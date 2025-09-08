@@ -21,7 +21,7 @@ struct IngredientsView: View {
         }
         var ingredients: [Ingredient] = []
         for ingredient in ingredientStore.ingredients {
-            if ingredient.name.lowercased().contains(searchText.lowercased()) {
+            if ingredient.ingredientType.name.lowercased().contains(searchText.lowercased()) {
                 ingredients.append(ingredient)
             }
         }
@@ -41,11 +41,11 @@ struct IngredientsView: View {
                         List(filteredIngredients) { ingredient in
                             NavigationLink(destination: IngredientDetailsView(ingredient: ingredient, addingIngredient: false)) {
                                 HStack {
-                                    Image(ingredient.ingredientType?.icon ?? "misc")
+                                    Image(ingredient.ingredientType.icon)
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 30, height: 30)
-                                    Text(ingredient.name)
+                                    Text(ingredient.ingredientType.name)
                                     Spacer()
                                     if let quantityMassUnit = ingredient.quantityMassUnit {
                                         Text("\(ingredient.quantity)\(quantityMassUnit)")

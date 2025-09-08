@@ -9,8 +9,7 @@ import Foundation
 
 struct Ingredient: Identifiable {
     let id: UUID = UUID()
-    let name: String
     let quantity: Int
     let quantityMassUnit: String?
-    let ingredientType: IngredientType?
+    let ingredientType: IngredientType
 }

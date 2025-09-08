@@ -28,10 +28,10 @@ struct IngredientDetailsView: View {
         self.addingIngredient = addingIngredient
         self.enteredQuantity = String(ingredient.quantity)
         
-        if ingredient.ingredientType?.quantityUnit == QuantityUnit.litres {
+        if ingredient.ingredientType.quantityUnit == QuantityUnit.litres {
             massUnitOptions = LITRE_MASS_UNITS
             selectedMassUnit = LITRE_MASS_UNITS[0]
-        } else if ingredient.ingredientType?.quantityUnit == QuantityUnit.weight {
+        } else if ingredient.ingredientType.quantityUnit == QuantityUnit.weight {
             massUnitOptions = WEIGHT_MASS_UNITS
             selectedMassUnit = WEIGHT_MASS_UNITS[0]
         } else {
@@ -80,7 +80,6 @@ struct IngredientDetailsView: View {
         }
         
         let updatedIngredient = Ingredient(
-            name: ingredient.name,
             quantity: quantity,
             quantityMassUnit: selectedMassUnit,
             ingredientType: ingredient.ingredientType
@@ -105,7 +104,6 @@ struct IngredientDetailsView: View {
         }
         
         let newIngredient = Ingredient(
-            name: ingredient.name,
             quantity: quantity,
             quantityMassUnit: selectedMassUnit,
             ingredientType: ingredient.ingredientType
@@ -179,7 +177,7 @@ struct IngredientDetailsView: View {
                     }
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Text(ingredient.name)
+                    Text(ingredient.ingredientType.name)
                         .font(.title)
                 }
                 if !addingIngredient {
@@ -201,5 +199,5 @@ struct IngredientDetailsView: View {
 }
 
 #Preview {
-    IngredientDetailsView(ingredient: Ingredient(name: "Test", quantity: 1, quantityMassUnit: nil, ingredientType: IngredientType.init(name: "Test", icon: "misc", quantityUnit: QuantityUnit.litres)), addingIngredient: true)
+    IngredientDetailsView(ingredient: Ingredient(quantity: 1, quantityMassUnit: nil, ingredientType: IngredientType.init(name: "Test", icon: "misc", quantityUnit: QuantityUnit.litres)), addingIngredient: true)
 }

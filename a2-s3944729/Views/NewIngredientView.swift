@@ -67,7 +67,6 @@ struct NewIngredientView: View {
                 List(filteredIngredients) { ingredient in
                     NavigationLink(destination: IngredientDetailsView(
                         ingredient: Ingredient(
-                            name: ingredient.name,
                             quantity: 1,
                             quantityMassUnit: nil,
                             ingredientType: ingredient

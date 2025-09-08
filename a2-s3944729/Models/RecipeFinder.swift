@@ -101,7 +101,7 @@ private func ingredientListToString(ingredients: [Ingredient]) -> String {
     
     for i in 0...ingredients.count - 1 {
         let ingredient = ingredients[i]
-        let ingredientString = "\(ingredient.quantity)\(ingredient.quantityMassUnit ?? "") \(ingredient.name)"
+        let ingredientString = "\(ingredient.quantity)\(ingredient.quantityMassUnit ?? "") \(ingredient.ingredientType.name)"
         ingredientsString += ingredientString
         
         if i != ingredients.count - 1 {
