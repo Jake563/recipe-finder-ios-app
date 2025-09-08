@@ -19,7 +19,14 @@ private let AI_RECIPE_SCHEMA: [String: Any] = [
             "name": ["type": "string"],
             "ingredients": [
                 "type": "array",
-                "items": ["type": "string"]
+                "items": [
+                    "type": "object",
+                    "properties": [
+                        "name": ["type": "string"],
+                        "quantity": ["type": "integer"],
+                        "quantityMassUnit": ["type": "string"]
+                    ]
+                ]
             ],
             "instructions": [
                 "type": "array",
@@ -126,7 +133,7 @@ func getRecipes(ingredients: [Ingredient]) async -> [Recipe] {
     print("Ingredients string: \(ingredientsString)")
     
     let prompt = """
-    Generate a maximum of \(MAX_RECIPES) recipes that contain these ingredients: \(ingredientsString). Do not include recipes that have other ingredients.
+    Generate a maximum of \(MAX_RECIPES) recipes that contain these ingredients: \(ingredientsString). Do not include recipes that have other ingredients. Note that quantityMassUnit can be "mL", "L", "g", "kg", or nil.
     """
     
     print("AI Prompt: \(prompt)")

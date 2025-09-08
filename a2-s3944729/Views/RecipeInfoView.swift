@@ -9,8 +9,18 @@ import SwiftUI
 
 struct RecipeInfoView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var ingredientStore: IngredientStore
     
     let recipe: Recipe
+    
+    private func getCorrespondingIngredient(requiredIngredient: RequiredIngredient) -> Ingredient? {
+        for ingredient in ingredientStore.ingredients {
+            if ingredient.ingredientType.name == requiredIngredient.name {
+                return ingredient
+            }
+        }
+        return nil
+    }
     
     var body: some View {
         NavigationStack {
@@ -29,18 +39,21 @@ struct RecipeInfoView: View {
                     Spacer()
                 }
                 .padding(.horizontal)
-                List(recipe.ingredients, id: \.self) { ingredient in
+                List(recipe.ingredients) { requiredIngredient in
+                    let correspondingIngredient = getCorrespondingIngredient(requiredIngredient: requiredIngredient)
                     VStack {
                         HStack {
                             HStack {
-                                Image("fruit")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 30, height: 30)
-                                Text(ingredient)
+                                if correspondingIngredient != nil {
+                                    Image(correspondingIngredient!.ingredientType.icon)
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 30, height: 30)
+                                }
+                                Text(requiredIngredient.name)
                             }
                             Spacer()
-                            Text("500mL")
+                            Text("\(String(requiredIngredient.quantity))\(requiredIngredient.quantityMassUnit ?? "")")
                         }
                         Divider()
                     }
@@ -80,7 +93,10 @@ struct RecipeInfoView: View {
 #Preview {
     RecipeInfoView(recipe: Recipe(
         name: "Test Recipe",
-        ingredients: ["Egg", "Milk"],
+        ingredients: [
+            RequiredIngredient(name: "Egg", quantity: 50, quantityMassUnit: nil),
+            RequiredIngredient(name: "Milk", quantity: 20, quantityMassUnit: "mL")
+        ],
         instructions: []
-    ))
+    )).environmentObject(IngredientStore())
 }

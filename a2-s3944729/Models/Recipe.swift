@@ -10,7 +10,7 @@ import Foundation
 struct Recipe: Codable, Identifiable {
     let id = UUID()
     let name: String
-    let ingredients: [String]
+    let ingredients: [RequiredIngredient]
     let instructions: [String]
     
     enum CodingKeys: String, CodingKey {
