@@ -9,14 +9,6 @@
 
 import SwiftUI
 
-struct Ingredient: Identifiable {
-    let id: UUID = UUID()
-    let name: String
-    let quantity: Int
-    let quantityMassUnit: String?
-    let ingredientType: IngredientType?
-}
-
 struct IngredientsView: View {
     @State private var searchText: String = ""
     @State private var filteredIngredients: [Ingredient] = []

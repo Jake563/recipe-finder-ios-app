@@ -9,17 +9,6 @@
 
 import Foundation
 
-enum QuantityUnit {
-    case count, weight, litres
-}
-
-struct IngredientType: Identifiable {
-    let id: UUID = UUID()
-    let name: String
-    let icon: String
-    let quantityUnit: QuantityUnit
-}
-
 struct AllIngredients {
     static let ingredients = [
         // Fruits

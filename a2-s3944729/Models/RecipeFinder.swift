@@ -46,19 +46,6 @@ private struct Part: Decodable {
     let text: String
 }
 
-struct Recipe: Codable, Identifiable {
-    let id = UUID()
-    let name: String
-    let ingredients: [String]
-    let instructions: [String]
-    
-    enum CodingKeys: String, CodingKey {
-        case name = "name"
-        case ingredients = "ingredients"
-        case instructions = "instructions"
-    }
-}
-
 /// Debug function that neatly prints the given list of recipes, allowing us to see what the recipes look like
 private func prettyPrintRecipes(recipes: [Recipe]) {
     let encoder = JSONEncoder()
