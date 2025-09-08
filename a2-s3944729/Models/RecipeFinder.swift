@@ -26,7 +26,8 @@ private let AI_RECIPE_SCHEMA: [String: Any] = [
                         "name": ["type": "string"],
                         "quantity": ["type": "integer"],
                         "quantityMassUnit": ["type": "string"]
-                    ]
+                    ],
+                    "required": ["name", "quantity"]
                 ]
             ],
             "instructions": [
@@ -34,7 +35,7 @@ private let AI_RECIPE_SCHEMA: [String: Any] = [
                 "items": ["type": "string"]
             ]
         ],
-        "required": ["name", "ingredients", "instructions"]
+        "required": ["name", "estimatedTime", "ingredients", "instructions"]
     ]
 ]
 
