@@ -27,7 +27,7 @@ struct RecipeInfoView: View {
             VStack {
                 HStack {
                     Image(systemName: "clock")
-                    Text("20 minutes")
+                    Text(recipe.estimatedTime)
                         .font(.title2)
                     Spacer()
                 }
@@ -93,6 +93,7 @@ struct RecipeInfoView: View {
 #Preview {
     RecipeInfoView(recipe: Recipe(
         name: "Test Recipe",
+        estimatedTime: "40 minutes",
         ingredients: [
             RequiredIngredient(name: "Egg", quantity: 50, quantityMassUnit: nil),
             RequiredIngredient(name: "Milk", quantity: 20, quantityMassUnit: "mL")

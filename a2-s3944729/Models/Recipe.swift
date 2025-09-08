@@ -10,11 +10,13 @@ import Foundation
 struct Recipe: Codable, Identifiable {
     let id = UUID()
     let name: String
+    let estimatedTime: String
     let ingredients: [RequiredIngredient]
     let instructions: [String]
     
     enum CodingKeys: String, CodingKey {
         case name = "name"
+        case estimatedTime = "estimatedTime"
         case ingredients = "ingredients"
         case instructions = "instructions"
     }

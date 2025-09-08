@@ -17,6 +17,7 @@ private let AI_RECIPE_SCHEMA: [String: Any] = [
         "type": "object",
         "properties": [
             "name": ["type": "string"],
+            "estimatedTime": ["type": "string"],
             "ingredients": [
                 "type": "array",
                 "items": [
