@@ -1,0 +1,205 @@
+//
+//  IngredientDetailsView.swift
+//  assignment-1
+//
+//  View that allows an ingredient to be added, edited or deleted.
+//
+//  Created by Jake Parkinson on 21/8/2025.
+//
+
+import SwiftUI
+
+private let LITRE_MASS_UNITS = ["mL", "L"]
+private let WEIGHT_MASS_UNITS = ["g", "kg"]
+private let MAX_QUANTITY_CHARACTERS = 4
+
+struct IngredientDetailsView: View {
+    @State private var enteredQuantity: String
+    @State private var selectedMassUnit: String
+    @State private var massUnitOptions: [String]
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var ingredientStore: IngredientStore
+    
+    let ingredient: Ingredient
+    let addingIngredient: Bool
+    
+    init(ingredient: Ingredient, addingIngredient: Bool) {
+        self.ingredient = ingredient
+        self.addingIngredient = addingIngredient
+        self.enteredQuantity = String(ingredient.quantity)
+        
+        if ingredient.ingredientType?.quantityUnit == QuantityUnit.litres {
+            massUnitOptions = LITRE_MASS_UNITS
+            selectedMassUnit = LITRE_MASS_UNITS[0]
+        } else if ingredient.ingredientType?.quantityUnit == QuantityUnit.weight {
+            massUnitOptions = WEIGHT_MASS_UNITS
+            selectedMassUnit = WEIGHT_MASS_UNITS[0]
+        } else {
+            massUnitOptions = []
+            selectedMassUnit = ""
+        }
+    }
+    
+    /// Determines whether the new value for the quantity is allowed.
+    private func allowQuantityValueChange(newValue: String) -> Bool {
+        if newValue.isEmpty {
+            // Empty values are allowed so the first digit can be changed.
+            return true
+        }
+        let numberNewValue = Int(newValue)
+        if numberNewValue == nil {
+            // Non-integer values are not allowed.
+            return false
+        }
+        
+        if newValue.count > MAX_QUANTITY_CHARACTERS {
+            // Character count exceeds max quantity characters.
+            return false
+        }
+        return true
+    }
+    
+    /// Removes the selected ingredient from the user's saved ingredients
+    private func deleteIngredient() {
+        for index in 0...ingredientStore.ingredients.count - 1 {
+            if ingredientStore.ingredients[index].id == ingredient.id {
+                ingredientStore.ingredients.remove(at: index)
+                break
+            }
+        }
+        ingredientStore.hasIngredientChanged = true
+        dismiss()
+    }
+    
+    /// Updates the details of the selected ingredient
+    private func saveIngredient() {
+        let quantity = Int(enteredQuantity) ?? -1
+        
+        if quantity == -1 {
+            return
+        }
+        
+        let updatedIngredient = Ingredient(
+            name: ingredient.name,
+            quantity: quantity,
+            quantityMassUnit: selectedMassUnit,
+            ingredientType: ingredient.ingredientType
+        )
+
+        for index in 0...ingredientStore.ingredients.count - 1 {
+            if ingredientStore.ingredients[index].id == ingredient.id {
+                ingredientStore.ingredients[index] = updatedIngredient
+                break
+            }
+        }
+        ingredientStore.hasIngredientChanged = true
+        dismiss()
+    }
+    
+    /// Adds the selected ingredient to the user's saved ingredients
+    private func addIngredient() {
+        let quantity = Int(enteredQuantity) ?? -1
+        
+        if quantity == -1 {
+            return
+        }
+        
+        let newIngredient = Ingredient(
+            name: ingredient.name,
+            quantity: quantity,
+            quantityMassUnit: selectedMassUnit,
+            ingredientType: ingredient.ingredientType
+        )
+        
+        ingredientStore.ingredients.append(newIngredient)
+        ingredientStore.hasIngredientChanged = true
+        ingredientStore.newIngredientAdded = true
+        dismiss()
+    }
+    
+    var body: some View {
+        NavigationStack {
+            VStack {
+                HStack {
+                    Text("Quantity:")
+                    TextField("", text: $enteredQuantity).keyboardType(.numberPad)
+                        .frame(width: 40, height: 34)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8).stroke(Color.gray, lineWidth: 1)
+                        )
+                        .multilineTextAlignment(.center)
+                        .onChange(of: enteredQuantity) { oldValue, newValue in
+                            let changeAllowed = allowQuantityValueChange(newValue: newValue)
+                            
+                            if !changeAllowed {
+                                enteredQuantity = oldValue
+                            }
+                        }
+                    if !massUnitOptions.isEmpty {
+                        Picker("Select a mass unit", selection: $selectedMassUnit) {
+                            ForEach(massUnitOptions, id: \.self) { unit in
+                                Text(unit)
+                            }
+                        }
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8).stroke(Color.gray, lineWidth: 1)
+                        )
+                    }
+                    Spacer()
+                }
+                .padding()
+                Spacer()
+                if addingIngredient {
+                    Button(action: addIngredient) {
+                        Text("Add")
+                            .frame(maxWidth:.infinity)
+                            .font(.title)
+                    }
+                    .padding()
+                    .buttonStyle(PrimaryButtonStyle())
+                } else {
+                    Button(action: saveIngredient) {
+                        Text("Save")
+                            .frame(maxWidth:.infinity)
+                            .font(.title)
+                    }
+                    .padding()
+                    .buttonStyle(PrimaryButtonStyle())
+                }
+       
+            }
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "arrow.left")
+                            .foregroundColor(.black)
+                    }
+                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text(ingredient.name)
+                        .font(.title)
+                }
+                if !addingIngredient {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: deleteIngredient) {
+                            Image(systemName: "trash")
+                                .foregroundColor(.black)
+                        }
+                    }
+                }
+            }
+        }
+        .onAppear() {
+            if ingredient.quantityMassUnit != nil {
+                selectedMassUnit = ingredient.quantityMassUnit!
+            }
+        }
+    }
+}
+
+#Preview {
+    IngredientDetailsView(ingredient: Ingredient(name: "Test", quantity: 1, quantityMassUnit: nil, ingredientType: IngredientType.init(name: "Test", icon: "misc", quantityUnit: QuantityUnit.litres)), addingIngredient: true)
+}

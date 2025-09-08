@@ -1,0 +1,40 @@
+//
+//  MainView.swift
+//  assignment-1
+//
+//  View that allows the ingredients, recipes and saved recipes views to be navigated to.
+//
+//  Created by Jake Parkinson on 21/8/2025.
+//
+
+import SwiftUI
+
+class IngredientStore: ObservableObject {
+    @Published var ingredients: [Ingredient] = []
+    @Published var hasIngredientChanged: Bool = false
+    @Published var newIngredientAdded: Bool = false
+}
+
+struct MainView: View {
+    @StateObject private var ingredientStore = IngredientStore()
+    
+    var body: some View {
+        TabView {
+            Tab("Ingredients", systemImage: "refrigerator") {
+                IngredientsView()
+            }
+
+            Tab("Recipes", systemImage: "note.text") {
+                RecipesView()
+            }
+
+            Tab("Saved", systemImage: "heart") {
+                SavedRecipesView()
+            }
+        }.environmentObject(ingredientStore)
+    }
+}
+
+#Preview {
+    MainView()
+}
