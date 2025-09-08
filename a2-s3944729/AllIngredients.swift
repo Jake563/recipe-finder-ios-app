@@ -1,6 +1,6 @@
 //
 //  AllIngredients.swift
-//  assignment-1
+//  a2-s3944729
 //
 //  Module that stores a list of ingredients the user can add.
 //

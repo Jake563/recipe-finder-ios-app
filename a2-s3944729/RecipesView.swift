@@ -1,6 +1,6 @@
 //
 //  RecipesView.swift
-//  assignment-1
+//  a2-s3944729
 //
 //  View that displays a list of recipes a user can make with their ingredients.
 //

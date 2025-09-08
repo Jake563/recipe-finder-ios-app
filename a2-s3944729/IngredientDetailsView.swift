@@ -1,6 +1,6 @@
 //
 //  IngredientDetailsView.swift
-//  assignment-1
+//  a2-s3944729
 //
 //  View that allows an ingredient to be added, edited or deleted.
 //

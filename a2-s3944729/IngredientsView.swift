@@ -1,6 +1,6 @@
 //
 //  IngredientsView.swift
-//  assignment-1
+//  a2-s3944729
 //
 //  View that list of all the user's saved ingredients.
 //

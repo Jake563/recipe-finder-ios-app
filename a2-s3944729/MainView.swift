@@ -1,6 +1,6 @@
 //
 //  MainView.swift
-//  assignment-1
+//  a2-s3944729
 //
 //  View that allows the ingredients, recipes and saved recipes views to be navigated to.
 //

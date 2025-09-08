@@ -1,6 +1,6 @@
 //
 //  PrimaryButtonStyle.swift
-//  assignment-1
+//  a2-s3944729
 //
 //  Style that stores the primary button styles.
 //

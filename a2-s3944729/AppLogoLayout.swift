@@ -1,6 +1,6 @@
 //
 //  AppLogoLayout.swift
-//  assignment-1
+//  a2-s3944729
 //
 //  Custom layout that assists with the layout of the app's logo.
 //

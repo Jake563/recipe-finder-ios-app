@@ -1,6 +1,6 @@
 //
 //  NewIngredientView.swift
-//  assignment-1
+//  a2-s3944729
 //
 //  View that allows a new ingredient to be added to a user's saved ingredients.
 //

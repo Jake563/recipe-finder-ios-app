@@ -1,6 +1,6 @@
 //
 //  RecipeFinder.swift
-//  assignment-1
+//  a2-s3944729
 //
 //  Module that is responsible for communication between the app and Google Gemini for retrieving AI responses.
 //
