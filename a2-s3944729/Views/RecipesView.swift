@@ -55,7 +55,7 @@ struct RecipesView: View {
                 ZStack {
                     List(recipes) { recipe in
                         HStack {
-                            NavigationLink(destination: RecipeInfoView()) {
+                            NavigationLink(destination: RecipeInfoView(recipe: recipe)) {
                                 HStack {
                                     Text(recipe.name)
                                 }
