@@ -39,6 +39,7 @@ struct RecipeInstructionsView: View {
     }
     
     private func initTimer() {
+        timerPaused = true
         timeRemaining = currentInstruction.timer
     }
 
