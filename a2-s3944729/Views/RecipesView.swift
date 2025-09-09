@@ -28,7 +28,7 @@ struct RecipesView: View {
         ingredientStore.hasIngredientChanged = false
         recipes.removeAll()
         Task {
-            recipes = await getRecipes(ingredients: ingredientStore.ingredients)
+            recipes = await AiService.getRecipes(ingredients: ingredientStore.ingredients)
             recipesLoading = false
         }
     }
