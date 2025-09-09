@@ -20,6 +20,7 @@ struct RecipeInstructionsView: View {
     
     let recipe: Recipe
     
+    /// Displays the next instruction step of the recipe
     private func nextStep() {
         if currentInstructionIndex == recipe.instructions.count - 1 {
             return
@@ -29,6 +30,7 @@ struct RecipeInstructionsView: View {
         initTimer()
     }
     
+    /// Displays the previous instruction step of the recipe
     private func prevStep() {
         if currentInstructionIndex == 0 {
             return
