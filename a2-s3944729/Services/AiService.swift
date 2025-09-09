@@ -33,7 +33,14 @@ struct AiService {
                 ],
                 "instructions": [
                     "type": "array",
-                    "items": ["type": "string"]
+                    "items": [
+                        "type": "object",
+                        "properties": [
+                            "instruction": ["type": "string"],
+                            "timer": ["type": "integer"],
+                        ],
+                        "required": ["instruction", "timer"]
+                    ]
                 ]
             ],
             "required": ["name", "estimatedTime", "ingredients", "instructions"]
@@ -134,7 +141,7 @@ struct AiService {
         
         let ingredientsString = ingredientListToString(ingredients: ingredients)
         let prompt = """
-    Generate a maximum of \(MAX_RECIPES) recipes that contain these ingredients: \(ingredientsString). Do not include recipes that have other ingredients. Note that quantityMassUnit can be "mL", "L", "g", "kg", or nil.
+    Generate a maximum of \(MAX_RECIPES) recipes that contain these ingredients: \(ingredientsString). Do not include recipes that have other ingredients. Note that quantityMassUnit can be "mL", "L", "g", "kg", or nil. Set timer to 0 if there is no timer. Timer should be in seconds.
     """
         
         print("AI Prompt: \(prompt)")

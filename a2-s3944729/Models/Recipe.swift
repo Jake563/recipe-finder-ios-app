@@ -12,7 +12,7 @@ struct Recipe: Codable, Identifiable {
     let name: String
     let estimatedTime: String
     let ingredients: [RequiredIngredient]
-    let instructions: [String]
+    let instructions: [Instruction]
     
     enum CodingKeys: String, CodingKey {
         case name = "name"

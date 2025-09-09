@@ -101,7 +101,7 @@ struct RecipeInstructionsView: View {
             RequiredIngredient(name: "Milk", quantity: 20, quantityMassUnit: "mL")
         ],
         instructions: [
-            "Preheat stove top for 10 minutes."
+            Instruction(instruction: "Preheat stove top for 10 minutes.", timer: 0)
         ]
     ))
 }
