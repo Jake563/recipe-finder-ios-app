@@ -1,5 +1,5 @@
 //
-//  RecipeFinder.swift
+//  AiService.swift
 //  a2-s3944729
 //
 //  Module that is responsible for communication between the app and Google Gemini for retrieving AI responses.
@@ -132,8 +132,6 @@ func getRecipes(ingredients: [Ingredient]) async -> [Recipe] {
     }
     
     let ingredientsString = ingredientListToString(ingredients: ingredients)
-    print("Ingredients string: \(ingredientsString)")
-    
     let prompt = """
     Generate a maximum of \(MAX_RECIPES) recipes that contain these ingredients: \(ingredientsString). Do not include recipes that have other ingredients. Note that quantityMassUnit can be "mL", "L", "g", "kg", or nil.
     """
