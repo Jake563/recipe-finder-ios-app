@@ -2,6 +2,8 @@
 //  RecipeInfoView.swift
 //  a2-s3944729
 //
+//  View that displays the basic information of a recipe, including the estimated time and required ingredients.
+//
 //  Created by Jake Parkinson on 24/8/2025.
 //
 

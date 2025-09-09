@@ -2,6 +2,8 @@
 //  RecipeInstructionsView.swift
 //  a2-s3944729
 //
+//  View that contains all the steps for a recipe, only showing one step at a time.
+//
 //  Created by Jake Parkinson on 9/9/2025.
 //
 
