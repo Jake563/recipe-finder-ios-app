@@ -4,31 +4,45 @@
 //
 //  View that contains all the steps for a recipe, only showing one step at a time.
 //
-//  Created by Jake Parkinson on 9/9/2025.
+//  Created by Jake Parkinson on 9/9/2025
 //
 
 import SwiftUI
 
 struct RecipeInstructionsView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var currentStep: String = "Preheat oven for 8 minutes"
-    @State private var currentStepIndex: Int = 0
+    @State private var currentInstruction: Instruction
+    @State private var currentInstructionIndex: Int
     
     let recipe: Recipe
     
     private func nextStep() {
-
+        if currentInstructionIndex == recipe.instructions.count - 1 {
+            return
+        }
+        currentInstructionIndex = currentInstructionIndex + 1
+        currentInstruction = recipe.instructions[currentInstructionIndex]
     }
     
     private func prevStep() {
-
+        if currentInstructionIndex == 0 {
+            return
+        }
+        currentInstructionIndex = currentInstructionIndex - 1
+        currentInstruction = recipe.instructions[currentInstructionIndex]
+    }
+    
+    init(recipe: Recipe) {
+        self.recipe = recipe
+        self.currentInstruction = recipe.instructions[0]
+        self.currentInstructionIndex = 0
     }
     
     var body: some View {
         NavigationStack {
             VStack {
                 HStack {
-                    Text(currentStep)
+                    Text(currentInstruction.instruction)
                     Spacer()
                 }
                 Spacer()
@@ -47,21 +61,25 @@ struct RecipeInstructionsView: View {
                 }
                 Spacer()
                 HStack {
-                    Button(action: {
-                        prevStep()
-                    }) {
-                        Text("< Prev")
+                    if currentInstructionIndex != 0 {
+                        Button(action: {
+                            prevStep()
+                        }) {
+                            Text("< Prev")
+                        }
+                        .font(.title)
+                        .buttonStyle(PrimaryButtonStyle())
                     }
-                    .font(.title)
-                    .buttonStyle(PrimaryButtonStyle())
                     Spacer()
-                    Button(action: {
-                        nextStep()
-                    }) {
-                        Text("Next >")
+                    if currentInstructionIndex != recipe.instructions.count - 1 {
+                        Button(action: {
+                            nextStep()
+                        }) {
+                            Text("Next >")
+                        }
+                        .font(.title)
+                        .buttonStyle(PrimaryButtonStyle())
                     }
-                    .font(.title)
-                    .buttonStyle(PrimaryButtonStyle())
                 }
             }
             .padding()
@@ -76,7 +94,7 @@ struct RecipeInstructionsView: View {
                     }
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Text("Step 1")
+                    Text("Step \(currentInstructionIndex + 1)")
                         .font(.title)
                 }
                 ToolbarItem() {
@@ -101,7 +119,8 @@ struct RecipeInstructionsView: View {
             RequiredIngredient(name: "Milk", quantity: 20, quantityMassUnit: "mL")
         ],
         instructions: [
-            Instruction(instruction: "Preheat stove top for 10 minutes.", timer: 0)
+            Instruction(instruction: "Preheat stove top for 10 minutes.", timer: 180),
+            Instruction(instruction: "Crack eggs into pan.", timer: 0)
         ]
     ))
 }
