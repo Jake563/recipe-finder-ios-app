@@ -13,6 +13,8 @@ struct RecipeInstructionsView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var currentInstruction: Instruction
     @State private var currentInstructionIndex: Int
+    @State private var timeRemaining: Int = 0
+    private let ONE_SECOND: UInt64 = 1_000_000_000
     
     let recipe: Recipe
     
@@ -22,6 +24,7 @@ struct RecipeInstructionsView: View {
         }
         currentInstructionIndex = currentInstructionIndex + 1
         currentInstruction = recipe.instructions[currentInstructionIndex]
+        initTimer()
     }
     
     private func prevStep() {
@@ -30,12 +33,45 @@ struct RecipeInstructionsView: View {
         }
         currentInstructionIndex = currentInstructionIndex - 1
         currentInstruction = recipe.instructions[currentInstructionIndex]
+        initTimer()
+    }
+    
+    private func initTimer() {
+        timeRemaining = currentInstruction.timer
+    }
+
+    private func startTimer() {
+        Task {
+            while timeRemaining > 0 {
+                try? await Task.sleep(nanoseconds: ONE_SECOND)
+                timeRemaining = timeRemaining - 1
+            }
+        }
+    }
+    
+    private func getFormattedTime(seconds: Int) -> String {
+        let formatter = DateComponentsFormatter()
+        formatter.zeroFormattingBehavior = [.pad]
+        formatter.unitsStyle = .positional
+
+        if seconds >= 3600 {
+            formatter.allowedUnits = [.hour, .minute, .second]
+        } else {
+            formatter.allowedUnits = [.minute, .second]
+        }
+        
+        if let formattedTime = formatter.string(from: TimeInterval(seconds)) {
+            return formattedTime
+        }
+        
+        return "error"
     }
     
     init(recipe: Recipe) {
         self.recipe = recipe
         self.currentInstruction = recipe.instructions[0]
         self.currentInstructionIndex = 0
+        initTimer()
     }
     
     var body: some View {
@@ -43,16 +79,17 @@ struct RecipeInstructionsView: View {
             VStack {
                 HStack {
                     Text(currentInstruction.instruction)
+                        .font(.title2)
                     Spacer()
                 }
                 Spacer()
                 VStack {
                     HStack {
                         Image(systemName: "clock")
-                        Text("07:00")
+                        Text("\(getFormattedTime(seconds: timeRemaining))")
                     }
                     Button(action: {
-                        nextStep()
+                        startTimer()
                     }) {
                         Text("Start Timer")
                     }
@@ -81,6 +118,9 @@ struct RecipeInstructionsView: View {
                         .buttonStyle(PrimaryButtonStyle())
                     }
                 }
+            }
+            .onAppear() {
+                initTimer()
             }
             .padding()
             .navigationBarBackButtonHidden(true)
@@ -119,7 +159,7 @@ struct RecipeInstructionsView: View {
             RequiredIngredient(name: "Milk", quantity: 20, quantityMassUnit: "mL")
         ],
         instructions: [
-            Instruction(instruction: "Preheat stove top for 10 minutes.", timer: 180),
+            Instruction(instruction: "Preheat stove top for 10 minutes.", timer: 5),
             Instruction(instruction: "Crack eggs into pan.", timer: 0)
         ]
     ))
