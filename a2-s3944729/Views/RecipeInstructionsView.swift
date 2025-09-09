@@ -105,7 +105,9 @@ struct RecipeInstructionsView: View {
                     VStack {
                         HStack {
                             Image(systemName: "clock")
+                                .font(.title2)
                             Text("\(getFormattedTime(seconds: timeRemaining))")
+                                .font(.title2)
                         }
                         Button(action: {
                             if timerPaused {
