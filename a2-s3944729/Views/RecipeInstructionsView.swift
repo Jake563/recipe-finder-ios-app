@@ -100,24 +100,26 @@ struct RecipeInstructionsView: View {
                     Spacer()
                 }
                 Spacer()
-                VStack {
-                    HStack {
-                        Image(systemName: "clock")
-                        Text("\(getFormattedTime(seconds: timeRemaining))")
-                    }
-                    Button(action: {
-                        if timerPaused {
-                            startTimer()
-                        } else {
-                            pauseTimer()
+                if currentInstruction.timer > 0 {
+                    VStack {
+                        HStack {
+                            Image(systemName: "clock")
+                            Text("\(getFormattedTime(seconds: timeRemaining))")
                         }
-                    }) {
-                        Text(getTimerText())
+                        Button(action: {
+                            if timerPaused {
+                                startTimer()
+                            } else {
+                                pauseTimer()
+                            }
+                        }) {
+                            Text(getTimerText())
+                        }
+                        .font(.title)
+                        .buttonStyle(PrimaryButtonStyle())
                     }
-                    .font(.title)
-                    .buttonStyle(PrimaryButtonStyle())
+                    Spacer()
                 }
-                Spacer()
                 HStack {
                     if currentInstructionIndex != 0 {
                         Button(action: {

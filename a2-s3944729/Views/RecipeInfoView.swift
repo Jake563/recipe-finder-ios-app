@@ -99,6 +99,9 @@ struct RecipeInfoView: View {
             RequiredIngredient(name: "Egg", quantity: 50, quantityMassUnit: nil),
             RequiredIngredient(name: "Milk", quantity: 20, quantityMassUnit: "mL")
         ],
-        instructions: []
+        instructions: [
+            Instruction(instruction: "Preheat stove top for 10 minutes.", timer: 5),
+            Instruction(instruction: "Crack eggs into pan.", timer: 0)
+        ]
     )).environmentObject(IngredientStore())
 }
