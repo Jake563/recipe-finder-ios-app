@@ -60,10 +60,9 @@ struct RecipeInfoView: View {
                 }
                 .listRowSpacing(5)
                 .scrollContentBackground(.hidden)
-                Button(action: {
-                    print("View instructions")
-                }) {
-                    Text("View Instructions")
+
+                NavigationLink(destination: RecipeInstructionsView(recipe: recipe)) {
+                    Text("View instructions")
                         .frame(maxWidth: .infinity)
                         .font(.title)
                 }
