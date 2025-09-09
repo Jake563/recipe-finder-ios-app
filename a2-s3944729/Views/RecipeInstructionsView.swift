@@ -43,6 +43,7 @@ struct RecipeInstructionsView: View {
         timeRemaining = currentInstruction.timer
     }
 
+    /// Makes the timer start counting down
     private func startTimer() {
         timerLoopStopped = false
         timerPaused = false
@@ -67,6 +68,7 @@ struct RecipeInstructionsView: View {
         return "Pause Timer"
     }
     
+    /// Returns given seconds in timer-format. For example: 66 -> 01:06.
     private func getFormattedTime(seconds: Int) -> String {
         let formatter = DateComponentsFormatter()
         formatter.zeroFormattingBehavior = [.pad]
