@@ -14,6 +14,8 @@ struct RecipeInstructionsView: View {
     @State private var currentInstruction: Instruction
     @State private var currentInstructionIndex: Int
     @State private var timeRemaining: Int = 0
+    @State private var timerPaused = true
+    @State private var timerStopped = true
     private let ONE_SECOND: UInt64 = 1_000_000_000
     
     let recipe: Recipe
@@ -41,12 +43,27 @@ struct RecipeInstructionsView: View {
     }
 
     private func startTimer() {
+        timerStopped = false
+        timerPaused = false
         Task {
-            while timeRemaining > 0 {
-                try? await Task.sleep(nanoseconds: ONE_SECOND)
+            try? await Task.sleep(nanoseconds: ONE_SECOND)
+            while timeRemaining > 0 && timerPaused == false {
                 timeRemaining = timeRemaining - 1
+                try? await Task.sleep(nanoseconds: ONE_SECOND)
             }
+            timerStopped = true
         }
+    }
+    
+    private func pauseTimer() {
+        timerPaused = true
+    }
+    
+    private func getTimerText() -> String {
+        if timerPaused {
+            return "Start Timer"
+        }
+        return "Pause Timer"
     }
     
     private func getFormattedTime(seconds: Int) -> String {
@@ -89,9 +106,13 @@ struct RecipeInstructionsView: View {
                         Text("\(getFormattedTime(seconds: timeRemaining))")
                     }
                     Button(action: {
-                        startTimer()
+                        if timerPaused {
+                            startTimer()
+                        } else {
+                            pauseTimer()
+                        }
                     }) {
-                        Text("Start Timer")
+                        Text(getTimerText())
                     }
                     .font(.title)
                     .buttonStyle(PrimaryButtonStyle())
