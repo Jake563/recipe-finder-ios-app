@@ -15,7 +15,7 @@ struct RecipeInstructionsView: View {
     @State private var currentInstructionIndex: Int
     @State private var timeRemaining: Int = 0
     @State private var timerPaused = true
-    @State private var timerStopped = true
+    @State private var timerLoopStopped = true
     private let ONE_SECOND: UInt64 = 1_000_000_000
     
     let recipe: Recipe
@@ -44,7 +44,7 @@ struct RecipeInstructionsView: View {
     }
 
     private func startTimer() {
-        timerStopped = false
+        timerLoopStopped = false
         timerPaused = false
         Task {
             try? await Task.sleep(nanoseconds: ONE_SECOND)
@@ -52,7 +52,7 @@ struct RecipeInstructionsView: View {
                 timeRemaining = timeRemaining - 1
                 try? await Task.sleep(nanoseconds: ONE_SECOND)
             }
-            timerStopped = true
+            timerLoopStopped = true
         }
     }
     
@@ -109,7 +109,9 @@ struct RecipeInstructionsView: View {
                         }
                         Button(action: {
                             if timerPaused {
-                                startTimer()
+                                if timerLoopStopped {
+                                    startTimer()
+                                }
                             } else {
                                 pauseTimer()
                             }
