@@ -212,7 +212,7 @@ struct AiService {
         return extractRecipesFromResponseData(data: responseData!)
     }
     
-    static func clarifyRecipeStep(instruction: Instruction) async -> String {
+    static func getRecipeStepClarification(instruction: Instruction) async -> String {
         do {
             print("Getting clarification on step...")
             let prompt = """

@@ -19,7 +19,7 @@ struct StepClarificationView: View {
             return
         }
         Task {
-            stepClarification = await AiService.clarifyRecipeStep(instruction: instruction)
+            stepClarification = await AiService.getRecipeStepClarification(instruction: instruction)
         }
     }
     
