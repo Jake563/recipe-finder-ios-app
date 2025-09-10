@@ -16,6 +16,7 @@ struct RecipeInstructionsView: View {
     @State private var timeRemaining: Int = 0
     @State private var timerPaused = true
     @State private var timerLoopStopped = true
+    @State private var instructionHelpShown: Bool = false
     private let ONE_SECOND: UInt64 = 1_000_000_000
     
     let recipe: Recipe
@@ -171,13 +172,15 @@ struct RecipeInstructionsView: View {
                 }
                 ToolbarItem() {
                     Button(action: {
-                        print("Help")
+                        instructionHelpShown = true
                     }) {
                         Image(systemName: "questionmark.circle")
                             .foregroundColor(.black)
                     }
                 }
             }
+            .sheet(isPresented: $instructionHelpShown, content: { StepClarificationView(instruction: currentInstruction)
+            })
         }
     }
 }
