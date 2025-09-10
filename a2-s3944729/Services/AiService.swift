@@ -47,6 +47,14 @@ struct AiService {
         ]
     ]
     
+    static private let AI_STEP_CLARIFICATION_SCHEMA: [String: Any] = [
+        "type": "object",
+        "properties": [
+            "clarification": ["type": "string"],
+        ],
+        "required": ["clarification"]
+    ]
+    
     private struct GeminiResponse: Decodable {
         let candidates: [Candidate]
     }
@@ -72,6 +80,37 @@ struct AiService {
            let jsonString = String(data: data, encoding: .utf8) {
             print(jsonString)
         }
+    }
+    
+    static private func extractJsonStringFromResponseData(data: Data) -> Data? {
+        do {
+            // Decode outer Gemini response
+            let response = try JSONDecoder().decode(GeminiResponse.self, from: data)
+            
+            // Ensure there is only one candidate
+            if response.candidates.count != 1 {
+                print("Failed to JSON data: unexpected number of candidates")
+                return nil
+            }
+            
+            // Ensure there is only one candidate part
+            if response.candidates[0].content.parts.count != 1 {
+                print("Failed to JSON data: unexpected number of parts")
+                return nil
+            }
+            
+            let jsonString = response.candidates[0].content.parts[0].text
+            let jsonData = jsonString.data(using: .utf8)
+            
+            if jsonData == nil {
+                print("Failed to JSON data: json data is nil")
+                return nil
+            }
+            return jsonData
+        } catch {
+            print("Failed to JSON data: \(error)")
+        }
+        return nil
     }
     
     /// Returns a list of recipes from the given response data
@@ -129,6 +168,45 @@ struct AiService {
         return ingredientsString
     }
     
+    static private func getAiResponse(prompt: String, responseSchema: [String: Any]) async -> Data? {
+        guard let url = URL(string: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=\(API_KEY)") else {
+            fatalError("Invalid URL")
+        }
+        
+        print("AI Prompt: \(prompt)")
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        let requestBody: [String: Any] = [
+            "contents": [
+                [
+                    "parts": [
+                        ["text": prompt]
+                    ]
+                ]
+            ],
+            "generationConfig": [
+                "responseMimeType": "application/json",
+                "responseSchema": responseSchema
+            ]
+        ]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody, options: [])
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        do {
+            let (responseData, _) = try await URLSession.shared.data(for: request)
+            
+            if let responseString = String(data: responseData, encoding: .utf8) {
+                print("Response: \(responseString)")
+            }
+            return responseData
+        } catch {
+            print("Failed to get recipes: \(error)")
+        }
+        return nil
+    }
+    
     /// Generates a list of recipes that can be made with the given ingredients
     static func getRecipes(ingredients: [Ingredient]) async -> [Recipe] {
         print("Getting recipes...")
@@ -176,6 +254,30 @@ struct AiService {
             print("Failed to get recipes: \(error)")
         }
         return []
+    }
+    
+    static func clarifyRecipeStep(instruction: Instruction) async -> String {
+        do {
+            print("Getting clarification on step...")
+            let prompt = """
+            The user is confused on this step you generated: "\(instruction.instruction)". Please clarify it.
+    """
+            
+            let aiResponse = await getAiResponse(prompt: prompt, responseSchema: AI_STEP_CLARIFICATION_SCHEMA)
+            
+            if aiResponse == nil {
+                print("Failed to get step clarification: ai response is nil")
+                return "Error"
+            }
+            
+            let jsonData = extractJsonStringFromResponseData(data: aiResponse!)
+            
+            let clarification = try JSONDecoder().decode(StepClarification.self, from: jsonData!)
+            return clarification.clarification
+        } catch {
+            print("Failed to get step clarification: \(error)")
+            return "Error"
+        }
     }
 }
 

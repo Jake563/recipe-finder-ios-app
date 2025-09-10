@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct StepClarificationView: View {
+    @Environment(\.dismiss) private var dismiss
     let instruction: Instruction
     
     var body: some View {
         VStack {
             HStack {
                 Button(action: {
-                    
+                    dismiss()
                 }) {
                     Image(systemName: "xmark")
                         .foregroundStyle(.black)
