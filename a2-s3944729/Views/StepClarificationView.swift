@@ -36,9 +36,14 @@ struct StepClarificationView: View {
                     .bold()
                 Spacer()
             }
-            HStack {
-                Text(stepClarification)
+            if stepClarification.isEmpty {
                 Spacer()
+                ProgressView()
+            } else {
+                HStack {
+                    Text(stepClarification)
+                    Spacer()
+                }
             }
             Spacer()
         }
