@@ -82,7 +82,7 @@ struct AiService {
         }
     }
     
-    static private func extractJsonStringFromResponseData(data: Data) -> Data? {
+    static private func extractJsonDataFromResponseData(data: Data) -> Data? {
         do {
             // Decode outer Gemini response
             let response = try JSONDecoder().decode(GeminiResponse.self, from: data)
@@ -116,7 +116,7 @@ struct AiService {
     /// Returns a list of recipes from the given response data
     static private func extractRecipesFromResponseData(data: Data) -> [Recipe] {
         do {
-            let jsonData = extractJsonStringFromResponseData(data: data)
+            let jsonData = extractJsonDataFromResponseData(data: data)
             
             if jsonData == nil {
                 print("Failed to extract recipes: json data is nil")
@@ -226,7 +226,7 @@ struct AiService {
                 return "Error"
             }
             
-            let jsonData = extractJsonStringFromResponseData(data: aiResponse!)
+            let jsonData = extractJsonDataFromResponseData(data: aiResponse!)
             
             let clarification = try JSONDecoder().decode(StepClarification.self, from: jsonData!)
             return clarification.clarification
