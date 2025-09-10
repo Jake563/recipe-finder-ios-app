@@ -116,23 +116,7 @@ struct AiService {
     /// Returns a list of recipes from the given response data
     static private func extractRecipesFromResponseData(data: Data) -> [Recipe] {
         do {
-            // Decode outer Gemini response
-            let response = try JSONDecoder().decode(GeminiResponse.self, from: data)
-            
-            // Ensure there is only one candidate
-            if response.candidates.count != 1 {
-                print("Failed to extract recipes: unexpected number of candidates")
-                return []
-            }
-            
-            // Ensure there is only one candidate part
-            if response.candidates[0].content.parts.count != 1 {
-                print("Failed to extract recipes: unexpected number of parts")
-                return []
-            }
-            
-            let jsonString = response.candidates[0].content.parts[0].text
-            let jsonData = jsonString.data(using: .utf8)
+            let jsonData = extractJsonStringFromResponseData(data: data)
             
             if jsonData == nil {
                 print("Failed to extract recipes: json data is nil")
@@ -213,47 +197,19 @@ struct AiService {
         if ingredients.isEmpty {
             return []
         }
-        guard let url = URL(string: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=\(API_KEY)") else {
-            fatalError("Invalid URL")
-        }
-        
+
         let ingredientsString = ingredientListToString(ingredients: ingredients)
         let prompt = """
     Generate a maximum of \(MAX_RECIPES) recipes that contain these ingredients: \(ingredientsString). Do not include recipes that have other ingredients. Note that quantityMassUnit can be "mL", "L", "g", "kg", or nil. Set timer to 0 if there is no timer. Timer should be in seconds.
     """
+    
+        let responseData = await getAiResponse(prompt: prompt, responseSchema: AI_RECIPE_SCHEMA)
         
-        print("AI Prompt: \(prompt)")
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        
-        let requestBody: [String: Any] = [
-            "contents": [
-                [
-                    "parts": [
-                        ["text": prompt]
-                    ]
-                ]
-            ],
-            "generationConfig": [
-                "responseMimeType": "application/json",
-                "responseSchema": AI_RECIPE_SCHEMA
-            ]
-        ]
-        request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody, options: [])
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        do {
-            let (responseData, _) = try await URLSession.shared.data(for: request)
-            
-            if let responseString = String(data: responseData, encoding: .utf8) {
-                print("Response: \(responseString)")
-            }
-            return extractRecipesFromResponseData(data: responseData)
-        } catch {
-            print("Failed to get recipes: \(error)")
+        if responseData == nil {
+            print("Failed to get recipes: response data is nil")
+            return []
         }
-        return []
+        return extractRecipesFromResponseData(data: responseData!)
     }
     
     static func clarifyRecipeStep(instruction: Instruction) async -> String {
