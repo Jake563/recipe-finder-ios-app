@@ -179,7 +179,7 @@ struct RecipeInstructionsView: View {
                     }
                 }
             }
-            .sheet(isPresented: $instructionHelpShown, content: { StepClarificationView(instruction: currentInstruction)
+            .sheet(isPresented: $instructionHelpShown, content: { StepClarificationView(instruction: currentInstruction, loadClarification: true)
             })
         }
     }

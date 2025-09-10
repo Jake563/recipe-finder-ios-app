@@ -9,7 +9,19 @@ import SwiftUI
 
 struct StepClarificationView: View {
     @Environment(\.dismiss) private var dismiss
+    @State private var stepClarification: String = ""
+    
     let instruction: Instruction
+    let loadClarification: Bool
+    
+    private func loadStepClarification() {
+        if !loadClarification {
+            return
+        }
+        Task {
+            stepClarification = await AiService.clarifyRecipeStep(instruction: instruction)
+        }
+    }
     
     var body: some View {
         VStack {
@@ -25,15 +37,18 @@ struct StepClarificationView: View {
                 Spacer()
             }
             HStack {
-                Text("This step asks you...")
+                Text(stepClarification)
                 Spacer()
             }
             Spacer()
         }
         .padding()
+        .onAppear() {
+            loadStepClarification()
+        }
     }
 }
 
 #Preview {
-    StepClarificationView(instruction: Instruction(instruction: "test", timer: 0))
+    StepClarificationView(instruction: Instruction(instruction: "This is a test instruction", timer: 0), loadClarification: false)
 }
