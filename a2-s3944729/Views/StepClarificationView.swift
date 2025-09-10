@@ -12,12 +12,8 @@ struct StepClarificationView: View {
     @State private var stepClarification: String = ""
     
     let instruction: Instruction
-    let loadClarification: Bool
     
     private func loadStepClarification() {
-        if !loadClarification {
-            return
-        }
         Task {
             stepClarification = await AiService.getRecipeStepClarification(instruction: instruction)
         }
@@ -55,5 +51,5 @@ struct StepClarificationView: View {
 }
 
 #Preview {
-    StepClarificationView(instruction: Instruction(instruction: "This is a test instruction", timer: 0), loadClarification: false)
+    StepClarificationView(instruction: Instruction(instruction: "This is a test instruction", timer: 0))
 }

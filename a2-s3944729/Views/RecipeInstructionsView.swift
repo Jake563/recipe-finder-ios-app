@@ -17,6 +17,8 @@ struct RecipeInstructionsView: View {
     @State private var timerPaused = true
     @State private var timerLoopStopped = true
     @State private var instructionHelpShown: Bool = false
+    @State private var clarificationLoaded: Bool = false
+    
     private let ONE_SECOND: UInt64 = 1_000_000_000
     
     let recipe: Recipe
@@ -29,6 +31,7 @@ struct RecipeInstructionsView: View {
         currentInstructionIndex = currentInstructionIndex + 1
         currentInstruction = recipe.instructions[currentInstructionIndex]
         initTimer()
+        clarificationLoaded = false
     }
     
     /// Displays the previous instruction step of the recipe
@@ -39,6 +42,7 @@ struct RecipeInstructionsView: View {
         currentInstructionIndex = currentInstructionIndex - 1
         currentInstruction = recipe.instructions[currentInstructionIndex]
         initTimer()
+        clarificationLoaded = false
     }
     
     private func initTimer() {
@@ -179,7 +183,7 @@ struct RecipeInstructionsView: View {
                     }
                 }
             }
-            .sheet(isPresented: $instructionHelpShown, content: { StepClarificationView(instruction: currentInstruction, loadClarification: true)
+            .sheet(isPresented: $instructionHelpShown, content: { StepClarificationView(instruction: currentInstruction)
             })
         }
     }
