@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F13A0E602E7A8E2E00D28690 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = F13A0E5E2E7A8E2800D28690 /* .gitignore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		F10F490A2E6EB56700ECFA8A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +31,7 @@
 		F10F48FC2E6EB56700ECFA8A /* a2-s3944729.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "a2-s3944729.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F10F49092E6EB56700ECFA8A /* a2-s3944729Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "a2-s3944729Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F10F49132E6EB56700ECFA8A /* a2-s3944729UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "a2-s3944729UITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F13A0E5E2E7A8E2800D28690 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -79,6 +84,7 @@
 				F10F490C2E6EB56700ECFA8A /* a2-s3944729Tests */,
 				F10F49162E6EB56700ECFA8A /* a2-s3944729UITests */,
 				F10F48FD2E6EB56700ECFA8A /* Products */,
+				F13A0E5E2E7A8E2800D28690 /* .gitignore */,
 			);
 			sourceTree = "<group>";
 		};
@@ -212,6 +218,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F13A0E602E7A8E2E00D28690 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

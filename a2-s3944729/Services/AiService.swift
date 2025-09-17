@@ -10,7 +10,7 @@
 import Foundation
 
 struct AiService {
-    static private let API_KEY = "AIzaSyDYIHmKUMUbnnT3D5YOmA5P3zvmZtFEPj0"
+    static private let API_KEY = getApiKey()
     static private let MAX_RECIPES = 3
     static private let AI_RECIPE_SCHEMA: [String: Any] = [
         "type": "array",
@@ -69,6 +69,24 @@ struct AiService {
     
     private struct Part: Decodable {
         let text: String
+    }
+    
+    static private func getApiKey() -> String {
+        let path = Bundle.main.path(forResource: "Secrets", ofType: "plist")
+        if path == nil {
+            fatalError("Failed to load AI Service API key from secrets file")
+        }
+        
+        let dict = NSDictionary(contentsOfFile: path!)
+        if dict == nil {
+            fatalError("Failed to load AI Service API key from secrets file")
+        }
+        
+        let key = dict!["AI_SERVICE_API_KEY"]
+        if key == nil {
+            fatalError("Failed to load AI Service API key from secrets file")
+        }
+        return String(describing: key!)
     }
     
     /// Debug function that neatly prints the given list of recipes, allowing us to see what the recipes look like
