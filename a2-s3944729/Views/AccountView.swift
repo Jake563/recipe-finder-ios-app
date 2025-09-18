@@ -11,8 +11,27 @@ struct AccountView: View {
     @State private var enteredEmail: String = ""
     @State private var enteredPassword: String = ""
     
+    @State private var emailError: String = ""
+    @State private var passwordError: String = ""
+    
     @State private var onLoginView = true;
     @State private var loggedIn = false;
+    
+    private func displaySignUpErrorFromError(error: Error) {
+        if error as! AuthService.SignUpError == AuthService.SignUpError.emailTaken {
+            emailError = "Email is taken"
+            return
+        }
+        if error as! AuthService.SignUpError == AuthService.SignUpError.invalidEmail {
+            emailError = "Invalid email"
+            return
+        }
+        if error as! AuthService.SignUpError == AuthService.SignUpError.weakPassword {
+            passwordError = "Password is weak"
+            return
+        }
+        passwordError = "Unknown error occured"
+    }
     
     private func login() {
         Task {
@@ -27,12 +46,17 @@ struct AccountView: View {
     
     private func signup() {
         Task {
-            let success = await AuthService.signUp(email: enteredEmail, password: enteredPassword)
-            
-            if !success {
-                return
+            do {
+                let success = try await AuthService.signUp(email: enteredEmail, password: enteredPassword)
+                
+                if !success {
+                    return
+                }
+                loggedIn = true
+            } catch {
+                print(error)
+                displaySignUpErrorFromError(error: error)
             }
-            loggedIn = true
         }
     }
     
@@ -56,18 +80,38 @@ struct AccountView: View {
             } else {
                 VStack(spacing: 40) {
                     VStack(spacing: 20) {
-                        TextField("Email", text: $enteredEmail)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8).stroke(Color.gray, lineWidth: 1)
-                            )
-                            .font(.title)
-                        TextField("Password", text: $enteredPassword)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8).stroke(Color.gray, lineWidth: 1)
-                            )
-                            .font(.title)
+                        VStack {
+                            TextField("Email", text: $enteredEmail)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8).stroke(Color.gray, lineWidth: 1)
+                                )
+                                .font(.title)
+                            if !emailError.isEmpty {
+                                HStack {
+                                    Text(emailError)
+                                        .foregroundStyle(.red)
+                                    Spacer()
+                                }
+                            }
+                        }
+                        VStack {
+                            TextField("Password", text: $enteredPassword)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8).stroke(Color.gray, lineWidth: 1)
+                                )
+                                .font(.title)
+                            if !passwordError.isEmpty {
+                                HStack {
+                                    Text(passwordError)
+                                        .foregroundStyle(.red)
+                                    Spacer()
+                                }
+                            }
+                        }
                     }
                     Button(action: {
+                        emailError = ""
+                        passwordError = ""
                         if onLoginView {
                             login()
                         } else {

@@ -13,8 +13,15 @@ import FirebaseAuth
 final class AuthService {
     private static var error: String?
     private static var isAuthenticated: Bool = Auth.auth().currentUser != nil
-    
     var userId: String? { Auth.auth().currentUser?.uid }
+    
+    enum SignUpError: Error {
+        case emailTaken
+        case invalidEmail
+        case weakPassword
+        case unknownError
+    }
+    
     
     //init() {
       //  Auth.auth().addStateDidChangeListener { [weak self] _, user in
@@ -23,12 +30,27 @@ final class AuthService {
     //}
     
     /// Creates an account with the given email and password
-    static func signUp(email: String, password: String) async -> Bool {
+    static func signUp(email: String, password: String) async throws -> Bool {
         error = nil
         do {
             _ = try await Auth.auth().createUser(withEmail: email, password: password)
             return true
         } catch {
+            if let error = error as NSError? {
+                switch AuthErrorCode(rawValue: error.code) {
+                case .emailAlreadyInUse:
+                    throw SignUpError.emailTaken
+                case .invalidEmail:
+                    throw SignUpError.invalidEmail
+                case .weakPassword:
+                    throw SignUpError.weakPassword
+                case .operationNotAllowed:
+                    throw SignUpError.unknownError
+                default:
+                    throw SignUpError.unknownError
+                }
+            }
+            print(error)
             self.error = error.localizedDescription
             print(self.error)
         }
