@@ -31,6 +31,10 @@ struct MainView: View {
             Tab("Saved", systemImage: "heart") {
                 SavedRecipesView()
             }
+            
+            Tab("Account", systemImage: "person.crop.circle") {
+                AccountView()
+            }
         }.environmentObject(ingredientStore)
     }
 }
