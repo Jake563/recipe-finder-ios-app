@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AccountView: View {
-    @State private var enteredUsername: String = ""
+    @State private var enteredEmail: String = ""
     @State private var enteredPassword: String = ""
     
     @State private var onLoginView = true;
@@ -16,7 +16,7 @@ struct AccountView: View {
     
     private func login() {
         Task {
-            let success = await AuthService.signIn(email: enteredUsername, password: enteredPassword)
+            let success = await AuthService.signIn(email: enteredEmail, password: enteredPassword)
             
             if !success {
                 return
@@ -27,7 +27,7 @@ struct AccountView: View {
     
     private func signup() {
         Task {
-            let success = await AuthService.signUp(email: enteredUsername, password: enteredPassword)
+            let success = await AuthService.signUp(email: enteredEmail, password: enteredPassword)
             
             if !success {
                 return
@@ -56,7 +56,7 @@ struct AccountView: View {
             } else {
                 VStack(spacing: 40) {
                     VStack(spacing: 20) {
-                        TextField("Username", text: $enteredUsername)
+                        TextField("Email", text: $enteredEmail)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8).stroke(Color.gray, lineWidth: 1)
                             )
