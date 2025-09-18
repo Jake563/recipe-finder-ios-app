@@ -69,7 +69,8 @@ struct NewIngredientView: View {
                         ingredient: Ingredient(
                             quantity: 1,
                             quantityMassUnit: nil,
-                            ingredientType: ingredient
+                            ingredientType: ingredient,
+                            storedIngredientID: nil // Ingredient is not stored yet
                         ),
                         addingIngredient: true)) {
                         Label(ingredient.name, systemImage: "plus")

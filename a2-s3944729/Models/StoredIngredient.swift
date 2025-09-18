@@ -9,6 +9,7 @@ import Foundation
 import SwiftData
 
 @Model final class StoredIngredient {
+    var id = UUID()
     var quantity: Int
     var quantityMassUnit: String?
     var ingredientTypeID: Int

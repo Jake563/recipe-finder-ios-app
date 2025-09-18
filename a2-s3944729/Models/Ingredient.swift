@@ -14,4 +14,5 @@ struct Ingredient: Identifiable {
     let quantity: Int
     let quantityMassUnit: String?
     let ingredientType: IngredientType
+    let storedIngredientID: UUID?
 }

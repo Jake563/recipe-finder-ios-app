@@ -12,7 +12,8 @@ class IngredientService {
             ingredients.append(Ingredient(
                 quantity: storedIngredient.quantity,
                 quantityMassUnit: storedIngredient.quantityMassUnit,
-                ingredientType: AllIngredients.ingredients[storedIngredient.ingredientTypeID]
+                ingredientType: AllIngredients.ingredients[storedIngredient.ingredientTypeID],
+                storedIngredientID: storedIngredient.id
             ))
         }
         return ingredients

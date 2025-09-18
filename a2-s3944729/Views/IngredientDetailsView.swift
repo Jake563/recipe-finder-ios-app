@@ -66,9 +66,9 @@ struct IngredientDetailsView: View {
     
     /// Removes the selected ingredient from the user's saved ingredients
     private func deleteIngredient() {
-        for index in 0...ingredientStore.ingredients.count - 1 {
-            if ingredientStore.ingredients[index].id == ingredient.id {
-                ingredientStore.ingredients.remove(at: index)
+        for storedIngredient in storedIngredients {
+            if storedIngredient.id == ingredient.storedIngredientID {
+                context.delete(storedIngredient)
                 break
             }
         }
@@ -87,7 +87,8 @@ struct IngredientDetailsView: View {
         let updatedIngredient = Ingredient(
             quantity: quantity,
             quantityMassUnit: selectedMassUnit,
-            ingredientType: ingredient.ingredientType
+            ingredientType: ingredient.ingredientType,
+            storedIngredientID: ingredient.storedIngredientID
         )
 
         for index in 0...ingredientStore.ingredients.count - 1 {
@@ -108,11 +109,7 @@ struct IngredientDetailsView: View {
             return
         }
         
-        let newIngredient = Ingredient(
-            quantity: quantity,
-            quantityMassUnit: selectedMassUnit,
-            ingredientType: ingredient.ingredientType
-        )
+
         let storedIngredient = StoredIngredient(
             quantity: quantity,
             quantityMassUnit: selectedMassUnit,
@@ -122,7 +119,7 @@ struct IngredientDetailsView: View {
         // Get ingredient type id (TEMPORARY!!)
         var index = 0
         for ingredient in AllIngredients.ingredients {
-            if ingredient.name == newIngredient.ingredientType.name {
+            if ingredient.name == self.ingredient.ingredientType.name {
                 storedIngredient.ingredientTypeID = index
                 break
             }
@@ -219,5 +216,5 @@ struct IngredientDetailsView: View {
 }
 
 #Preview {
-    IngredientDetailsView(ingredient: Ingredient(quantity: 1, quantityMassUnit: nil, ingredientType: IngredientType.init(name: "Test", icon: "misc", quantityUnit: QuantityUnit.litres)), addingIngredient: true)
+    IngredientDetailsView(ingredient: Ingredient(quantity: 1, quantityMassUnit: nil, ingredientType: IngredientType.init(name: "Test", icon: "misc", quantityUnit: QuantityUnit.litres), storedIngredientID: nil), addingIngredient: true)
 }
