@@ -69,6 +69,7 @@ struct IngredientDetailsView: View {
         for storedIngredient in storedIngredients {
             if storedIngredient.id == ingredient.storedIngredientID {
                 context.delete(storedIngredient)
+                try? context.save()
                 break
             }
         }
@@ -84,19 +85,15 @@ struct IngredientDetailsView: View {
             return
         }
         
-        let updatedIngredient = Ingredient(
-            quantity: quantity,
-            quantityMassUnit: selectedMassUnit,
-            ingredientType: ingredient.ingredientType,
-            storedIngredientID: ingredient.storedIngredientID
-        )
-
-        for index in 0...ingredientStore.ingredients.count - 1 {
-            if ingredientStore.ingredients[index].id == ingredient.id {
-                ingredientStore.ingredients[index] = updatedIngredient
+        for storedIngredient in storedIngredients {
+            if storedIngredient.id == ingredient.storedIngredientID {
+                storedIngredient.quantity = quantity
+                storedIngredient.quantityMassUnit = selectedMassUnit
+                try? context.save()
                 break
             }
         }
+
         ingredientStore.hasIngredientChanged = true
         dismiss()
     }
@@ -127,6 +124,7 @@ struct IngredientDetailsView: View {
         }
         
         context.insert(storedIngredient)
+        try? context.save()
         ingredientStore.hasIngredientChanged = true
         ingredientStore.newIngredientAdded = true
         dismiss()
