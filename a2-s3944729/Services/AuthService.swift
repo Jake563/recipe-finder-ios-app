@@ -22,6 +22,13 @@ final class AuthService {
         case unknownError
     }
     
+    enum SignInError: Error {
+        case invalidEmail
+        case notFound
+        case wrongPassword
+        case unknownError
+    }
+    
     
     //init() {
       //  Auth.auth().addStateDidChangeListener { [weak self] _, user in
@@ -30,11 +37,10 @@ final class AuthService {
     //}
     
     /// Creates an account with the given email and password
-    static func signUp(email: String, password: String) async throws -> Bool {
+    static func signUp(email: String, password: String) async throws {
         error = nil
         do {
             _ = try await Auth.auth().createUser(withEmail: email, password: password)
-            return true
         } catch {
             if let error = error as NSError? {
                 switch AuthErrorCode(rawValue: error.code) {
@@ -44,8 +50,6 @@ final class AuthService {
                     throw SignUpError.invalidEmail
                 case .weakPassword:
                     throw SignUpError.weakPassword
-                case .operationNotAllowed:
-                    throw SignUpError.unknownError
                 default:
                     throw SignUpError.unknownError
                 }
@@ -54,20 +58,29 @@ final class AuthService {
             self.error = error.localizedDescription
             print(self.error)
         }
-        return false
     }
     
     /// Logs the user in
-    static func signIn(email: String, password: String) async -> Bool {
+    static func signIn(email: String, password: String) async throws {
         error = nil
         do {
             _ = try await Auth.auth().signIn(withEmail: email, password: password)
-            return true
         } catch {
+            if let error = error as NSError? {
+                switch AuthErrorCode(rawValue: error.code) {
+                case .invalidEmail:
+                    throw SignInError.invalidEmail
+                case .userNotFound:
+                    throw SignInError.notFound
+                case .wrongPassword:
+                    throw SignInError.wrongPassword
+                default:
+                    throw SignUpError.unknownError
+                }
+            }
             self.error = error.localizedDescription
             print(self.error)
         }
-        return false
     }
     
     /// Signs the current logged-in user out

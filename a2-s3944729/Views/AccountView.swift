@@ -33,25 +33,37 @@ struct AccountView: View {
         passwordError = "Unknown error occured"
     }
     
+    private func displaySignInErrorFromError(error: Error) {
+        if error as! AuthService.SignInError == AuthService.SignInError.invalidEmail {
+            emailError = "Invalid email"
+            return
+        }
+        if error as! AuthService.SignInError == AuthService.SignInError.notFound {
+            passwordError = "Account not found"
+            return
+        }
+        if error as! AuthService.SignInError == AuthService.SignInError.wrongPassword {
+            passwordError = "Incorrect password"
+            return
+        }
+        passwordError = "Unknown error occured"
+    }
+    
     private func login() {
         Task {
-            let success = await AuthService.signIn(email: enteredEmail, password: enteredPassword)
-            
-            if !success {
-                return
+            do {
+                try await AuthService.signIn(email: enteredEmail, password: enteredPassword)
+                loggedIn = true
+            } catch {
+                displaySignInErrorFromError(error: error)
             }
-            loggedIn = true
         }
     }
     
     private func signup() {
         Task {
             do {
-                let success = try await AuthService.signUp(email: enteredEmail, password: enteredPassword)
-                
-                if !success {
-                    return
-                }
+                try await AuthService.signUp(email: enteredEmail, password: enteredPassword)
                 loggedIn = true
             } catch {
                 print(error)
