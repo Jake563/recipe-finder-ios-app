@@ -11,7 +11,7 @@ import SwiftUI
 import SwiftData
 
 class IngredientStore: ObservableObject {
-    @Published var hasIngredientChanged: Bool = false
+    @Published var hasIngredientChanged: Bool = true
     @Published var newIngredientAdded: Bool = false
 }
 
