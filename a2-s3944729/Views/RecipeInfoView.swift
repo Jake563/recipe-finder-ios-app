@@ -8,15 +8,21 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct RecipeInfoView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var ingredientStore: IngredientStore
     
+    @Query
+    private var storedIngredients: [StoredIngredient]
+    
     let recipe: Recipe
     
     private func getCorrespondingIngredient(requiredIngredient: RequiredIngredient) -> Ingredient? {
-        for ingredient in ingredientStore.ingredients {
+        let ingredients = IngredientService.storedIngredientsToIngredients(storedIngredients: storedIngredients)
+        
+        for ingredient in ingredients {
             if ingredient.ingredientType.name == requiredIngredient.name {
                 return ingredient
             }

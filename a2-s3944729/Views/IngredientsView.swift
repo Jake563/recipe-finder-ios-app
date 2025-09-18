@@ -8,24 +8,30 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct IngredientsView: View {
     @State private var searchText: String = ""
     @State private var filteredIngredients: [Ingredient] = []
     @EnvironmentObject var ingredientStore: IngredientStore
     
+    @Query
+    private var storedIngredients: [StoredIngredient]
+    
     private func searchIngredients() {
+        let ingredients = IngredientService.storedIngredientsToIngredients(storedIngredients: storedIngredients)
+        
         if searchText.isEmpty {
-            filteredIngredients = ingredientStore.ingredients
+            filteredIngredients = ingredients
             return
         }
-        var ingredients: [Ingredient] = []
-        for ingredient in ingredientStore.ingredients {
+        var filteredIngredients: [Ingredient] = []
+        for ingredient in ingredients {
             if ingredient.ingredientType.name.lowercased().contains(searchText.lowercased()) {
-                ingredients.append(ingredient)
+                filteredIngredients.append(ingredient)
             }
         }
-        filteredIngredients = ingredients
+        self.filteredIngredients = filteredIngredients
     }
     
     var body: some View {
@@ -63,7 +69,7 @@ struct IngredientsView: View {
                         }
                         .scrollContentBackground(.hidden)
                     }
-                    if ingredientStore.ingredients.isEmpty {
+                    if storedIngredients.isEmpty {
                         Text("You currently have no ingredients.")
                             .foregroundColor(.secondary)
                     }

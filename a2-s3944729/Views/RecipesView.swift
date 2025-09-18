@@ -8,11 +8,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct RecipesView: View {
     @State private var recipesLoading = false
     @State private var recipes: [Recipe] = []
     @EnvironmentObject private var ingredientStore: IngredientStore
+    
+    @Query
+    private var storedIngredients: [StoredIngredient]
     
     /// Displays a list of recipes that can be made with the user's current ingredients
     private func onViewOpened() {
@@ -28,14 +32,15 @@ struct RecipesView: View {
         ingredientStore.hasIngredientChanged = false
         recipes.removeAll()
         Task {
-            recipes = await AiService.getRecipes(ingredients: ingredientStore.ingredients)
+            let ingredients = IngredientService.storedIngredientsToIngredients(storedIngredients: storedIngredients)
+            recipes = await AiService.getRecipes(ingredients: ingredients)
             recipesLoading = false
         }
     }
     
     /// Returns what placeholder text should be displayed on the screen
     private func getStatusTextView() -> AnyView {
-        if ingredientStore.ingredients.isEmpty {
+        if storedIngredients.isEmpty {
             return AnyView(Text("Add ingredients to see a list of recipes!")
                 .foregroundStyle(.secondary))
         }

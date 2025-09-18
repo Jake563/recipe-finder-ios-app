@@ -8,6 +8,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 class IngredientStore: ObservableObject {
     @Published var ingredients: [Ingredient] = []
@@ -17,7 +18,7 @@ class IngredientStore: ObservableObject {
 
 struct MainView: View {
     @StateObject private var ingredientStore = IngredientStore()
-    
+
     var body: some View {
         TabView {
             Tab("Ingredients", systemImage: "refrigerator") {

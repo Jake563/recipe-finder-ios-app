@@ -8,6 +8,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 private let LITRE_MASS_UNITS = ["mL", "L"]
 private let WEIGHT_MASS_UNITS = ["g", "kg"]
@@ -18,7 +19,11 @@ struct IngredientDetailsView: View {
     @State private var selectedMassUnit: String
     @State private var massUnitOptions: [String]
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var context
     @EnvironmentObject private var ingredientStore: IngredientStore
+
+    @Query
+    private var storedIngredients: [StoredIngredient]
     
     let ingredient: Ingredient
     let addingIngredient: Bool
@@ -108,8 +113,23 @@ struct IngredientDetailsView: View {
             quantityMassUnit: selectedMassUnit,
             ingredientType: ingredient.ingredientType
         )
+        let storedIngredient = StoredIngredient(
+            quantity: quantity,
+            quantityMassUnit: selectedMassUnit,
+            ingredientTypeID: -1
+        )
         
-        ingredientStore.ingredients.append(newIngredient)
+        // Get ingredient type id (TEMPORARY!!)
+        var index = 0
+        for ingredient in AllIngredients.ingredients {
+            if ingredient.name == newIngredient.ingredientType.name {
+                storedIngredient.ingredientTypeID = index
+                break
+            }
+            index = index + 1
+        }
+        
+        context.insert(storedIngredient)
         ingredientStore.hasIngredientChanged = true
         ingredientStore.newIngredientAdded = true
         dismiss()
