@@ -11,7 +11,6 @@ import Foundation
 import FirebaseAuth
 
 final class AuthService {
-    private static var error: String?
     private static var isAuthenticated: Bool = Auth.auth().currentUser != nil
     var userId: String? { Auth.auth().currentUser?.uid }
     
@@ -38,10 +37,10 @@ final class AuthService {
     
     /// Creates an account with the given email and password
     static func signUp(email: String, password: String) async throws {
-        error = nil
         do {
             _ = try await Auth.auth().createUser(withEmail: email, password: password)
         } catch {
+            print("Sign up error: " + error.localizedDescription)
             if let error = error as NSError? {
                 switch AuthErrorCode(rawValue: error.code) {
                 case .emailAlreadyInUse:
@@ -54,19 +53,16 @@ final class AuthService {
                     throw SignUpError.unknownError
                 }
             }
-            print(error)
-            self.error = error.localizedDescription
-            print(self.error)
         }
     }
     
     /// Logs the user in
     static func signIn(email: String, password: String) async throws {
-        error = nil
         do {
             _ = try await Auth.auth().signIn(withEmail: email, password: password)
         } catch {
             if let error = error as NSError? {
+                print("Sign In error: " + error.localizedDescription)
                 switch AuthErrorCode(rawValue: error.code) {
                 case .invalidEmail:
                     throw SignInError.invalidEmail
@@ -78,8 +74,6 @@ final class AuthService {
                     throw SignUpError.unknownError
                 }
             }
-            self.error = error.localizedDescription
-            print(self.error)
         }
     }
     
@@ -89,7 +83,7 @@ final class AuthService {
             try Auth.auth().signOut()
             return true
         } catch {
-            self.error = error.localizedDescription
+            print("Sign out error: " + error.localizedDescription)
         }
         return false
     }
