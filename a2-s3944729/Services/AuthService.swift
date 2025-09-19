@@ -71,7 +71,7 @@ final class AuthService {
                 case .wrongPassword:
                     throw SignInError.wrongPassword
                 default:
-                    throw SignUpError.unknownError
+                    throw SignInError.unknownError
                 }
             }
         }
