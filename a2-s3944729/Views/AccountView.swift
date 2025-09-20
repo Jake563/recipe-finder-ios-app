@@ -2,6 +2,8 @@
 //  AccountView.swift
 //  a2-s3944729
 //
+//  View that allows a user to sign in, sign up or sign out.
+//
 //  Created by Jake Parkinson on 18/9/2025.
 //
 

@@ -2,6 +2,8 @@
 //  StepClarificationView.swift
 //  a2-s3944729
 //
+//  View that provides clarification on a step
+//
 //  Created by Jake Parkinson on 10/9/2025.
 //
 
