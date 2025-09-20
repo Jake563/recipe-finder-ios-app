@@ -10,6 +10,13 @@ import SwiftUI
 struct SavedRecipesView: View {
     @State private var savedRecipes: [SavedRecipe] = []
     
+    private func loadSavedRecipes() {
+        Task {
+            let recipes = try? await SavedRecipesService.getRecipes()
+            savedRecipes = recipes ?? []
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -22,7 +29,8 @@ struct SavedRecipesView: View {
                                 }
                             }
                             Button(action: {
-                                print("delete recipe not implemented")
+                                try? SavedRecipesService.deleteRecipe(savedRecipe: savedRecipe)
+                                loadSavedRecipes()
                             }) {
                                 Image(systemName: "heart")
                                     .foregroundStyle(.black)
@@ -47,10 +55,7 @@ struct SavedRecipesView: View {
                 }
             }
             .onAppear {
-                Task {
-                    let recipes = try? await SavedRecipesService.getRecipes()
-                    savedRecipes = recipes ?? []
-                }
+                loadSavedRecipes()
             }
         }
     }

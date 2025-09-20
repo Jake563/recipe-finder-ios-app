@@ -49,4 +49,16 @@ final class SavedRecipesService {
             }
         }
     }
+    
+    static func deleteRecipe(savedRecipe: SavedRecipe) throws {
+        let userId = AuthService.getUserId()
+        
+        if userId == nil {
+            throw Errors.noAuthenticatedUser
+        }
+        
+        if let id = savedRecipe.id {
+            db.collection(SAVED_RECIPES_COLLECTION_NAME).document(id).delete()
+        }
+    }
 }
