@@ -17,61 +17,56 @@ struct AccountView: View {
     @State private var onLoginView = true;
     @State private var loggedIn = AuthService.isLoggedIn();
     
-    private func displaySignUpErrorFromError(error: Error) {
-        if error as! AuthService.SignUpError == AuthService.SignUpError.emailTaken {
+    /// Displays an error message on the Email or Password field indicating what the sign-in/sign-up problem was.
+    private func displayFieldErrorFromError(error: Error) {
+        if error as! AuthService.AuthError == AuthService.AuthError.emailTaken {
             emailError = "Email is taken"
             return
         }
-        if error as! AuthService.SignUpError == AuthService.SignUpError.invalidEmail {
+        if error as! AuthService.AuthError == AuthService.AuthError.invalidEmail {
             emailError = "Invalid email"
             return
         }
-        if error as! AuthService.SignUpError == AuthService.SignUpError.weakPassword {
-            passwordError = "Password is weak"
-            return
-        }
-        passwordError = "Unknown error occured"
-    }
-    
-    private func displaySignInErrorFromError(error: Error) {
-        if error as! AuthService.SignInError == AuthService.SignInError.invalidEmail {
-            emailError = "Invalid email"
-            return
-        }
-        if error as! AuthService.SignInError == AuthService.SignInError.notFound {
+        if error as! AuthService.AuthError == AuthService.AuthError.accountNotFound {
             passwordError = "Account not found"
             return
         }
-        if error as! AuthService.SignInError == AuthService.SignInError.wrongPassword {
+        if error as! AuthService.AuthError == AuthService.AuthError.weakPassword {
+            passwordError = "Password is weak"
+            return
+        }
+        if error as! AuthService.AuthError == AuthService.AuthError.wrongPassword {
             passwordError = "Incorrect password"
             return
         }
         passwordError = "Unknown error occured"
     }
     
+    /// Attempts to the log the user in with the email and password they entered
     private func login() {
         Task {
             do {
                 try await AuthService.signIn(email: enteredEmail, password: enteredPassword)
                 loggedIn = true
             } catch {
-                displaySignInErrorFromError(error: error)
+                displayFieldErrorFromError(error: error)
             }
         }
     }
     
+    /// Attempts to sign the user up with the email and password they entered
     private func signup() {
         Task {
             do {
                 try await AuthService.signUp(email: enteredEmail, password: enteredPassword)
                 loggedIn = true
             } catch {
-                print(error)
-                displaySignUpErrorFromError(error: error)
+                displayFieldErrorFromError(error: error)
             }
         }
     }
     
+    /// Logs the user out
     private func logout() {
         let success = AuthService.signOut()
         

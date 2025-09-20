@@ -2,6 +2,8 @@
 //  SavedRecipesView.swift
 //  a2-s3944729
 //
+//  View that lists all the recipes a user has favourited.
+//
 //  Created by Jake Parkinson on 21/8/2025.
 //
 
