@@ -66,7 +66,11 @@ struct RecipesView: View {
                                 }
                             }
                             Button(action: {
-                                print("Not implemented")
+                                do {
+                                    try SavedRecipesService.addRecipe(recipe: recipe)
+                                } catch {
+                                    print("Failed to save recipe: \(error)")
+                                }
                             }) {
                                 Image(systemName: "heart")
                                     .foregroundStyle(.black)

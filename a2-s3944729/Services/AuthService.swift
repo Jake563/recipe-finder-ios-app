@@ -12,7 +12,7 @@ import FirebaseAuth
 
 final class AuthService {
     private static var isAuthenticated: Bool = Auth.auth().currentUser != nil
-    var userId: String? { Auth.auth().currentUser?.uid }
+    private static var userId: String? = Auth.auth().currentUser?.uid
     
     enum SignUpError: Error {
         case emailTaken
@@ -38,7 +38,8 @@ final class AuthService {
     /// Creates an account with the given email and password
     static func signUp(email: String, password: String) async throws {
         do {
-            _ = try await Auth.auth().createUser(withEmail: email, password: password)
+            let authResult = try await Auth.auth().createUser(withEmail: email, password: password)
+            userId = authResult.user.uid
         } catch {
             print("Sign up error: " + error.localizedDescription)
             if let error = error as NSError? {
@@ -59,7 +60,8 @@ final class AuthService {
     /// Logs the user in
     static func signIn(email: String, password: String) async throws {
         do {
-            _ = try await Auth.auth().signIn(withEmail: email, password: password)
+            let authResult = try await Auth.auth().signIn(withEmail: email, password: password)
+            userId = authResult.user.uid
         } catch {
             if let error = error as NSError? {
                 print("Sign In error: " + error.localizedDescription)
@@ -81,10 +83,15 @@ final class AuthService {
     static func signOut() -> Bool {
         do {
             try Auth.auth().signOut()
+            userId = nil
             return true
         } catch {
             print("Sign out error: " + error.localizedDescription)
         }
         return false
+    }
+    
+    static func getUserId() -> String? {
+        return userId
     }
 }

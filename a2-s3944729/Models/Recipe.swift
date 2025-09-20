@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
-struct Recipe: Codable, Identifiable {
+struct Recipe: Identifiable, Codable {
     let id = UUID()
     let name: String
     let estimatedTime: String
