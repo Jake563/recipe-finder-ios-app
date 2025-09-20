@@ -94,4 +94,8 @@ final class AuthService {
     static func getUserId() -> String? {
         return userId
     }
+    
+    static func isLoggedIn() -> Bool {
+        return userId != nil
+    }
 }
