@@ -13,6 +13,7 @@ import SwiftData
 struct RecipesView: View {
     @State private var recipesLoading = false
     @State private var recipes: [Recipe] = []
+    @State private var favouritedRecipes = [String: String]()
     @EnvironmentObject private var ingredientStore: IngredientStore
     
     @Query
@@ -66,14 +67,27 @@ struct RecipesView: View {
                                 }
                             }
                             Button(action: {
-                                do {
-                                    try SavedRecipesService.addRecipe(recipe: recipe)
-                                } catch {
-                                    print("Failed to save recipe: \(error)")
+                                let savedRecipeId = favouritedRecipes[recipe.id.uuidString]
+                                
+                                if savedRecipeId != nil {
+                                    try? SavedRecipesService.deleteRecipe(savedRecipeId: savedRecipeId!)
+                                    favouritedRecipes.removeValue(forKey: recipe.id.uuidString)
+                                } else {
+                                    do {
+                                        let savedRecipeId = try SavedRecipesService.addRecipe(recipe: recipe)
+                                        favouritedRecipes[recipe.id.uuidString] = savedRecipeId
+                                    } catch {
+                                        print("Failed to save recipe: \(error)")
+                                    }
                                 }
                             }) {
-                                Image(systemName: "heart")
-                                    .foregroundStyle(.black)
+                                if favouritedRecipes[recipe.id.uuidString] != nil {
+                                    Image(systemName: "heart.fill")
+                                        .foregroundStyle(.pink)
+                                } else {
+                                    Image(systemName: "heart")
+                                        .foregroundStyle(.black)
+                                }
                             }
                             .buttonStyle(.plain)
                         }

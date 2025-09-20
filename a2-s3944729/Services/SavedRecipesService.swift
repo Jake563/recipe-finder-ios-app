@@ -32,7 +32,7 @@ final class SavedRecipesService {
         return savedRecipes
     }
     
-    static func addRecipe(recipe: Recipe) throws {
+    static func addRecipe(recipe: Recipe) throws -> String {
         let userId = AuthService.getUserId()
         
         if userId == nil {
@@ -41,24 +41,23 @@ final class SavedRecipesService {
         
         let savedRecipe = SavedRecipe(userId: userId!, recipe: recipe)
         print(savedRecipe)
-        _ = try db.collection(SAVED_RECIPES_COLLECTION_NAME).addDocument(from: savedRecipe) { error in
+        let queryResult = try db.collection(SAVED_RECIPES_COLLECTION_NAME).addDocument(from: savedRecipe) { error in
             if let error = error {
                 print("Error adding document: \(error)")
             } else {
                 print("Document added successfully")
             }
         }
+        return queryResult.documentID
     }
     
-    static func deleteRecipe(savedRecipe: SavedRecipe) throws {
+    static func deleteRecipe(savedRecipeId: String) throws {
         let userId = AuthService.getUserId()
         
         if userId == nil {
             throw Errors.noAuthenticatedUser
         }
         
-        if let id = savedRecipe.id {
-            db.collection(SAVED_RECIPES_COLLECTION_NAME).document(id).delete()
-        }
+        db.collection(SAVED_RECIPES_COLLECTION_NAME).document(savedRecipeId).delete()
     }
 }

@@ -29,11 +29,11 @@ struct SavedRecipesView: View {
                                 }
                             }
                             Button(action: {
-                                try? SavedRecipesService.deleteRecipe(savedRecipe: savedRecipe)
+                                try? SavedRecipesService.deleteRecipe(savedRecipeId: savedRecipe.id!)
                                 loadSavedRecipes()
                             }) {
-                                Image(systemName: "heart")
-                                    .foregroundStyle(.black)
+                                Image(systemName: "heart.fill")
+                                    .foregroundStyle(.pink)
                             }
                             .buttonStyle(.plain)
                         }
