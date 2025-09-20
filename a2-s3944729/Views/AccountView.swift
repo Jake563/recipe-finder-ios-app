@@ -19,23 +19,25 @@ struct AccountView: View {
     
     /// Displays an error message on the Email or Password field indicating what the sign-in/sign-up problem was.
     private func displayFieldErrorFromError(error: Error) {
-        if error as! AuthService.AuthError == AuthService.AuthError.emailTaken {
+        let authError = error as! AuthService.AuthError
+        
+        if authError == AuthService.AuthError.emailTaken {
             emailError = "Email is taken"
             return
         }
-        if error as! AuthService.AuthError == AuthService.AuthError.invalidEmail {
+        if authError == AuthService.AuthError.invalidEmail {
             emailError = "Invalid email"
             return
         }
-        if error as! AuthService.AuthError == AuthService.AuthError.accountNotFound {
+        if authError == AuthService.AuthError.accountNotFound {
             passwordError = "Account not found"
             return
         }
-        if error as! AuthService.AuthError == AuthService.AuthError.weakPassword {
+        if authError == AuthService.AuthError.weakPassword {
             passwordError = "Password is weak"
             return
         }
-        if error as! AuthService.AuthError == AuthService.AuthError.wrongPassword {
+        if authError == AuthService.AuthError.wrongPassword {
             passwordError = "Incorrect password"
             return
         }
