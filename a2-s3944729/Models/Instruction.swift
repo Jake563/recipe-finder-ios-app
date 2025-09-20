@@ -7,8 +7,13 @@
 
 import Foundation
 
-struct Instruction: Codable, Identifiable {
-    let id: UUID = UUID()
+struct Instruction: Identifiable, Codable {
+    let id = UUID()
     let instruction: String
     let timer: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case instruction = "instruction"
+        case timer = "timer"
+    }
 }

@@ -23,7 +23,7 @@ final class SavedRecipesService {
             throw Errors.noAuthenticatedUser
         }
         
-        let queryResult = try await db.collection(SAVED_RECIPES_COLLECTION_NAME).whereField("userId", isEqualTo: userId).getDocuments()
+        let queryResult = try await db.collection(SAVED_RECIPES_COLLECTION_NAME).whereField("userId", isEqualTo: userId!).getDocuments()
         let documents = queryResult.documents
         let savedRecipes: [SavedRecipe] = documents.compactMap {
             try? $0.data(as: SavedRecipe.self)

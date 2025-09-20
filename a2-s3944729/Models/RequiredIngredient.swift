@@ -9,9 +9,15 @@
 
 import Foundation
 
-struct RequiredIngredient: Codable, Identifiable {
-    let id: UUID = UUID()
+struct RequiredIngredient: Identifiable, Codable {
+    let id = UUID()
     let name: String
     let quantity: Int
     let quantityMassUnit: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case name = "name"
+        case quantity = "quantity"
+        case quantityMassUnit = "quantityMassUnit"
+    }
 }
