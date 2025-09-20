@@ -10,14 +10,10 @@ import FirebaseFirestore
 
 final class SavedRecipesService {
     static private let db = Firestore.firestore()
-    private var notesListener: ListenerRegistration?
-    
+    static private let SAVED_RECIPES_COLLECTION_NAME = "saved-recipes"
+
     enum Errors: Error {
         case noAuthenticatedUser
-    }
-    
-    func stopObserving() {
-        notesListener?.remove(); notesListener = nil
     }
     
     static func getRecipes() async throws -> [SavedRecipe] {
@@ -27,7 +23,7 @@ final class SavedRecipesService {
             throw Errors.noAuthenticatedUser
         }
         
-        let queryResult = try await db.collection("recipes").whereField("userId", isEqualTo: userId).getDocuments()
+        let queryResult = try await db.collection(SAVED_RECIPES_COLLECTION_NAME).whereField("userId", isEqualTo: userId).getDocuments()
         let documents = queryResult.documents
         let savedRecipes: [SavedRecipe] = documents.compactMap {
             try? $0.data(as: SavedRecipe.self)
@@ -45,7 +41,7 @@ final class SavedRecipesService {
         
         let savedRecipe = SavedRecipe(userId: userId!, recipe: recipe)
         print(savedRecipe)
-        _ = try db.collection("recipes").addDocument(from: savedRecipe) { error in
+        _ = try db.collection(SAVED_RECIPES_COLLECTION_NAME).addDocument(from: savedRecipe) { error in
             if let error = error {
                 print("Error adding document: \(error)")
             } else {
