@@ -20,6 +20,22 @@ final class SavedRecipesService {
         notesListener?.remove(); notesListener = nil
     }
     
+    static func getRecipes() async throws -> [SavedRecipe] {
+        let userId = AuthService.getUserId()
+        
+        if userId == nil {
+            throw Errors.noAuthenticatedUser
+        }
+        
+        let queryResult = try await db.collection("recipes").whereField("userId", isEqualTo: userId).getDocuments()
+        let documents = queryResult.documents
+        let savedRecipes: [SavedRecipe] = documents.compactMap {
+            try? $0.data(as: SavedRecipe.self)
+        }
+        
+        return savedRecipes
+    }
+    
     static func addRecipe(recipe: Recipe) throws {
         let userId = AuthService.getUserId()
         
