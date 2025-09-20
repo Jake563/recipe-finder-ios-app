@@ -16,6 +16,8 @@ struct RecipesView: View {
     @State private var favouritedRecipes = [String: String]()
     @EnvironmentObject private var ingredientStore: IngredientStore
     
+    @Binding var selectedTab: Int
+    
     @Query
     private var storedIngredients: [StoredIngredient]
     
@@ -67,6 +69,11 @@ struct RecipesView: View {
                                 }
                             }
                             Button(action: {
+                                if !AuthService.isLoggedIn() {
+                                    selectedTab = ACCOUNT_TAB_ID
+                                    return
+                                }
+                                
                                 let savedRecipeId = favouritedRecipes[recipe.id.uuidString]
                                 
                                 if savedRecipeId != nil {
@@ -113,6 +120,6 @@ struct RecipesView: View {
 }
 
 #Preview {
-    RecipesView()
+    RecipesView(selectedTab: .constant(0))
         .environmentObject(IngredientStore())
 }
