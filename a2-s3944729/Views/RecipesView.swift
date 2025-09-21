@@ -15,7 +15,8 @@ struct RecipesView: View {
     @State private var recipes: [Recipe] = []
     @State private var favouritedRecipes = [String: String]()
     @EnvironmentObject private var ingredientStore: IngredientStore
-    
+    private let aiService = AiService(session: URLSession.shared)
+
     @Binding var selectedTab: Int
     
     @Query
@@ -36,7 +37,7 @@ struct RecipesView: View {
         recipes.removeAll()
         Task {
             let ingredients = IngredientService.storedIngredientsToIngredients(storedIngredients: storedIngredients)
-            recipes = await AiService.getRecipes(ingredients: ingredients)
+            recipes = await aiService.getRecipes(ingredients: ingredients)
             recipesLoading = false
         }
     }

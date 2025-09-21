@@ -55,6 +55,12 @@ struct AiService {
         "required": ["clarification"]
     ]
     
+    private let session: NetworkSession
+    
+    init(session: NetworkSession) {
+        self.session = session
+    }
+    
     private struct GeminiResponse: Decodable {
         let candidates: [Candidate]
     }
@@ -90,7 +96,7 @@ struct AiService {
     }
     
     /// Debug function that neatly prints the given list of recipes, allowing us to see what the recipes look like
-    static private func prettyPrintRecipes(recipes: [Recipe]) {
+    private func prettyPrintRecipes(recipes: [Recipe]) {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         
@@ -100,7 +106,7 @@ struct AiService {
         }
     }
     
-    static private func extractJsonDataFromResponseData(data: Data) -> Data? {
+    private func extractJsonDataFromResponseData(data: Data) -> Data? {
         do {
             // Decode outer Gemini response
             let response = try JSONDecoder().decode(GeminiResponse.self, from: data)
@@ -132,7 +138,7 @@ struct AiService {
     }
     
     /// Returns a list of recipes from the given response data
-    static private func extractRecipesFromResponseData(data: Data) -> [Recipe] {
+    private func extractRecipesFromResponseData(data: Data) -> [Recipe] {
         do {
             let jsonData = extractJsonDataFromResponseData(data: data)
             
@@ -154,7 +160,7 @@ struct AiService {
     }
     
     /// Converts the given list of ingredients to a string that lists all of the ingredients.
-    static private func ingredientListToString(ingredients: [Ingredient]) -> String {
+    private func ingredientListToString(ingredients: [Ingredient]) -> String {
         var ingredientsString = ""
         
         for i in 0...ingredients.count - 1 {
@@ -170,8 +176,8 @@ struct AiService {
         return ingredientsString
     }
     
-    static private func getAiResponse(prompt: String, responseSchema: [String: Any]) async -> Data? {
-        guard let url = URL(string: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=\(API_KEY)") else {
+    private func getAiResponse(prompt: String, responseSchema: [String: Any]) async -> Data? {
+        guard let url = URL(string: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=\(AiService.API_KEY)") else {
             fatalError("Invalid URL")
         }
         
@@ -197,7 +203,7 @@ struct AiService {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         do {
-            let (responseData, _) = try await URLSession.shared.data(for: request)
+            let (responseData, _) = try await self.session.data(for: request)
             
             if let responseString = String(data: responseData, encoding: .utf8) {
                 print("Response: \(responseString)")
@@ -210,7 +216,7 @@ struct AiService {
     }
     
     /// Generates a list of recipes that can be made with the given ingredients
-    static func getRecipes(ingredients: [Ingredient]) async -> [Recipe] {
+    func getRecipes(ingredients: [Ingredient]) async -> [Recipe] {
         print("Getting recipes...")
         if ingredients.isEmpty {
             return []
@@ -218,10 +224,10 @@ struct AiService {
 
         let ingredientsString = ingredientListToString(ingredients: ingredients)
         let prompt = """
-    Generate a maximum of \(MAX_RECIPES) recipes that contain these ingredients: \(ingredientsString). Do not include recipes that have other ingredients. Note that quantityMassUnit can be "mL", "L", "g", "kg", or nil. Set timer to 0 if there is no timer. Timer should be in seconds.
+    Generate a maximum of \(AiService.MAX_RECIPES) recipes that contain these ingredients: \(ingredientsString). Do not include recipes that have other ingredients. Note that quantityMassUnit can be "mL", "L", "g", "kg", or nil. Set timer to 0 if there is no timer. Timer should be in seconds.
     """
     
-        let responseData = await getAiResponse(prompt: prompt, responseSchema: AI_RECIPE_SCHEMA)
+        let responseData = await getAiResponse(prompt: prompt, responseSchema: AiService.AI_RECIPE_SCHEMA)
         
         if responseData == nil {
             print("Failed to get recipes: response data is nil")
@@ -230,14 +236,14 @@ struct AiService {
         return extractRecipesFromResponseData(data: responseData!)
     }
     
-    static func getRecipeStepClarification(instruction: Instruction) async -> String {
+    func getRecipeStepClarification(instruction: Instruction) async -> String {
         do {
             print("Getting clarification on step...")
             let prompt = """
             The user is confused on this step you generated: "\(instruction.instruction)". Please clarify it.
     """
             
-            let aiResponse = await getAiResponse(prompt: prompt, responseSchema: AI_STEP_CLARIFICATION_SCHEMA)
+            let aiResponse = await getAiResponse(prompt: prompt, responseSchema: AiService.AI_STEP_CLARIFICATION_SCHEMA)
             
             if aiResponse == nil {
                 print("Failed to get step clarification: ai response is nil")

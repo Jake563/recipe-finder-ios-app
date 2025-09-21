@@ -12,12 +12,13 @@ import SwiftUI
 struct StepClarificationView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var stepClarification: String = ""
+    private let aiService = AiService(session: URLSession.shared)
     
     let instruction: Instruction
     
     private func loadStepClarification() {
         Task {
-            stepClarification = await AiService.getRecipeStepClarification(instruction: instruction)
+            stepClarification = await aiService.getRecipeStepClarification(instruction: instruction)
         }
     }
     
