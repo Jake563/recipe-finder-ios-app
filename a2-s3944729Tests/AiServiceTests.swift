@@ -36,9 +36,19 @@ struct AiServiceTests {
         // Write your test here and use APIs like `#expect(...)` to check expected conditions.
     }
     
-    @Test func getRecipesShouldReturnEmptyListForEmptyIngredients() async throws {
+    @Test func testGetRecipes_emptyIngredients_returnsEmptyRecipes() async throws {
         let mockJSON = #"{}"#.data(using: .utf8)!
         let mockSession = MockNetworkSession(mockData: mockJSON)
+        let aiService = AiService(session: mockSession)
+
+        let recipes = await aiService.getRecipes(ingredients: [])
+        
+        #expect(recipes.isEmpty)
+    }
+    
+    @Test func testGetRecipes_networkRequestFailure_returnsEmptyRecipes() async throws {
+        let mockJSON = #"{}"#.data(using: .utf8)!
+        let mockSession = MockNetworkSession(mockData: mockJSON, shouldThrowError: true)
         let aiService = AiService(session: mockSession)
 
         let recipes = await aiService.getRecipes(ingredients: [])
