@@ -24,14 +24,14 @@ private class MockFirebaseAuthService: FirebaseAuthServiceProtocol {
     
     func signIn(email: String, password: String) async throws -> String? {
         if shouldThrowError {
-            throw NSError(domain: "MockError", code: 1)
+            throw errorToThrow!
         }
         return "signedInUserID"
     }
     
     func signOut(withEmail: String, password: String) async throws {
         if shouldThrowError {
-            throw NSError(domain: "MockError", code: 1)
+            throw errorToThrow!
         }
     }
 
@@ -60,6 +60,31 @@ struct AuthServiceTests {
 
         await #expect(throws: AuthService.AuthError.weakPassword) {
             _ = try await authService.signUp(email: "test@test.com", password: "123")
+        }
+    }
+    
+    @Test func testSignIn_accountDoesNotExist_throwsAccountNotFoundError() async throws {
+        let ACCOUNT_NOT_FOUND_ERROR_CODE = 17011
+        let mockFirebaseAuthService = MockFirebaseAuthService()
+        mockFirebaseAuthService.shouldThrowError = true
+        mockFirebaseAuthService.errorToThrow = NSError(domain: "FIRAuthErrorDomain", code: ACCOUNT_NOT_FOUND_ERROR_CODE)
+        let authService = AuthService(firebaseAuthService: mockFirebaseAuthService)
+
+        await #expect(throws: AuthService.AuthError.accountNotFound) {
+            _ = try await authService.signIn(email: "non-exist@test.com", password: "123")
+        }
+    }
+    
+    @Test func testSignIn_networkFailure_returnsUnknownError() async throws {
+        struct GenericError: Error {}
+        
+        let mockFirebaseAuthService = MockFirebaseAuthService()
+        mockFirebaseAuthService.shouldThrowError = true
+        mockFirebaseAuthService.errorToThrow = GenericError()
+        let authService = AuthService(firebaseAuthService: mockFirebaseAuthService)
+
+        await #expect(throws: AuthService.AuthError.unknownError) {
+            _ = try await authService.signIn(email: "test@test.com", password: "123")
         }
     }
 }
