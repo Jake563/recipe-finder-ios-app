@@ -37,9 +37,22 @@
 		F13A0E5E2E7A8E2800D28690 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		F100604C2E811EB300A23626 /* Exceptions for "a2-s3944729" folder in "a2-s3944729Tests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Protocols/FirebaseAuthService.swift,
+			);
+			target = F10F49082E6EB56700ECFA8A /* a2-s3944729Tests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F10F48FE2E6EB56700ECFA8A /* a2-s3944729 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				F100604C2E811EB300A23626 /* Exceptions for "a2-s3944729" folder in "a2-s3944729Tests" target */,
+			);
 			path = "a2-s3944729";
 			sourceTree = "<group>";
 		};

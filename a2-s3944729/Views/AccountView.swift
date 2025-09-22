@@ -10,6 +10,8 @@
 import SwiftUI
 
 struct AccountView: View {
+    private let authService = AuthService.getAuthService()
+    
     @State private var enteredEmail: String = ""
     @State private var enteredPassword: String = ""
     
@@ -17,8 +19,11 @@ struct AccountView: View {
     @State private var passwordError: String = ""
     
     @State private var onLoginView = true;
-    @State private var loggedIn = AuthService.isLoggedIn();
+    @State private var loggedIn = false;
     
+    init() {
+        loggedIn = authService.isLoggedIn()
+    }
     /// Displays an error message on the Email or Password field indicating what the sign-in/sign-up problem was.
     private func displayFieldErrorFromError(error: Error) {
         let authError = error as! AuthService.AuthError
@@ -50,7 +55,7 @@ struct AccountView: View {
     private func login() {
         Task {
             do {
-                try await AuthService.signIn(email: enteredEmail, password: enteredPassword)
+                try await authService.signIn(email: enteredEmail, password: enteredPassword)
                 loggedIn = true
             } catch {
                 displayFieldErrorFromError(error: error)
@@ -62,7 +67,7 @@ struct AccountView: View {
     private func signup() {
         Task {
             do {
-                try await AuthService.signUp(email: enteredEmail, password: enteredPassword)
+                try await authService.signUp(email: enteredEmail, password: enteredPassword)
                 loggedIn = true
             } catch {
                 displayFieldErrorFromError(error: error)
@@ -72,7 +77,7 @@ struct AccountView: View {
     
     /// Logs the user out
     private func logout() {
-        let success = AuthService.signOut()
+        let success = authService.signOut()
         
         if !success {
             return

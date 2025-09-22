@@ -10,9 +10,29 @@
 import Foundation
 import FirebaseAuth
 
+private class FirebaseAuthService: FirebaseAuthServiceProtocol {
+    func createUser(withEmail: String, password: String) async throws -> String? {
+        return try await Auth.auth().createUser(withEmail: withEmail, password: password).user.uid
+    }
+
+    func signIn(email: String, password: String) async throws -> String? {
+        return try await Auth.auth().signIn(withEmail: email, password: password).user.uid
+    }
+    
+    func signOut(withEmail: String, password: String) async throws {
+        return try Auth.auth().signOut()
+    }
+
+    func currentUser() -> String? {
+        return Auth.auth().currentUser?.uid
+    }
+}
+
 final class AuthService {
-    private static var isAuthenticated: Bool = Auth.auth().currentUser != nil
-    private static var userId: String? = Auth.auth().currentUser?.uid
+    private let firebaseAuthService: FirebaseAuthServiceProtocol
+    private var isAuthenticated: Bool
+    private var userId: String?
+    private static let authService = AuthService(firebaseAuthService: FirebaseAuthService())
     
     /// Errors that can occur during sign-in/sign-up
     enum AuthError: Error {
@@ -24,8 +44,19 @@ final class AuthService {
         case unknownError
     }
     
+    init(firebaseAuthService: FirebaseAuthServiceProtocol) {
+        self.firebaseAuthService = firebaseAuthService
+        self.isAuthenticated = firebaseAuthService.currentUser() != nil
+        self.userId = firebaseAuthService.currentUser()
+    }
+    
+    // Singleton
+    static func getAuthService() -> AuthService {
+        return AuthService.authService
+    }
+    
     /// Creates an account with the given email and password
-    static func signUp(email: String, password: String) async throws {
+    func signUp(email: String, password: String) async throws {
         do {
             let authResult = try await Auth.auth().createUser(withEmail: email, password: password)
             userId = authResult.user.uid
@@ -47,10 +78,9 @@ final class AuthService {
     }
     
     /// Logs the user in
-    static func signIn(email: String, password: String) async throws {
+    func signIn(email: String, password: String) async throws {
         do {
-            let authResult = try await Auth.auth().signIn(withEmail: email, password: password)
-            userId = authResult.user.uid
+            userId = try await firebaseAuthService.signIn(email: email, password: password)
         } catch {
             if let error = error as NSError? {
                 print("Sign In error: " + error.localizedDescription)
@@ -69,7 +99,7 @@ final class AuthService {
     }
     
     /// Signs the current logged-in user out
-    static func signOut() -> Bool {
+    func signOut() -> Bool {
         do {
             try Auth.auth().signOut()
             userId = nil
@@ -81,12 +111,12 @@ final class AuthService {
     }
     
     /// Returns the ID of the user who is currently signed-in
-    static func getUserId() -> String? {
+    func getUserId() -> String? {
         return userId
     }
     
     /// Returns whether the user is logged in or not
-    static func isLoggedIn() -> Bool {
+    func isLoggedIn() -> Bool {
         return userId != nil
     }
 }

@@ -9,6 +9,7 @@ import Foundation
 import FirebaseFirestore
 
 final class SavedRecipesService {
+    static private let authService = AuthService.getAuthService()
     static private let db = Firestore.firestore()
     static private let SAVED_RECIPES_COLLECTION_NAME = "saved-recipes"
 
@@ -17,7 +18,7 @@ final class SavedRecipesService {
     }
     
     static func getRecipes() async throws -> [SavedRecipe] {
-        let userId = AuthService.getUserId()
+        let userId = authService.getUserId()
         
         if userId == nil {
             throw Errors.noAuthenticatedUser
@@ -33,7 +34,7 @@ final class SavedRecipesService {
     }
     
     static func addRecipe(recipe: Recipe) throws -> String {
-        let userId = AuthService.getUserId()
+        let userId = authService.getUserId()
         
         if userId == nil {
             throw Errors.noAuthenticatedUser
@@ -52,7 +53,7 @@ final class SavedRecipesService {
     }
     
     static func deleteRecipe(savedRecipeId: String) throws {
-        let userId = AuthService.getUserId()
+        let userId = authService.getUserId()
         
         if userId == nil {
             throw Errors.noAuthenticatedUser

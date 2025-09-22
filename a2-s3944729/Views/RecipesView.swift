@@ -16,6 +16,7 @@ struct RecipesView: View {
     @State private var favouritedRecipes = [String: String]()
     @EnvironmentObject private var ingredientStore: IngredientStore
     private let aiService = AiService(session: URLSession.shared)
+    private let authService = AuthService.getAuthService()
 
     @Binding var selectedTab: Int
     
@@ -70,7 +71,7 @@ struct RecipesView: View {
                                 }
                             }
                             Button(action: {
-                                if !AuthService.isLoggedIn() {
+                                if !authService.isLoggedIn() {
                                     selectedTab = ACCOUNT_TAB_ID
                                     return
                                 }

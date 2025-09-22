@@ -83,6 +83,7 @@ struct AiServiceTests {
         ]
         """#
         
+        
         let mockJSON = makeMockGeminiResponse(text: recipesResponse)
         let mockSession = MockNetworkSession(mockData: mockJSON)
         let aiService = AiService(session: mockSession)
