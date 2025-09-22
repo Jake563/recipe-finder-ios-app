@@ -59,6 +59,7 @@ final class AuthService {
     func signUp(email: String, password: String) async throws {
         do {
             userId = try await firebaseAuthService.createUser(withEmail: email, password: password)
+            return
         } catch {
             print("Sign up error: " + error.localizedDescription)
             if let error = error as NSError? {
@@ -81,6 +82,7 @@ final class AuthService {
     func signIn(email: String, password: String) async throws {
         do {
             userId = try await firebaseAuthService.signIn(email: email, password: password)
+            return
         } catch {
             if let error = error as NSError? {
                 print("Sign In error: " + error.localizedDescription)
