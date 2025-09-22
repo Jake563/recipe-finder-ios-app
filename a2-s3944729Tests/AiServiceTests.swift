@@ -27,6 +27,29 @@ private struct MockNetworkSession: NetworkSession {
     }
 }
 
+private struct GeminiResponse: Codable {
+    struct Candidate: Codable {
+        struct Content: Codable {
+            struct Part: Codable {
+                let text: String
+            }
+            let parts: [Part]
+        }
+        let content: Content
+    }
+    let candidates: [Candidate]
+}
+
+private func makeMockGeminiResponse(text: String) -> Data {
+    let part = GeminiResponse.Candidate.Content.Part(text: text)
+    let content = GeminiResponse.Candidate.Content(parts: [part])
+    let candidate = GeminiResponse.Candidate(content: content)
+    
+    let response = GeminiResponse(candidates: [candidate])
+    
+    return try! JSONEncoder().encode(response)
+}
+
 struct AiServiceTests {
     func beforeEach() {
         
@@ -55,5 +78,34 @@ struct AiServiceTests {
         
         #expect(recipes.isEmpty)
     }
+    
+    @Test func testGetRecipes_oneIngredient_returnsRecipes() async throws {
+        let recipesResponse = #"""
+        [
+            {
+                "name": "Boiled Egg",
+                "estimatedTime": "1 minute",
+                "ingredients": [],
+                "instructions": []
+            }
+        ]
+        """#
+        
+        let mockJSON = makeMockGeminiResponse(text: recipesResponse)
+        let mockSession = MockNetworkSession(mockData: mockJSON)
+        let aiService = AiService(session: mockSession)
 
+        let recipes = await aiService.getRecipes(ingredients: [
+            Ingredient(
+                quantity: 1,
+                quantityMassUnit: "",
+                ingredientType: IngredientType(name: "Egg", icon: "", quantityUnit: QuantityUnit.count),
+                storedIngredientID: nil
+            )
+        ])
+        
+        #expect(recipes.count == 1)
+        #expect(recipes[0].name == "Boiled Egg")
+        #expect(recipes[0].estimatedTime == "1 minute")
+    }
 }
