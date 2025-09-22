@@ -10,6 +10,6 @@ import FirebaseAuth
 protocol FirebaseAuthServiceProtocol {
     func createUser(withEmail: String, password: String) async throws -> String?
     func signIn(email: String, password: String) async throws -> String?
-    func signOut(withEmail: String, password: String) async throws
+    func signOut() async throws
     func currentUser() -> String?
 }

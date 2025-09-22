@@ -19,7 +19,7 @@ private class FirebaseAuthService: FirebaseAuthServiceProtocol {
         return try await Auth.auth().signIn(withEmail: email, password: password).user.uid
     }
     
-    func signOut(withEmail: String, password: String) async throws {
+    func signOut() async throws {
         return try Auth.auth().signOut()
     }
 
@@ -102,9 +102,9 @@ final class AuthService {
     }
     
     /// Signs the current logged-in user out
-    func signOut() -> Bool {
+    func signOut() async -> Bool {
         do {
-            try Auth.auth().signOut()
+            try await firebaseAuthService.signOut()
             userId = nil
             return true
         } catch {

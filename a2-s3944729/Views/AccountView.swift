@@ -85,12 +85,14 @@ struct AccountView: View {
     
     /// Logs the user out
     private func logout() {
-        let success = authService.signOut()
-        
-        if !success {
-            return
+        Task {
+            let success = await authService.signOut()
+            
+            if !success {
+                return
+            }
+            loggedIn = false
         }
-        loggedIn = false
     }
     
     var body: some View {

@@ -28,7 +28,7 @@ private class MockFirebaseAuthService: FirebaseAuthServiceProtocol {
         return signedInUserID
     }
     
-    func signOut(withEmail: String, password: String) async throws {
+    func signOut() async throws {
         if errorToThrow != nil {
             throw errorToThrow!
         }
@@ -81,23 +81,13 @@ struct AuthServiceTests {
         // This test will pass if signIn throws no error, hence why there is no #expect here.
     }
     
-    @Test func testIsLoggedIn_nonNilUserId_returnsTrue() async throws {
+    @Test func testSignOut_signOutFails_returnsFalse() async throws {
         let mockFirebaseAuthService = MockFirebaseAuthService()
-        mockFirebaseAuthService.signedInUserID = "signed-in-user-id"
+        mockFirebaseAuthService.errorToThrow = NSError(domain: "FIRAuthErrorDomain", code: 1)
         let authService = AuthService(firebaseAuthService: mockFirebaseAuthService)
+
+        let success = await authService.signOut()
         
-        let loggedIn = authService.isLoggedIn()
-        
-        #expect(loggedIn == true)
-    }
-    
-    @Test func testIsLoggedIn_nilUserId_returnsFalse() async throws {
-        let mockFirebaseAuthService = MockFirebaseAuthService()
-        mockFirebaseAuthService.signedInUserID = nil
-        let authService = AuthService(firebaseAuthService: mockFirebaseAuthService)
-        
-        let loggedIn = authService.isLoggedIn()
-        
-        #expect(loggedIn == false)
+        #expect(success == false)
     }
 }
