@@ -51,12 +51,19 @@ struct AccountView: View {
         passwordError = "Unknown error occured"
     }
     
+    private func clearAuthFields() {
+        enteredEmail = ""
+        enteredPassword = ""
+    }
+    
     /// Attempts to the log the user in with the email and password they entered
     private func login() {
+        print(enteredPassword)
         Task {
             do {
                 try await authService.signIn(email: enteredEmail, password: enteredPassword)
                 loggedIn = true
+                clearAuthFields()
             } catch {
                 displayFieldErrorFromError(error: error)
             }
@@ -69,6 +76,7 @@ struct AccountView: View {
             do {
                 try await authService.signUp(email: enteredEmail, password: enteredPassword)
                 loggedIn = true
+                clearAuthFields()
             } catch {
                 displayFieldErrorFromError(error: error)
             }
@@ -101,6 +109,7 @@ struct AccountView: View {
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 8).stroke(Color.gray, lineWidth: 1)
                                 )
+                                .textInputAutocapitalization(.never)
                                 .font(.title)
                             if !emailError.isEmpty {
                                 HStack {
@@ -111,10 +120,11 @@ struct AccountView: View {
                             }
                         }
                         VStack {
-                            TextField("Password", text: $enteredPassword)
+                            SecureField("Password", text: $enteredPassword)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 8).stroke(Color.gray, lineWidth: 1)
                                 )
+                                .textInputAutocapitalization(.never)
                                 .font(.title)
                             if !passwordError.isEmpty {
                                 HStack {
