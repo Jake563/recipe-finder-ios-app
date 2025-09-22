@@ -108,4 +108,40 @@ struct AiServiceTests {
         #expect(recipes[0].name == "Boiled Egg")
         #expect(recipes[0].estimatedTime == "1 minute")
     }
+    
+    @Test func testGetRecipeStepClarification_networkRequestFailure_returnsErrorMessage() async throws {
+        let mockJSON = #"{}"#.data(using: .utf8)!
+        let mockSession = MockNetworkSession(mockData: mockJSON, shouldThrowError: true)
+        let aiService = AiService(session: mockSession)
+
+        let clarification = await aiService.getRecipeStepClarification(instruction:
+            Instruction(
+                instruction: "Test instruction",
+                timer: 0,
+            )
+        )
+        
+        #expect(clarification == "Error")
+    }
+    
+    @Test func testGetRecipeStepClarification_instruction_returnsClarification() async throws {
+        let clarificationJSON = #"""
+        {
+            "clarification": "Step clarification 123",
+        }
+        """#
+        
+        let mockJSON = makeMockGeminiResponse(text: clarificationJSON)
+        let mockSession = MockNetworkSession(mockData: mockJSON)
+        let aiService = AiService(session: mockSession)
+
+        let clarification = await aiService.getRecipeStepClarification(instruction:
+            Instruction(
+                instruction: "This is a test instruction",
+                timer: 123,
+            )
+        )
+        
+        #expect(clarification == "Step clarification 123")
+    }
 }
