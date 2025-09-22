@@ -19,14 +19,14 @@ private class MockFirebaseAuthService: FirebaseAuthServiceProtocol {
         if shouldThrowError {
             throw errorToThrow!
         }
-        return "abc"
+        return signedInUserID
     }
     
     func signIn(email: String, password: String) async throws -> String? {
         if shouldThrowError {
             throw errorToThrow!
         }
-        return "signedInUserID"
+        return signedInUserID
     }
     
     func signOut(withEmail: String, password: String) async throws {
@@ -36,7 +36,7 @@ private class MockFirebaseAuthService: FirebaseAuthServiceProtocol {
     }
 
     func currentUser() -> String? {
-        return "signedInUserID"
+        return signedInUserID
     }
 }
 
@@ -86,5 +86,25 @@ struct AuthServiceTests {
         await #expect(throws: AuthService.AuthError.unknownError) {
             _ = try await authService.signIn(email: "test@test.com", password: "123")
         }
+    }
+    
+    @Test func testIsLoggedIn_userLoggedIn_returnsTrue() async throws {
+        let mockFirebaseAuthService = MockFirebaseAuthService()
+        mockFirebaseAuthService.signedInUserID = "signed-in-user-id"
+        let authService = AuthService(firebaseAuthService: mockFirebaseAuthService)
+        
+        let loggedIn = authService.isLoggedIn()
+        
+        #expect(loggedIn == true)
+    }
+    
+    @Test func testIsLoggedIn_userNotLoggedIn_returnsFalse() async throws {
+        let mockFirebaseAuthService = MockFirebaseAuthService()
+        mockFirebaseAuthService.signedInUserID = nil
+        let authService = AuthService(firebaseAuthService: mockFirebaseAuthService)
+        
+        let loggedIn = authService.isLoggedIn()
+        
+        #expect(loggedIn == false)
     }
 }
