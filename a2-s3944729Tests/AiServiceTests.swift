@@ -51,14 +51,6 @@ private func makeMockGeminiResponse(text: String) -> Data {
 }
 
 struct AiServiceTests {
-    func beforeEach() {
-        
-    }
-
-    @Test func example() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
-    }
-    
     @Test func testGetRecipes_emptyIngredients_returnsEmptyRecipes() async throws {
         let mockJSON = #"{}"#.data(using: .utf8)!
         let mockSession = MockNetworkSession(mockData: mockJSON)
