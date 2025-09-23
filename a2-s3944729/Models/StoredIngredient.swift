@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 
+/// Represents an ingredient a user has added to their ingredients list.
 @Model final class StoredIngredient {
     var id = UUID()
     var quantity: Int

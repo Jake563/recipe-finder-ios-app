@@ -2,8 +2,6 @@
 //  IngredientDetailsView.swift
 //  a2-s3944729
 //
-//  View that allows an ingredient to be added, edited or deleted.
-//
 //  Created by Jake Parkinson on 21/8/2025.
 //
 
@@ -14,6 +12,7 @@ private let LITRE_MASS_UNITS = ["mL", "L"]
 private let WEIGHT_MASS_UNITS = ["g", "kg"]
 private let MAX_QUANTITY_CHARACTERS = 4
 
+/// View that allows an ingredient to be added, edited or deleted.
 struct IngredientDetailsView: View {
     @State private var enteredQuantity: String
     @State private var selectedMassUnit: String

@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseFirestore
 
+/// Represents a recipe a user has saved to their favourites.
 struct SavedRecipe: Identifiable, Codable {
     @DocumentID var id: String?
     var userId: String

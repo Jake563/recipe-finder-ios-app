@@ -2,13 +2,12 @@
 //  AppLogoLayout.swift
 //  a2-s3944729
 //
-//  Custom layout that assists with the layout of the app's logo.
-//
 //  Created by Jake Parkinson on 24/8/2025.
 //
 
 import SwiftUI
 
+/// Custom layout that assists with the layout of the app's logo.
 struct AppLogoLayout: Layout {
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
         let sizes = subviews.map { $0.sizeThatFits(proposal) }

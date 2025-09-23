@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Holds the AI clarification of a step/instruction.
 struct StepClarification: Codable {
     let clarification: String
 }

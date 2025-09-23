@@ -2,8 +2,6 @@
 //  IngredientType.swift
 //  a2-s3944729
 //
-//  Represents an ingredient a user can add.
-//
 //  Created by Jake Parkinson on 8/9/2025.
 //
 
@@ -13,6 +11,7 @@ enum QuantityUnit {
     case count, weight, litres
 }
 
+///  Represents an ingredient a user can add.
 struct IngredientType: Identifiable {
     let id: UUID = UUID()
     let name: String

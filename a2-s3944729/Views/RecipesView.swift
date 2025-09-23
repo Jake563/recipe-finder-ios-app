@@ -2,14 +2,13 @@
 //  RecipesView.swift
 //  a2-s3944729
 //
-//  View that displays a list of recipes a user can make with their ingredients.
-//
 //  Created by Jake Parkinson on 21/8/2025.
 //
 
 import SwiftUI
 import SwiftData
 
+///  View that displays a list of recipes a user can make with their ingredients.
 struct RecipesView: View {
     @State private var recipesLoading = false
     @State private var recipes: [Recipe] = []

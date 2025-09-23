@@ -2,13 +2,12 @@
 //  StepClarificationView.swift
 //  a2-s3944729
 //
-//  View that provides clarification on a step
-//
 //  Created by Jake Parkinson on 10/9/2025.
 //
 
 import SwiftUI
 
+/// View that provides AI-generated clarification on a step.
 struct StepClarificationView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var stepClarification: String = ""

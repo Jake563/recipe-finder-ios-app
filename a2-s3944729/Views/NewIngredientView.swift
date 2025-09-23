@@ -2,13 +2,12 @@
 //  NewIngredientView.swift
 //  a2-s3944729
 //
-//  View that allows a new ingredient to be added to a user's saved ingredients.
-//
 //  Created by Jake Parkinson on 22/8/2025.
 //
 
 import SwiftUI
 
+/// View that allows a new ingredient to be added to a user's saved ingredients.
 struct NewIngredientView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var ingredientStore: IngredientStore

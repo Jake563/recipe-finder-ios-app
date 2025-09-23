@@ -2,8 +2,6 @@
 //  AuthService.swift
 //  a2-s3944729
 //
-//  Service that is responsible for handling auth related actions, such as logging in.
-//
 //  Created by Jake Parkinson on 18/9/2025.
 //
 
@@ -28,6 +26,7 @@ private class FirebaseAuthService: FirebaseAuthServiceProtocol {
     }
 }
 
+/// Service that is responsible for handling auth related actions, such as logging in.
 final class AuthService {
     private let firebaseAuthService: FirebaseAuthServiceProtocol
     private var isAuthenticated: Bool
@@ -50,7 +49,7 @@ final class AuthService {
         self.userId = firebaseAuthService.currentUser()
     }
     
-    // Singleton
+    /// Returns a Singleton instance of AuthService
     static func getAuthService() -> AuthService {
         return AuthService.authService
     }

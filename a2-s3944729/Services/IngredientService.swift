@@ -5,6 +5,7 @@
 //  Created by Jake Parkinson on 18/9/2025.
 //
 
+/// A helper service that provides common methods related to ingredients.
 class IngredientService {
     static func storedIngredientsToIngredients(storedIngredients: [StoredIngredient]) -> [Ingredient] {
         var ingredients: [Ingredient] = []

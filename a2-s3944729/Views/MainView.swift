@@ -2,8 +2,6 @@
 //  MainView.swift
 //  a2-s3944729
 //
-//  View that allows the ingredients, recipes and saved recipes views to be navigated to.
-//
 //  Created by Jake Parkinson on 21/8/2025.
 //
 
@@ -20,6 +18,7 @@ let RECIPES_TAB_ID = 1
 let SAVED_RECIPES_TAB_ID = 2
 let ACCOUNT_TAB_ID = 3
 
+/// View that allows the ingredients, recipes and saved recipes views to be navigated to.
 struct MainView: View {
     @StateObject private var ingredientStore = IngredientStore()
     @State private var selectedTab = 0

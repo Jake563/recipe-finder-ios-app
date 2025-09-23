@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Represents a step/instruction of a recipe.
 struct Instruction: Identifiable, Codable {
     let id = UUID()
     let instruction: String

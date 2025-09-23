@@ -1,8 +1,6 @@
 //
 //  ContentView.swift
 //  a2-s3944729
-//
-//  View that introduces the user to the app.
 // 
 //  Created by Jake Parkinson on 8/9/2025.
 //
@@ -22,6 +20,7 @@ private struct CustomRectangle: View {
     }
 }
 
+/// View that introduces the user to the app.
 private struct AppLogo: View {
     var body: some View {
         AppLogoLayout {

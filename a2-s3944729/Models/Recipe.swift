@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseFirestore
 
+/// Represents a dish a user can make.
 struct Recipe: Identifiable, Codable {
     let id = UUID()
     let name: String

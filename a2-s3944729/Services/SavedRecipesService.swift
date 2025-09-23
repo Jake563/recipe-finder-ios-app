@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseFirestore
 
+/// Service that is responsible for storing and retrieving saved recipes in cloud storage.
 final class SavedRecipesService {
     static private let authService = AuthService.getAuthService()
     static private let db = Firestore.firestore()

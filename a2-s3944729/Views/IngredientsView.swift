@@ -2,14 +2,13 @@
 //  IngredientsView.swift
 //  a2-s3944729
 //
-//  View that list of all the user's saved ingredients.
-//
 //  Created by Jake Parkinson on 21/8/2025.
 //
 
 import SwiftUI
 import SwiftData
 
+/// View that list of all the user's saved ingredients.
 struct IngredientsView: View {
     @State private var searchText: String = ""
     @State private var filteredIngredients: [Ingredient] = []

@@ -2,13 +2,12 @@
 //  Ingredient.swift
 //  a2-s3944729
 //
-//  Represents an ingredient a user owns.
-//
 //  Created by Jake Parkinson on 8/9/2025.
 //
 
 import Foundation
 
+/// Represents an ingredient a user owns.
 struct Ingredient: Identifiable {
     let id: UUID = UUID()
     let quantity: Int

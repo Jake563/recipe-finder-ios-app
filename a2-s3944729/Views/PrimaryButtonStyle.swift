@@ -2,8 +2,6 @@
 //  PrimaryButtonStyle.swift
 //  a2-s3944729
 //
-//  Style that stores the primary button styles.
-//
 //  Created by Jake Parkinson on 23/8/2025.
 //
 
@@ -11,6 +9,7 @@ import SwiftUI
 
 let PRIMARY_BUTTON_COLOUR = Color(red:0.95, green:0.95, blue:0.95)
 
+/// Style that stores the primary button styles.
 struct PrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label

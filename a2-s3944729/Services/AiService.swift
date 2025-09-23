@@ -2,13 +2,12 @@
 //  AiService.swift
 //  a2-s3944729
 //
-//  Module that is responsible for communication between the app and Google Gemini for retrieving AI responses.
-//
 //  Created by Jake Parkinson on 24/8/2025.
 //
 
 import Foundation
 
+/// Module that is responsible for communication between the app and Google Gemini for retrieving AI responses.
 struct AiService {
     static private let API_KEY = getApiKey()
     static private let MAX_RECIPES = 3

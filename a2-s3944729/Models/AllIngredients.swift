@@ -2,13 +2,12 @@
 //  AllIngredients.swift
 //  a2-s3944729
 //
-//  Module that stores a list of ingredients the user can add.
-//
 //  Created by Jake Parkinson on 23/8/2025.
 //
 
 import Foundation
 
+/// Module that stores a list of ingredients the user can add.
 struct AllIngredients {
     static let ingredients = [
         // Fruits
