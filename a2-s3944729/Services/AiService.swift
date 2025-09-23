@@ -8,7 +8,7 @@
 import Foundation
 
 /// Module that is responsible for communication between the app and Google Gemini for retrieving AI responses.
-struct AiService {
+class AiService {
     static private let API_KEY = getApiKey()
     static private let MAX_RECIPES = 3
     static private let AI_RECIPE_SCHEMA: [String: Any] = [
