@@ -1,10 +1,17 @@
-# ``a2-s3944729``
+# ``a2_s3944729``
 
-<!--@START_MENU_TOKEN@-->Summary<!--@END_MENU_TOKEN@-->
+This app is called LeftOvers. It allows users to discover cooking recipes that can be made with a list of ingredients they own.
 
 ## Overview
 
-<!--@START_MENU_TOKEN@-->Text<!--@END_MENU_TOKEN@-->
+This app features:
+- Adding, editing and deleting ingredients.
+- Finding recipes based on a list of ingredients.
+- Simple step-by-step instruction process on how to make a recipe dish. 
+- Timers on time-based instructions to save the user from manually setting the timer.
+- AI-generated instruction clarification in case the user gets confused on an instruction step.
+- Saving recipes to favourites.
+- Account sign-up, sign-in and sign-out.
 
 ## Topics
 
