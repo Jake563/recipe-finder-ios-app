@@ -9,6 +9,7 @@ import Testing
 @testable import a2_s3944729
 import Foundation
 
+/// This is a mockup of the Network session, which allows unit tests to mimic what methods in Network session returns.
 private struct MockNetworkSession: NetworkSession {
     var mockData: Data
     var mockResponse: URLResponse = HTTPURLResponse(
@@ -40,6 +41,7 @@ private struct GeminiResponse: Codable {
     let candidates: [Candidate]
 }
 
+/// Converts the given string JSON text into a JSON data object
 private func makeMockGeminiResponse(text: String) -> Data {
     let part = GeminiResponse.Candidate.Content.Part(text: text)
     let content = GeminiResponse.Candidate.Content(parts: [part])
@@ -50,6 +52,7 @@ private func makeMockGeminiResponse(text: String) -> Data {
     return try! JSONEncoder().encode(response)
 }
 
+/// Unit tests that test methods in the Ai Service
 struct AiServiceTests {
     @Test func testGetRecipes_emptyIngredients_returnsEmptyRecipes() async throws {
         let mockJSON = #"{}"#.data(using: .utf8)!

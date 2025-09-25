@@ -1,6 +1,6 @@
 # ``a2_s3944729``
 
-This app is called LeftOvers. It allows users to discover cooking recipes that can be made with a list of ingredients they own.
+This app is called LeftOvers. It enables users to discover cooking recipes that can be made with a list of ingredients they own.
 
 ## Overview
 
@@ -29,7 +29,7 @@ This app features:
 
 ### Protocols
 
-- ``FirebaseAuthService``
+- ``FirebaseAuthServiceProtocol``
 - ``NetworkSession``
 
 ### Services

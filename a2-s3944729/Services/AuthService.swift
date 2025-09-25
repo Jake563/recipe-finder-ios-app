@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseAuth
 
+/// This class is a wrapper around Firebase's Auth.auth() service, allowing the Firebase auth service to be mocked for unit testing.
 private class FirebaseAuthService: FirebaseAuthServiceProtocol {
     func createUser(withEmail: String, password: String) async throws -> String? {
         return try await Auth.auth().createUser(withEmail: withEmail, password: password).user.uid

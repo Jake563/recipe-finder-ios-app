@@ -10,6 +10,7 @@ import FirebaseAuth
 @testable import a2_s3944729
 import Foundation
 
+/// This is a mockup of the Firebase Auth Service, which allows unit tests to mimic what methods in Firebase Auth Service returns.
 private class MockFirebaseAuthService: FirebaseAuthServiceProtocol {
     var signedInUserID: String?
     var errorToThrow: Error?
@@ -39,6 +40,7 @@ private class MockFirebaseAuthService: FirebaseAuthServiceProtocol {
     }
 }
 
+/// Unit tests that test methods in the Auth Service
 struct AuthServiceTests {
     @Test func testSignUp_unknownError_throwsUnknownError() async throws {
         let mockFirebaseAuthService = MockFirebaseAuthService()
