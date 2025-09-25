@@ -7,6 +7,7 @@
 
 import FirebaseAuth
 
+/// Acts as an interface of Firebase auth service, allowing real and mocked implementations
 protocol FirebaseAuthServiceProtocol {
     func createUser(withEmail: String, password: String) async throws -> String?
     func signIn(email: String, password: String) async throws -> String?
