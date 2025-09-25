@@ -7,56 +7,38 @@
 
 import Foundation
 
+// Temporary struct just for decoding JSON (no id)
+private struct IngredientDTO: Codable {
+    let name: String
+    let icon: String
+    let quantityUnit: QuantityUnit
+}
+
 /// Module that stores a list of ingredients the user can add.
 struct AllIngredients {
-    static let ingredients = [
-        // Fruits
-        IngredientType(name: "Apple", icon: "fruit", quantityUnit: QuantityUnit.count),
-        IngredientType(name: "Banana", icon: "fruit", quantityUnit: QuantityUnit.count),
-        IngredientType(name: "Orange", icon: "fruit", quantityUnit: QuantityUnit.count),
-        IngredientType(name: "Strawberry", icon: "fruit", quantityUnit: QuantityUnit.count),
-        IngredientType(name: "Grapes", icon: "fruit", quantityUnit: QuantityUnit.weight),
-        IngredientType(name: "Blueberry", icon: "fruit", quantityUnit: QuantityUnit.weight),
+    private static let FILE_NAME = "IngredientTypes"
+    static let ingredients = getIngredientsFromFile()
+    
+    /// Returns a list of ingredient types stored in the Ingredient types JSON file
+    static private func getIngredientsFromFile() -> [IngredientType] {
+        guard let url = Bundle.main.url(forResource: FILE_NAME, withExtension: "json") else {
+            print("Could not find \(FILE_NAME).json")
+            return []
+        }
+        
+        do {
+            let data = try Data(contentsOf: url)
+            let decoder = JSONDecoder()
+            let decoded = try decoder.decode([IngredientDTO].self, from: data)
+            
+            // Map DTOs into real IngredientType (with new UUIDs)
+            return decoded.map {
+                IngredientType(name: $0.name, icon: $0.icon, quantityUnit: $0.quantityUnit)
+            }
+        } catch {
+            print("Failed to decode \(FILE_NAME).json: \(error)")
+            return []
+        }
+    }
 
-        // Vegetables
-        IngredientType(name: "Carrot", icon: "vegetable", quantityUnit: QuantityUnit.count),
-        IngredientType(name: "Broccoli", icon: "vegetable", quantityUnit: QuantityUnit.count),
-        IngredientType(name: "Onion", icon: "vegetable", quantityUnit: QuantityUnit.count),
-        IngredientType(name: "Tomato", icon: "vegetable", quantityUnit: QuantityUnit.count),
-        IngredientType(name: "Spinach", icon: "vegetable", quantityUnit: QuantityUnit.weight),
-        IngredientType(name: "Bell Pepper", icon: "vegetable", quantityUnit: QuantityUnit.count),
-        IngredientType(name: "Cucumber", icon: "vegetable", quantityUnit: QuantityUnit.count),
-
-        // Dairy
-        IngredientType(name: "Egg", icon: "dairy", quantityUnit: QuantityUnit.count),
-        IngredientType(name: "Cheese", icon: "dairy", quantityUnit: QuantityUnit.weight),
-        IngredientType(name: "Butter", icon: "dairy", quantityUnit: QuantityUnit.weight),
-        IngredientType(name: "Milk", icon: "dairy", quantityUnit: QuantityUnit.litres),
-        IngredientType(name: "Yogurt", icon: "dairy", quantityUnit: QuantityUnit.weight),
-
-        // Grains
-        IngredientType(name: "Bread", icon: "grain", quantityUnit: QuantityUnit.count),
-        IngredientType(name: "Rice", icon: "grain", quantityUnit: QuantityUnit.weight),
-        IngredientType(name: "Pasta", icon: "grain", quantityUnit: QuantityUnit.weight),
-        IngredientType(name: "Oats", icon: "grain", quantityUnit: QuantityUnit.weight),
-
-        // Spices
-        IngredientType(name: "Pepper", icon: "spice", quantityUnit: QuantityUnit.count),
-        IngredientType(name: "Salt", icon: "spice", quantityUnit: QuantityUnit.weight),
-        IngredientType(name: "Olive Oil", icon: "spice", quantityUnit: QuantityUnit.litres),
-        IngredientType(name: "Garlic", icon: "spice", quantityUnit: QuantityUnit.weight),
-
-        // Proteins
-        IngredientType(name: "Chicken", icon: "protein", quantityUnit: QuantityUnit.weight),
-        IngredientType(name: "Beef", icon: "protein", quantityUnit: QuantityUnit.weight),
-        IngredientType(name: "Fish", icon: "protein", quantityUnit: QuantityUnit.count),
-        IngredientType(name: "Tofu", icon: "protein", quantityUnit: QuantityUnit.weight),
-
-        // Miscellaneous
-        IngredientType(name: "White Chocolate", icon: "misc", quantityUnit: QuantityUnit.weight),
-        IngredientType(name: "Milk Chocolate", icon: "misc", quantityUnit: QuantityUnit.weight),
-        IngredientType(name: "Dark Chocolate", icon: "misc", quantityUnit: QuantityUnit.weight),
-        IngredientType(name: "Honey", icon: "misc", quantityUnit: QuantityUnit.weight),
-        IngredientType(name: "Lemon", icon: "misc", quantityUnit: QuantityUnit.count)
-    ]
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum QuantityUnit {
+enum QuantityUnit: String, Codable {
     case count, weight, litres
 }
 

@@ -1,0 +1,43 @@
+[
+  { "name": "Apple", "icon": "fruit", "quantityUnit": "count" },
+  { "name": "Banana", "icon": "fruit", "quantityUnit": "count" },
+  { "name": "Orange", "icon": "fruit", "quantityUnit": "count" },
+  { "name": "Strawberry", "icon": "fruit", "quantityUnit": "count" },
+  { "name": "Grapes", "icon": "fruit", "quantityUnit": "weight" },
+  { "name": "Blueberry", "icon": "fruit", "quantityUnit": "weight" },
+
+  { "name": "Carrot", "icon": "vegetable", "quantityUnit": "count" },
+  { "name": "Broccoli", "icon": "vegetable", "quantityUnit": "count" },
+  { "name": "Onion", "icon": "vegetable", "quantityUnit": "count" },
+  { "name": "Tomato", "icon": "vegetable", "quantityUnit": "count" },
+  { "name": "Spinach", "icon": "vegetable", "quantityUnit": "weight" },
+  { "name": "Bell Pepper", "icon": "vegetable", "quantityUnit": "count" },
+  { "name": "Cucumber", "icon": "vegetable", "quantityUnit": "count" },
+
+  { "name": "Egg", "icon": "dairy", "quantityUnit": "count" },
+  { "name": "Cheese", "icon": "dairy", "quantityUnit": "weight" },
+  { "name": "Butter", "icon": "dairy", "quantityUnit": "weight" },
+  { "name": "Milk", "icon": "dairy", "quantityUnit": "litres" },
+  { "name": "Yogurt", "icon": "dairy", "quantityUnit": "weight" },
+
+  { "name": "Bread", "icon": "grain", "quantityUnit": "count" },
+  { "name": "Rice", "icon": "grain", "quantityUnit": "weight" },
+  { "name": "Pasta", "icon": "grain", "quantityUnit": "weight" },
+  { "name": "Oats", "icon": "grain", "quantityUnit": "weight" },
+
+  { "name": "Pepper", "icon": "spice", "quantityUnit": "count" },
+  { "name": "Salt", "icon": "spice", "quantityUnit": "weight" },
+  { "name": "Olive Oil", "icon": "spice", "quantityUnit": "litres" },
+  { "name": "Garlic", "icon": "spice", "quantityUnit": "weight" },
+
+  { "name": "Chicken", "icon": "protein", "quantityUnit": "weight" },
+  { "name": "Beef", "icon": "protein", "quantityUnit": "weight" },
+  { "name": "Fish", "icon": "protein", "quantityUnit": "count" },
+  { "name": "Tofu", "icon": "protein", "quantityUnit": "weight" },
+
+  { "name": "White Chocolate", "icon": "misc", "quantityUnit": "weight" },
+  { "name": "Milk Chocolate", "icon": "misc", "quantityUnit": "weight" },
+  { "name": "Dark Chocolate", "icon": "misc", "quantityUnit": "weight" },
+  { "name": "Honey", "icon": "misc", "quantityUnit": "weight" },
+  { "name": "Lemon", "icon": "misc", "quantityUnit": "count" }
+]
