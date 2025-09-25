@@ -42,6 +42,7 @@ private class MockFirebaseAuthService: FirebaseAuthServiceProtocol {
 
 /// Unit tests that test methods in the Auth Service
 struct AuthServiceTests {
+    /// Ensure signUp throws unknown error when the Firebase auth service throws an unrecognised error.
     @Test func testSignUp_unknownError_throwsUnknownError() async throws {
         let mockFirebaseAuthService = MockFirebaseAuthService()
         mockFirebaseAuthService.errorToThrow = NSError(domain: "domain", code: -123)
@@ -52,6 +53,7 @@ struct AuthServiceTests {
         }
     }
     
+    /// Ensure signUp throws "weak password" error when the Firebase auth service throws an error due to the password being too weak.
     @Test func testSignUp_weakPassword_throwsWeakPasswordError() async throws {
         let WEAK_PASSWORD_CODE = 17026
         let mockFirebaseAuthService = MockFirebaseAuthService()
@@ -63,6 +65,7 @@ struct AuthServiceTests {
         }
     }
     
+    /// Ensure signIn throws account not found error when the Firebase auth service throws an error due to the account not existing.
     @Test func testSignIn_accountDoesNotExist_throwsAccountNotFoundError() async throws {
         let ACCOUNT_NOT_FOUND_ERROR_CODE = 17011
         let mockFirebaseAuthService = MockFirebaseAuthService()
@@ -74,6 +77,7 @@ struct AuthServiceTests {
         }
     }
     
+    /// Ensure signIn throws no errors when the Firebase auth service sign-in suceeds.
     @Test func testSignIn_signInSucceeds_throwsNoError() async throws {
         let mockFirebaseAuthService = MockFirebaseAuthService()
         let authService = AuthService(firebaseAuthService: mockFirebaseAuthService)
@@ -83,6 +87,7 @@ struct AuthServiceTests {
         // This test will pass if signIn throws no error, hence why there is no #expect here.
     }
     
+    /// Ensure signOut returns false when the Firebase auth service sign-out throws an error.
     @Test func testSignOut_signOutFails_returnsFalse() async throws {
         let mockFirebaseAuthService = MockFirebaseAuthService()
         mockFirebaseAuthService.errorToThrow = NSError(domain: "FIRAuthErrorDomain", code: 1)

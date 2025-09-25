@@ -54,6 +54,7 @@ private func makeMockGeminiResponse(text: String) -> Data {
 
 /// Unit tests that test methods in the Ai Service
 struct AiServiceTests {
+    /// Ensure getRecipes can handle being passed an empty list of ingredients.
     @Test func testGetRecipes_emptyIngredients_returnsEmptyRecipes() async throws {
         let mockJSON = #"{}"#.data(using: .utf8)!
         let mockSession = MockNetworkSession(mockData: mockJSON)
@@ -64,6 +65,7 @@ struct AiServiceTests {
         #expect(recipes.isEmpty)
     }
     
+    /// Ensure getRecipes just returns an empty list of recipes when the HTTP request to the LLM fails.
     @Test func testGetRecipes_networkRequestFailure_returnsEmptyRecipes() async throws {
         let mockJSON = #"{}"#.data(using: .utf8)!
         let mockSession = MockNetworkSession(mockData: mockJSON, shouldThrowError: true)
@@ -74,6 +76,7 @@ struct AiServiceTests {
         #expect(recipes.isEmpty)
     }
     
+    /// Ensure getRecipes sucessfully returns one recipe for when the LLM returns one recipe in the JSON response.
     @Test func testGetRecipes_oneIngredient_returnsRecipes() async throws {
         let recipesResponse = #"""
         [
@@ -105,6 +108,7 @@ struct AiServiceTests {
         #expect(recipes[0].estimatedTime == "1 minute")
     }
     
+    /// Ensure getRecipeStepClarification returns an error string rather than throwing an error when the HTTP request to the LLM fails.
     @Test func testGetRecipeStepClarification_networkRequestFailure_returnsErrorMessage() async throws {
         let mockJSON = #"{}"#.data(using: .utf8)!
         let mockSession = MockNetworkSession(mockData: mockJSON, shouldThrowError: true)
@@ -120,6 +124,7 @@ struct AiServiceTests {
         #expect(clarification == "Error")
     }
     
+    /// Ensure getRecipeStepClarification returns the clarification response from the LLM as a string.
     @Test func testGetRecipeStepClarification_instruction_returnsClarification() async throws {
         let clarificationJSON = #"""
         {
