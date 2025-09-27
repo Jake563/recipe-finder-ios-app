@@ -46,6 +46,7 @@ This app features:
 - ``ContentView``
 - ``IngredientDetailsView``
 - ``IngredientsView``
+- ``IntroductionView``
 - ``MainView``
 - ``NewIngredientView``
 - ``PrimaryButtonStyle``

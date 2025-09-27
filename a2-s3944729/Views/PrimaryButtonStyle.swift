@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-let PRIMARY_BUTTON_COLOUR = Color(red:0.95, green:0.95, blue:0.95)
+private let PRIMARY_BUTTON_COLOUR = Color(red:0.95, green:0.95, blue:0.95)
 
 /// Style that stores the primary button styles.
 struct PrimaryButtonStyle: ButtonStyle {
