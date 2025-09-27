@@ -57,7 +57,6 @@ struct AccountView: View {
     
     /// Attempts to the log the user in with the email and password they entered
     private func login() {
-        print(enteredPassword)
         Task {
             do {
                 try await authService.signIn(email: enteredEmail, password: enteredPassword)
