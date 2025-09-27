@@ -47,6 +47,10 @@ struct AccountView: View {
             passwordError = "Incorrect password"
             return
         }
+        if authError == AuthService.AuthError.incorrectEmailOrPassword {
+            passwordError = "Incorrect email or password"
+            return
+        }
         passwordError = "Unknown error occured"
     }
     

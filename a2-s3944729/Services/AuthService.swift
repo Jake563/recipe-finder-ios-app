@@ -41,6 +41,7 @@ final class AuthService {
         case accountNotFound
         case wrongPassword
         case weakPassword
+        case incorrectEmailOrPassword
         case unknownError
     }
     
@@ -93,6 +94,8 @@ final class AuthService {
                     throw AuthError.accountNotFound
                 case .wrongPassword:
                     throw AuthError.wrongPassword
+                case .invalidCredential:
+                    throw AuthError.incorrectEmailOrPassword
                 default:
                     throw AuthError.unknownError
                 }
