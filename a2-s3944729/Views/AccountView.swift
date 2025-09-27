@@ -101,6 +101,7 @@ struct AccountView: View {
                 }) {
                     Text("Logout")
                 }
+                .buttonStyle(PrimaryButtonStyle())
             } else {
                 VStack(spacing: 40) {
                     VStack(spacing: 20) {
