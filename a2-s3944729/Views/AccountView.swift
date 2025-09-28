@@ -18,7 +18,7 @@ struct AccountView: View {
     @State private var passwordError: String = ""
     
     @State private var onLoginView = true;
-    @State private var loggedIn = false;
+    @State private var loggedIn: Bool;
     
     init() {
         loggedIn = authService.isLoggedIn()
