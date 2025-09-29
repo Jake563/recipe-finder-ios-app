@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseFirestore
 
-/// Service that is responsible for storing and retrieving saved recipes in cloud storage.
+/// Service that is responsible for storing and retrieving saved recipes in cloud storage for the current signed-in user.
 final class SavedRecipesService {
     static private let authService = AuthService.getAuthService()
     static private let db = Firestore.firestore()
@@ -18,6 +18,7 @@ final class SavedRecipesService {
         case noAuthenticatedUser
     }
     
+    /// Gets all the recipes in the database.
     static func getRecipes() async throws -> [SavedRecipe] {
         let userId = authService.getUserId()
 
@@ -37,6 +38,7 @@ final class SavedRecipesService {
         return savedRecipes
     }
     
+    /// Adds the given recipe to the database.
     static func addRecipe(recipe: Recipe) async throws -> String {
         let userId = authService.getUserId()
         
@@ -58,6 +60,7 @@ final class SavedRecipesService {
         return queryResult.documentID
     }
     
+    /// Deletes the recipe with the given recipe ID from the database.
     static func deleteRecipe(savedRecipeId: String) throws {
         let userId = authService.getUserId()
         
@@ -68,6 +71,7 @@ final class SavedRecipesService {
         db.collection(SAVED_RECIPES_COLLECTION_NAME).document(savedRecipeId).delete()
     }
     
+    /// Changes the priority of the given recipes list.
     static func changeRecipeOrder(recipesToUpdate: [(id: String, newPriority: Int)]) throws {
         let userId = authService.getUserId()
         
