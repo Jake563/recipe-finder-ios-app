@@ -12,7 +12,6 @@ import FirebaseFirestore
 final class SavedRecipesService {
     static private let authService = AuthService.getAuthService()
     static private let db = Firestore.firestore()
-    static private let batch = db.batch()
     static private let SAVED_RECIPES_COLLECTION_NAME = "saved-recipes"
 
     enum Errors: Error {
@@ -75,6 +74,8 @@ final class SavedRecipesService {
         if userId == nil {
             throw Errors.noAuthenticatedUser
         }
+        
+        let batch = db.batch()
         
         for (id, newPriority) in recipesToUpdate {
             let docRef = db.collection(SAVED_RECIPES_COLLECTION_NAME).document(id)
