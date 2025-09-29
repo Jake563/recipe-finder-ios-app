@@ -71,15 +71,40 @@ struct SavedRecipesView: View {
     }
     
     private func updatePressedRecipeIndex() {
+        print("CALLED")
         if pressedButtonIndex == nil {
             return
         }
+
         print("Current Index: \(pressedButtonIndex!)")
         print("Offset: \(buttonOffset)")
         let indexChange = offsetToIndexChange(offset: buttonOffset)
         let newIndex = pressedButtonIndex! + indexChange
         print("New Index: \(newIndex)")
+  
+        let recipe = savedRecipes[pressedButtonIndex!]
+        savedRecipes.remove(at: pressedButtonIndex!)
+        savedRecipes.insert(recipe, at: newIndex)
+
+        var recipesToUpdate: [(String, Int)] = []
         
+        if newIndex <= pressedButtonIndex! {
+            for newPriority in newIndex...pressedButtonIndex! {
+                let recipeAtIndex = savedRecipes[newPriority]
+                recipesToUpdate.append((recipeAtIndex.id!, newPriority))
+            }
+        } else {
+            for newPriority in pressedButtonIndex!...newIndex {
+                let recipeAtIndex = savedRecipes[newPriority]
+                recipesToUpdate.append((recipeAtIndex.id!, newPriority))
+            }
+        }
+        
+        do {
+            try SavedRecipesService.changeRecipeOrder(recipesToUpdate: recipesToUpdate)
+        } catch {
+            print("Failed to change recipe order: \(error)")
+        }
     }
     
     private func loadSavedRecipes() {
@@ -102,7 +127,7 @@ struct SavedRecipesView: View {
                             ForEach(Array(savedRecipes.enumerated()), id: \.element.id) { index, savedRecipe in
                                 let dragGesture = DragGesture()
                                     .onChanged{value in
-                                        print("Translation: \(value.translation.height)")
+                                        //print("Translation: \(value.translation.height)")
                                         buttonOffset = value.translation.height
                                         recipeBeingDraggedID = savedRecipe.id
                                         pressedButtonIndex = index
