@@ -12,5 +12,6 @@ import FirebaseFirestore
 struct SavedRecipe: Identifiable, Codable {
     @DocumentID var id: String?
     var userId: String
+    var priority: Int
     var recipe: Recipe
 }

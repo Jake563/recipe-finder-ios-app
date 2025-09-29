@@ -81,11 +81,13 @@ struct RecipesView: View {
                                     try? SavedRecipesService.deleteRecipe(savedRecipeId: savedRecipeId!)
                                     favouritedRecipes.removeValue(forKey: recipe.id.uuidString)
                                 } else {
-                                    do {
-                                        let savedRecipeId = try SavedRecipesService.addRecipe(recipe: recipe)
-                                        favouritedRecipes[recipe.id.uuidString] = savedRecipeId
-                                    } catch {
-                                        print("Failed to save recipe: \(error)")
+                                    Task {
+                                        do {
+                                            let savedRecipeId = try await SavedRecipesService.addRecipe(recipe: recipe)
+                                            favouritedRecipes[recipe.id.uuidString] = savedRecipeId
+                                        } catch {
+                                            print("Failed to save recipe: \(error)")
+                                        }
                                     }
                                 }
                             }) {

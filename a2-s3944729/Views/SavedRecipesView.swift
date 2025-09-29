@@ -66,54 +66,30 @@ struct SavedRecipesView: View {
         return 0
     }
     
+    private func offsetToIndexChange(offset: Double) -> Int {
+        return Int(offset / 100)
+    }
+    
+    private func updatePressedRecipeIndex() {
+        if pressedButtonIndex == nil {
+            return
+        }
+        print("Current Index: \(pressedButtonIndex!)")
+        print("Offset: \(buttonOffset)")
+        let indexChange = offsetToIndexChange(offset: buttonOffset)
+        let newIndex = pressedButtonIndex! + indexChange
+        print("New Index: \(newIndex)")
+        
+    }
+    
     private func loadSavedRecipes() {
         Task {
-            //let recipes = try? await SavedRecipesService.getRecipes()
-            //savedRecipes = recipes ?? []
-            
-            // Create dummy recipes
-            savedRecipes = [
-                SavedRecipe(
-                    id: "a",
-                    userId: "abc",
-                    recipe: Recipe(
-                        name: "Test Recipe",
-                        estimatedTime: "40 minutes",
-                        ingredients: [],
-                        instructions: []
-                    )
-                ),
-                SavedRecipe(
-                    id: "b",
-                    userId: "abc",
-                    recipe: Recipe(
-                        name: "Test Recipe 2",
-                        estimatedTime: "40 minutes",
-                        ingredients: [],
-                        instructions: []
-                    )
-                ),
-                SavedRecipe(
-                    id: "c",
-                    userId: "abc",
-                    recipe: Recipe(
-                        name: "Test Recipe 3",
-                        estimatedTime: "40 minutes",
-                        ingredients: [],
-                        instructions: []
-                    )
-                ),
-                SavedRecipe(
-                    id: "d",
-                    userId: "abc",
-                    recipe: Recipe(
-                        name: "Test Recipe 4",
-                        estimatedTime: "40 minutes",
-                        ingredients: [],
-                        instructions: []
-                    )
-                ),
-            ]
+            do {
+                let recipes = try await SavedRecipesService.getRecipes()
+                savedRecipes = recipes
+            } catch {
+                print("Failed to get saved recipes: \(error)")
+            }
         }
     }
     
@@ -132,7 +108,12 @@ struct SavedRecipesView: View {
                                         pressedButtonIndex = index
                                     }
                                     .onEnded { value in
-                                        print("ENDED")
+                                        print("DRAG ENDED")
+                                        updatePressedRecipeIndex()
+                                        recipeBeingDraggedID = nil
+                                        recipeBeingLongedPressedID = nil
+                                        pressedButtonIndex = nil
+                                        buttonOffset = 0
                                     }
                                 let longPressGesture = LongPressGesture()
                                     .onChanged { value in
@@ -144,7 +125,6 @@ struct SavedRecipesView: View {
                                     }
                                 let combinedGesture = longPressGesture.sequenced(before: dragGesture)
 
-                                let recipeIsDragged = recipeBeingDraggedID == savedRecipe.id
                                 let recipeIsLongPressed = recipeBeingLongedPressedID == savedRecipe.id
                                 
                                 let isPressedRecipeAbove = isPressedRecipeAboveFunc(recipeIndex: index)
@@ -155,6 +135,7 @@ struct SavedRecipesView: View {
                                 HStack {
                                     NavigationLink(destination: RecipeInfoView(recipe: savedRecipe.recipe)) {
                                         HStack {
+                                            Text(String(index))
                                             Text(savedRecipe.recipe.name)
                                         }
                                         Spacer()

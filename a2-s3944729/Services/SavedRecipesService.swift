@@ -20,12 +20,15 @@ final class SavedRecipesService {
     
     static func getRecipes() async throws -> [SavedRecipe] {
         let userId = authService.getUserId()
-        
+
         if userId == nil {
             throw Errors.noAuthenticatedUser
         }
         
-        let queryResult = try await db.collection(SAVED_RECIPES_COLLECTION_NAME).whereField("userId", isEqualTo: userId!).getDocuments()
+        let queryResult = try await db.collection(SAVED_RECIPES_COLLECTION_NAME)
+            .whereField("userId", isEqualTo: userId!)
+            .order(by: "priority")
+            .getDocuments()
         let documents = queryResult.documents
         let savedRecipes: [SavedRecipe] = documents.compactMap {
             try? $0.data(as: SavedRecipe.self)
@@ -34,15 +37,17 @@ final class SavedRecipesService {
         return savedRecipes
     }
     
-    static func addRecipe(recipe: Recipe) throws -> String {
+    static func addRecipe(recipe: Recipe) async throws -> String {
         let userId = authService.getUserId()
         
         if userId == nil {
             throw Errors.noAuthenticatedUser
         }
         
-        let savedRecipe = SavedRecipe(userId: userId!, recipe: recipe)
-        print(savedRecipe)
+        let allRecipesQueryResult = try await db.collection(SAVED_RECIPES_COLLECTION_NAME)
+            .whereField("userId", isEqualTo: userId!)
+            .getDocuments()
+        let savedRecipe = SavedRecipe(userId: userId!, priority: allRecipesQueryResult.count, recipe: recipe)
         let queryResult = try db.collection(SAVED_RECIPES_COLLECTION_NAME).addDocument(from: savedRecipe) { error in
             if let error = error {
                 print("Error adding document: \(error)")
