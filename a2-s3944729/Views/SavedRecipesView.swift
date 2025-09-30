@@ -76,7 +76,6 @@ struct SavedRecipesView: View {
     
     /// Updates the priority of the recipe based on the position its button was dragged to.
     private func updatePressedRecipeIndex() {
-        print("CALLED")
         if pressedButtonIndex == nil {
             return
         }
@@ -139,15 +138,13 @@ struct SavedRecipesView: View {
                     ScrollView {
                         VStack(spacing: 20) {
                             ForEach(Array(savedRecipes.enumerated()), id: \.element.id) { index, savedRecipe in
-                                let dragGesture = DragGesture()
+                                let dragGesture = DragGesture(minimumDistance: 0)
                                     .onChanged{value in
-                                        //print("Translation: \(value.translation.height)")
                                         buttonOffset = value.translation.height
                                         recipeBeingDraggedID = savedRecipe.id
                                         pressedButtonIndex = index
                                     }
                                     .onEnded { value in
-                                        print("DRAG ENDED")
                                         updatePressedRecipeIndex()
                                         recipeBeingDraggedID = nil
                                         recipeBeingLongedPressedID = nil
@@ -155,11 +152,7 @@ struct SavedRecipesView: View {
                                         buttonOffset = 0
                                     }
                                 let longPressGesture = LongPressGesture()
-                                    .onChanged { value in
-                                        print("long press changed")
-                                    }
                                     .onEnded{ value in
-                                        print("LONG PRESS ENDED")
                                         recipeBeingLongedPressedID = savedRecipe.id
                                     }
                                 let combinedGesture = longPressGesture.sequenced(before: dragGesture)
@@ -174,7 +167,6 @@ struct SavedRecipesView: View {
                                 HStack {
                                     NavigationLink(destination: RecipeInfoView(recipe: savedRecipe.recipe)) {
                                         HStack {
-                                            Text(String(index))
                                             Text(savedRecipe.recipe.name)
                                         }
                                         Spacer()
@@ -196,7 +188,10 @@ struct SavedRecipesView: View {
                                 .scaleEffect(recipeIsLongPressed ? 1.1 : 1)
                                 .animation(.spring(), value: recipeBeingLongedPressedID)
                                 .offset(y: btnOffset)
+                                .animation(.spring(), value: isPressedRecipeAbove)
+                                .animation(.spring(), value: isPressedRecipeBelow)
                                 .gesture(combinedGesture)
+                                .zIndex(recipeIsLongPressed ? 1 : 0)
                             }
                         }
                         .padding()
