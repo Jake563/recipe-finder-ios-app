@@ -86,7 +86,15 @@ struct SavedRecipesView: View {
         let indexChange = offsetToIndexChange(offset: buttonOffset)
         let newIndex = pressedButtonIndex! + indexChange
         print("New Index: \(newIndex)")
-  
+        
+        if newIndex < 0 {
+            return
+        }
+        
+        if newIndex >= savedRecipes.count {
+            return
+        }
+
         let recipe = savedRecipes[pressedButtonIndex!]
         savedRecipes.remove(at: pressedButtonIndex!)
         savedRecipes.insert(recipe, at: newIndex)
