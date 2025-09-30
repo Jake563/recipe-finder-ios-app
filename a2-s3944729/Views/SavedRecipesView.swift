@@ -71,9 +71,20 @@ struct SavedRecipesView: View {
         return 0
     }
     
-    /// Returns the index change for the given offset.
-    private func offsetToIndexChange(offset: Double) -> Int {
-        return Int(offset / 100)
+    /// Calculates what the new index of the pressed recipe button should be based on it's button's offset.
+    private func getNewIndex(offset: Double) -> Int {
+        let indexChange = Int(offset / 100)
+        let newIndex = pressedButtonIndex! + indexChange
+        
+        if newIndex < 0 {
+            return 0
+        }
+        
+        if newIndex >= savedRecipes.count {
+            return savedRecipes.count - 1
+        }
+        
+        return newIndex
     }
     
     /// Updates the priority of the recipe based on the position its button was dragged to.
@@ -84,16 +95,8 @@ struct SavedRecipesView: View {
 
         print("Current Index: \(pressedButtonIndex!)")
         print("Offset: \(buttonOffset)")
-        let indexChange = offsetToIndexChange(offset: buttonOffset)
-        let newIndex = pressedButtonIndex! + indexChange
+        let newIndex = getNewIndex(offset: buttonOffset)
         print("New Index: \(newIndex)")
-        
-        if newIndex < 0 {
-            return
-        }
-        if newIndex >= savedRecipes.count {
-            return
-        }
 
         let recipe = savedRecipes[pressedButtonIndex!]
         savedRecipes.remove(at: pressedButtonIndex!)
