@@ -15,6 +15,7 @@ struct SavedRecipesView: View {
     @State private var buttonOffset = 0.0
     @State private var pressedButtonIndex: Int? = nil
     
+    /// Returns true if the recipe the user is dragging is above the recipe button of the given index.
     private func isPressedRecipeAboveFunc(recipeIndex: Int) -> Bool {
         if pressedButtonIndex == nil {
             return false
@@ -34,6 +35,7 @@ struct SavedRecipesView: View {
         return isAbove
     }
     
+    /// Returns true if the recipe the user is dragging is below the recipe button of the given index.
     private func isPressedRecipeBelowFunc(recipeIndex: Int) -> Bool {
         if pressedButtonIndex == nil {
             return false
@@ -53,6 +55,7 @@ struct SavedRecipesView: View {
         return isBelow
     }
     
+    /// Returns what the offset a button should be.
     private func getButtonOffset(isAbove: Bool, isBelow: Bool, recipeIsPressed: Bool) -> CGFloat {
         if recipeIsPressed {
             return buttonOffset
@@ -66,10 +69,12 @@ struct SavedRecipesView: View {
         return 0
     }
     
+    /// Returns the index change for the given offset.
     private func offsetToIndexChange(offset: Double) -> Int {
         return Int(offset / 100)
     }
     
+    /// Updates the priority of the recipe based on the position its button was dragged to.
     private func updatePressedRecipeIndex() {
         print("CALLED")
         if pressedButtonIndex == nil {
@@ -107,6 +112,7 @@ struct SavedRecipesView: View {
         }
     }
     
+    /// Displays the user's saved recipes from the database
     private func loadSavedRecipes() {
         Task {
             do {
