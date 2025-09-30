@@ -78,8 +78,10 @@ struct RecipesView: View {
                                 let savedRecipeId = favouritedRecipes[recipe.id.uuidString]
                                 
                                 if savedRecipeId != nil {
-                                    try? SavedRecipesService.deleteRecipe(savedRecipeId: savedRecipeId!)
-                                    favouritedRecipes.removeValue(forKey: recipe.id.uuidString)
+                                    Task {
+                                        try? await SavedRecipesService.deleteRecipe(savedRecipeId: savedRecipeId!)
+                                        favouritedRecipes.removeValue(forKey: recipe.id.uuidString)
+                                    }
                                 } else {
                                     Task {
                                         do {

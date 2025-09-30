@@ -60,15 +60,49 @@ final class SavedRecipesService {
         return queryResult.documentID
     }
     
+    private static func fixRecipePriorities(batch: WriteBatch, savedRecipeId: String) async throws {
+        let allRecipes = try? await getRecipes()
+        
+        if allRecipes == nil {
+            return
+        }
+        
+        var priority = 0
+        for index in 0...allRecipes!.count - 1 {
+            let document = allRecipes![index]
+            if document.id == savedRecipeId {
+                continue
+            }
+            let docRef = db.collection(SAVED_RECIPES_COLLECTION_NAME).document(document.id!)
+            batch.updateData(["priority": priority], forDocument: docRef)
+            priority = priority + 1
+        }
+    }
+    
     /// Deletes the recipe with the given recipe ID from the database.
-    static func deleteRecipe(savedRecipeId: String) throws {
+    static func deleteRecipe(savedRecipeId: String) async throws {
+        print("Deleting recipe...")
         let userId = authService.getUserId()
         
         if userId == nil {
             throw Errors.noAuthenticatedUser
         }
         
-        db.collection(SAVED_RECIPES_COLLECTION_NAME).document(savedRecipeId).delete()
+        let documentToDelete = db.collection(SAVED_RECIPES_COLLECTION_NAME).document(savedRecipeId)
+        let batch = db.batch()
+        batch.deleteDocument(documentToDelete)
+
+        do {
+            try await fixRecipePriorities(batch: batch, savedRecipeId: savedRecipeId)
+        } catch {
+            print("Failed to fix recipe priorities: \(error)")
+        }
+        
+        do {
+            try await batch.commit()
+        } catch {
+            print("Failed to commit batch: \(error)")
+        }
     }
     
     /// Changes the priority of the given recipes list.

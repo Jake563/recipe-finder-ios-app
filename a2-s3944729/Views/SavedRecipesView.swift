@@ -182,8 +182,10 @@ struct SavedRecipesView: View {
                                     }
                                     .accentColor(.primary)
                                     Button(action: {
-                                        try? SavedRecipesService.deleteRecipe(savedRecipeId: savedRecipe.id!)
-                                        loadSavedRecipes()
+                                        Task {
+                                            try? await SavedRecipesService.deleteRecipe(savedRecipeId: savedRecipe.id!)
+                                            loadSavedRecipes()
+                                        }
                                     }) {
                                         Image(systemName: "heart.fill")
                                             .foregroundStyle(.pink)
