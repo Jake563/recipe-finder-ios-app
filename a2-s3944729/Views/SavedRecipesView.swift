@@ -17,6 +17,8 @@ struct SavedRecipesView: View {
     
     private let BUTTON_HEIGHT: CGFloat = 50
     
+    private let authService = AuthService.getAuthService()
+    
     /// Returns true if the recipe the user is dragging is above the recipe button of the given index.
     private func isPressedRecipeAboveFunc(recipeIndex: Int) -> Bool {
         if pressedButtonIndex == nil {
@@ -125,10 +127,13 @@ struct SavedRecipesView: View {
     
     /// Displays the user's saved recipes from the database
     private func loadSavedRecipes() {
+        if !authService.isLoggedIn() {
+            savedRecipes.removeAll()
+            return
+        }
         Task {
             do {
-                let recipes = try await SavedRecipesService.getRecipes()
-                savedRecipes = recipes
+                savedRecipes = try await SavedRecipesService.getRecipes()
             } catch {
                 print("Failed to get saved recipes: \(error)")
             }
