@@ -15,6 +15,8 @@ struct SavedRecipesView: View {
     @State private var buttonOffset = 0.0
     @State private var pressedButtonIndex: Int? = nil
     
+    private let BUTTON_HEIGHT: CGFloat = 50
+    
     /// Returns true if the recipe the user is dragging is above the recipe button of the given index.
     private func isPressedRecipeAboveFunc(recipeIndex: Int) -> Bool {
         if pressedButtonIndex == nil {
@@ -29,7 +31,7 @@ struct SavedRecipesView: View {
             return false
         }
         
-        let yThreshold = (recipeIndex - pressedButtonIndex!) * (100)
+        let yThreshold = (recipeIndex - pressedButtonIndex!) * (Int(BUTTON_HEIGHT) * 2)
         let isAbove = Int(buttonOffset) < yThreshold
         
         return isAbove
@@ -49,7 +51,7 @@ struct SavedRecipesView: View {
             return false
         }
         
-        let yThreshold = (recipeIndex - pressedButtonIndex!) * (100)
+        let yThreshold = (recipeIndex - pressedButtonIndex!) * (Int(BUTTON_HEIGHT) * 2)
         let isBelow = Int(buttonOffset) > yThreshold
         
         return isBelow
@@ -61,10 +63,10 @@ struct SavedRecipesView: View {
             return buttonOffset
         }
         if isAbove {
-            return 100
+            return BUTTON_HEIGHT * 2
         }
         if isBelow {
-            return -100
+            return BUTTON_HEIGHT * -2
         }
         return 0
     }
@@ -75,7 +77,7 @@ struct SavedRecipesView: View {
     }
     
     /// Updates the priority of the recipe based on the position its button was dragged to.
-    private func updatePressedRecipeIndex() {
+    private func updatePressedRecipePriority() {
         if pressedButtonIndex == nil {
             return
         }
@@ -89,7 +91,6 @@ struct SavedRecipesView: View {
         if newIndex < 0 {
             return
         }
-        
         if newIndex >= savedRecipes.count {
             return
         }
@@ -145,7 +146,7 @@ struct SavedRecipesView: View {
                                         pressedButtonIndex = index
                                     }
                                     .onEnded { value in
-                                        updatePressedRecipeIndex()
+                                        updatePressedRecipePriority()
                                         recipeBeingDraggedID = nil
                                         recipeBeingLongedPressedID = nil
                                         pressedButtonIndex = nil
@@ -162,7 +163,7 @@ struct SavedRecipesView: View {
                                 let isPressedRecipeAbove = isPressedRecipeAboveFunc(recipeIndex: index)
                                 let isPressedRecipeBelow = isPressedRecipeBelowFunc(recipeIndex: index)
                                 
-                                let btnOffset = getButtonOffset(isAbove: isPressedRecipeAbove, isBelow: isPressedRecipeBelow, recipeIsPressed: recipeIsLongPressed)
+                                let offset = getButtonOffset(isAbove: isPressedRecipeAbove, isBelow: isPressedRecipeBelow, recipeIsPressed: recipeIsLongPressed)
                                 
                                 HStack {
                                     NavigationLink(destination: RecipeInfoView(recipe: savedRecipe.recipe)) {
@@ -181,13 +182,13 @@ struct SavedRecipesView: View {
                                     }
                                     .buttonStyle(.plain)
                                 }
-                                .frame(height: 50)
+                                .frame(height: BUTTON_HEIGHT)
                                 .padding(16)
                                 .background(Color(red:0.95, green:0.95, blue:0.95))
                                 .cornerRadius(16)
                                 .scaleEffect(recipeIsLongPressed ? 1.1 : 1)
                                 .animation(.spring(), value: recipeBeingLongedPressedID)
-                                .offset(y: btnOffset)
+                                .offset(y: offset)
                                 .animation(.spring(), value: isPressedRecipeAbove)
                                 .animation(.spring(), value: isPressedRecipeBelow)
                                 .gesture(combinedGesture)
