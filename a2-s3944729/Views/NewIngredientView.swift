@@ -19,8 +19,7 @@ struct NewIngredientView: View {
     /// Displays ingredients that matches what the user has entered in the search field
     private func searchIngredients() {
         var searchResultCount = 0
-        var ingredientRecognised = false
-        
+
         if searchText.isEmpty {
             filteredIngredients.removeAll()
             return
@@ -35,12 +34,6 @@ struct NewIngredientView: View {
                     break
                 }
             }
-            if ingredient.name == searchText {
-                ingredientRecognised = true
-            }
-        }
-        if !ingredientRecognised {
-            ingredients.insert(IngredientType(name: searchText, icon: "misc", quantityUnit: QuantityUnit.count), at: 0)
         }
         filteredIngredients = ingredients
     }

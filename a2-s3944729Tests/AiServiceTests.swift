@@ -60,20 +60,27 @@ struct AiServiceTests {
         let mockSession = MockNetworkSession(mockData: mockJSON)
         let aiService = AiService(session: mockSession)
 
-        let recipes = await aiService.getRecipes(ingredients: [])
+        let recipes = try await aiService.getRecipes(ingredients: [])
         
         #expect(recipes.isEmpty)
     }
     
-    /// Ensure getRecipes just returns an empty list of recipes when the HTTP request to the LLM fails.
-    @Test func testGetRecipes_networkRequestFailure_returnsEmptyRecipes() async throws {
+    /// Ensure getRecipes throws an unknown error when the HTTP request to the LLM fails.
+    @Test func testGetRecipes_networkRequestFailure_throwsUnknownError() async throws {
         let mockJSON = #"{}"#.data(using: .utf8)!
         let mockSession = MockNetworkSession(mockData: mockJSON, shouldThrowError: true)
         let aiService = AiService(session: mockSession)
 
-        let recipes = await aiService.getRecipes(ingredients: [])
-        
-        #expect(recipes.isEmpty)
+        await #expect(throws: AiService.AiServiceError.unknownError) {
+            try await aiService.getRecipes(ingredients: [
+                Ingredient(
+                    quantity: 1,
+                    quantityMassUnit: "",
+                    ingredientType: IngredientType(name: "Egg", icon: "", quantityUnit: QuantityUnit.count),
+                    storedIngredientID: nil
+                )
+            ])
+        }
     }
     
     /// Ensure getRecipes sucessfully returns one recipe for when the LLM returns one recipe in the JSON response.
@@ -94,7 +101,7 @@ struct AiServiceTests {
         let mockSession = MockNetworkSession(mockData: mockJSON)
         let aiService = AiService(session: mockSession)
 
-        let recipes = await aiService.getRecipes(ingredients: [
+        let recipes = try await aiService.getRecipes(ingredients: [
             Ingredient(
                 quantity: 1,
                 quantityMassUnit: "",

@@ -11,6 +11,7 @@ import SwiftData
 ///  View that displays a list of recipes a user can make with their ingredients.
 struct RecipesView: View {
     @State private var recipesLoading = false
+    @State private var recipeLoadingError = false
     @State private var recipes: [Recipe] = []
     @State private var favouritedRecipes = [String: String]()
     @EnvironmentObject private var ingredientStore: IngredientStore
@@ -33,11 +34,16 @@ struct RecipesView: View {
             return
         }
         recipesLoading = true
+        recipeLoadingError = false
         ingredientStore.hasIngredientChanged = false
         recipes.removeAll()
         Task {
             let ingredients = IngredientService.storedIngredientsToIngredients(storedIngredients: storedIngredients)
-            recipes = await aiService.getRecipes(ingredients: ingredients)
+            do {
+                recipes = try await aiService.getRecipes(ingredients: ingredients)
+            } catch {
+                recipeLoadingError = true
+            }
             recipesLoading = false
         }
     }
@@ -53,6 +59,10 @@ struct RecipesView: View {
         }
         if recipes.isEmpty {
             return AnyView(Text("No recipes available for your current ingredients.")
+                .foregroundStyle(.secondary))
+        }
+        if recipeLoadingError {
+            return AnyView(Text("An unknown error occured. Please try again later.")
                 .foregroundStyle(.secondary))
         }
         return AnyView(Text(""))

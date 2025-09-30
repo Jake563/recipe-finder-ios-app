@@ -112,7 +112,7 @@ struct IngredientDetailsView: View {
             ingredientTypeID: -1
         )
         
-        // Get ingredient type id (TEMPORARY!!)
+        // Get ingredient type id
         var index = 0
         for ingredient in AllIngredients.ingredients {
             if ingredient.name == self.ingredient.ingredientType.name {

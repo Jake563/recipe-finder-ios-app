@@ -56,6 +56,10 @@ class AiService {
     
     private let session: NetworkSession
     
+    enum AiServiceError: Error {
+        case unknownError
+    }
+    
     init(session: NetworkSession) {
         self.session = session
     }
@@ -215,7 +219,7 @@ class AiService {
     }
     
     /// Generates a list of recipes that can be made with the given ingredients
-    func getRecipes(ingredients: [Ingredient]) async -> [Recipe] {
+    func getRecipes(ingredients: [Ingredient]) async throws -> [Recipe] {
         print("Getting recipes...")
         if ingredients.isEmpty {
             return []
@@ -230,7 +234,7 @@ class AiService {
         
         if responseData == nil {
             print("Failed to get recipes: response data is nil")
-            return []
+            throw AiServiceError.unknownError
         }
         return extractRecipesFromResponseData(data: responseData!)
     }
