@@ -60,6 +60,7 @@ final class SavedRecipesService {
         return queryResult.documentID
     }
     
+    /// Sets the priority of all recipes in the database based on their order index in the array.
     private static func fixRecipePriorities(batch: WriteBatch, savedRecipeId: String) async throws {
         let allRecipes = try? await getRecipes()
         
