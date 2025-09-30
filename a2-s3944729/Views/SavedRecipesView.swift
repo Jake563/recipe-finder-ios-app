@@ -195,6 +195,7 @@ struct SavedRecipesView: View {
                                 .animation(.spring(), value: isPressedRecipeAbove)
                                 .animation(.spring(), value: isPressedRecipeBelow)
                                 .gesture(combinedGesture)
+                                .highPriorityGesture(combinedGesture)
                                 .zIndex(recipeIsLongPressed ? 1 : 0)
                             }
                         }
