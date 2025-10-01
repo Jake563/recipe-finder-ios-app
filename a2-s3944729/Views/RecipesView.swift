@@ -57,12 +57,12 @@ struct RecipesView: View {
         if recipesLoading {
             return AnyView(ProgressView("Finding recipes..."))
         }
-        if recipes.isEmpty {
-            return AnyView(Text("No recipes available for your current ingredients.")
-                .foregroundStyle(.secondary))
-        }
         if recipeLoadingError {
             return AnyView(Text("An unknown error occured. Please try again later.")
+                .foregroundStyle(.secondary))
+        }
+        if recipes.isEmpty {
+            return AnyView(Text("No recipes available for your current ingredients.")
                 .foregroundStyle(.secondary))
         }
         return AnyView(Text(""))
