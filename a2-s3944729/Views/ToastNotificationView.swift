@@ -8,7 +8,7 @@
 import UIKit
 import SwiftUI
 
-private let AUTO_CLOSE_DELAY = 3.0
+private let AUTO_CLOSE_DELAY = 2.0
 
 /// Toast notification implementation using UiKit.
 class ToastNotificationView: UIView {
