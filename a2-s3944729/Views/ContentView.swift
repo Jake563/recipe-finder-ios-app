@@ -10,13 +10,17 @@ import SwiftUI
 /// View that displays the entire app.
 struct ContentView: View {
     @State private var showMainView = false
+    @StateObject private var toastNotificationService = ToastNotificationService()
     
     var body: some View {
-        if showMainView {
-            MainView()
-        } else {
-            IntroductionView(showMainView: $showMainView)
-        }
+        ZStack {
+            if showMainView {
+                MainView()
+            } else {
+                IntroductionView(showMainView: $showMainView)
+            }
+            ToastHostView(message: toastNotificationService.message, show: toastNotificationService.showToast)
+        }.environmentObject(toastNotificationService)
     }
 }
 
