@@ -20,6 +20,7 @@ struct IngredientDetailsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     @EnvironmentObject private var ingredientStore: IngredientStore
+    @EnvironmentObject private var toastNotificationService: ToastNotificationService
 
     @Query
     private var storedIngredients: [StoredIngredient]
@@ -126,6 +127,8 @@ struct IngredientDetailsView: View {
         try? context.save()
         ingredientStore.hasIngredientChanged = true
         ingredientStore.newIngredientAdded = true
+        
+        toastNotificationService.displayNotification(message: "Ingredient Added!")
         dismiss()
     }
     

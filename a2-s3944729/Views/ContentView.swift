@@ -20,6 +20,7 @@ struct ContentView: View {
                 IntroductionView(showMainView: $showMainView)
             }
             ToastHostView(message: toastNotificationService.message, show: toastNotificationService.showToast)
+                .allowsHitTesting(false)
         }.environmentObject(toastNotificationService)
     }
 }

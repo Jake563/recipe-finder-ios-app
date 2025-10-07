@@ -12,7 +12,6 @@ struct NewIngredientView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var ingredientStore: IngredientStore
     @State private var searchText: String = ""
-    @State private var notificationVisible = false
     @State private var filteredIngredients: [IngredientType] = []
     private let MAX_SEARCH_RESULTS: Int = 10
     
@@ -36,16 +35,6 @@ struct NewIngredientView: View {
             }
         }
         filteredIngredients = ingredients
-    }
-    
-    /// Displays a notification confirming that an ingredient has been added
-    private func displayIngredientAddedNotification() {
-        let twoSeconds: UInt64 = 2_000_000_000
-        notificationVisible = true
-        Task {
-            try? await Task.sleep(nanoseconds: twoSeconds)
-            notificationVisible = false
-        }
     }
     
     /// Clears the text entered in the search field
@@ -76,12 +65,6 @@ struct NewIngredientView: View {
                 }
                 .scrollContentBackground(.hidden)
                 .listRowSpacing(20)
-                if notificationVisible {
-                    Text("Ingredient added!")
-                        .foregroundStyle(.green)
-                        .padding()
-                        .font(.title)
-                }
             }
             .navigationBarBackButtonHidden(true)
             .toolbar {
@@ -105,7 +88,6 @@ struct NewIngredientView: View {
             }
             clearSearchText()
             ingredientStore.newIngredientAdded = false
-            displayIngredientAddedNotification()
         }
     }
 }
