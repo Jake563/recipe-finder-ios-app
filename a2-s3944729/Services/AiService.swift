@@ -143,15 +143,8 @@ class AiService {
     /// Returns a list of recipes from the given response data
     private func extractRecipesFromResponseData(data: Data) -> [Recipe] {
         do {
-            let jsonData = extractJsonDataFromResponseData(data: data)
-            
-            if jsonData == nil {
-                print("Failed to extract recipes: json data is nil")
-                return []
-            }
-            
             // Decode JSON data to list of recipes
-            let recipes = try JSONDecoder().decode([Recipe].self, from: jsonData!)
+            let recipes = try JSONDecoder().decode([Recipe].self, from: data)
             
             print("Recipes extracted successfully:")
             prettyPrintRecipes(recipes: recipes)
@@ -211,7 +204,8 @@ class AiService {
             if let responseString = String(data: responseData, encoding: .utf8) {
                 print("Response: \(responseString)")
             }
-            return responseData
+            
+            return extractJsonDataFromResponseData(data: responseData)
         } catch {
             print("Failed to get recipes: \(error)")
         }
@@ -252,10 +246,8 @@ class AiService {
                 print("Failed to get step clarification: ai response is nil")
                 return "Error"
             }
-            
-            let jsonData = extractJsonDataFromResponseData(data: aiResponse!)
-            
-            let clarification = try JSONDecoder().decode(StepClarification.self, from: jsonData!)
+
+            let clarification = try JSONDecoder().decode(StepClarification.self, from: aiResponse!)
             return clarification.clarification
         } catch {
             print("Failed to get step clarification: \(error)")
