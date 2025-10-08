@@ -22,6 +22,7 @@ let ACCOUNT_TAB_ID = 3
 struct MainView: View {
     @StateObject private var ingredientStore = IngredientStore()
     @State private var selectedTab = 0
+    @State private var showIntelligentAssistant = false
 
     var body: some View {
         ZStack {
@@ -55,7 +56,7 @@ struct MainView: View {
                 HStack {
                     Spacer()
                     Button(action: {
-                        
+                        showIntelligentAssistant = true
                     }) {
                         ZStack {
                             Image(systemName: "microphone.fill")
@@ -87,6 +88,12 @@ struct MainView: View {
             }
             .padding(.vertical, 50)
         }
+        .sheet(
+            isPresented: $showIntelligentAssistant,
+            content: {
+                IntelligentAssistantView()
+            }
+        )
     }
 }
 
