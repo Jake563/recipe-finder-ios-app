@@ -13,14 +13,16 @@ struct ContentView: View {
     @StateObject private var toastNotificationService = ToastNotificationService()
     
     var body: some View {
-        ZStack {
+        ZStack(alignment: .top) {
             if showMainView {
                 MainView()
             } else {
                 IntroductionView(showMainView: $showMainView)
             }
-            ToastHostView(message: toastNotificationService.message, show: toastNotificationService.showToast)
-                .allowsHitTesting(false)
+            if toastNotificationService.showToast {
+                ToastHostView(message: toastNotificationService.message)
+                    .frame(height: 90)
+            }
         }.environmentObject(toastNotificationService)
     }
 }

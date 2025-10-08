@@ -11,7 +11,7 @@ import SwiftUI
 private let AUTO_CLOSE_DELAY = 2.0
 
 /// Toast notification implementation using UiKit.
-class ToastNotificationView: UIView {
+private class ToastNotificationView: UIView {
     private let messageLabel = UILabel()
 
     init(message: String) {
@@ -19,9 +19,10 @@ class ToastNotificationView: UIView {
         setupUI(message: message)
         setupCloseGesture()
     }
+    
+    var onClose: (() -> Void)?
 
     private func setupUI(message: String) {
-        clipsToBounds = true
         backgroundColor = UIColor(red: 0, green: 0.7, blue: 0.2, alpha: 1.0)
         layer.cornerRadius = 12
         
@@ -67,6 +68,9 @@ class ToastNotificationView: UIView {
             self.frame.origin.y = -100
         }) { _ in
             self.removeFromSuperview()
+            if self.onClose != nil {
+                self.onClose!()
+            }
         }
     }
 
@@ -77,18 +81,21 @@ class ToastNotificationView: UIView {
 
 /// Bridges the UiKit ToastNotificationView with SwiftUi, allowing Toast Notifications to be added in SwiftUi Views.
 struct ToastHostView: UIViewControllerRepresentable {
+    @EnvironmentObject private var toastNotificationService: ToastNotificationService
     let message: String
-    let show: Bool
 
     func makeUIViewController(context: Context) -> UIViewController {
         UIViewController()
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
-        if show {
+        if toastNotificationService.showToast {
             let toast = ToastNotificationView(message: message)
+            toast.onClose = {
+                toastNotificationService.showToast = false
+            }
             toast.show(parent: uiViewController.view)
-
+            
             DispatchQueue.main.asyncAfter(deadline: .now() + AUTO_CLOSE_DELAY) {
                 toast.close()
             }
@@ -105,9 +112,5 @@ class ToastNotificationService: ObservableObject {
     func displayNotification(message: String) {
         self.message = message
         self.showToast = true
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.showToast = false
-        }
     }
 }
