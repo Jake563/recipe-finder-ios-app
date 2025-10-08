@@ -24,31 +24,69 @@ struct MainView: View {
     @State private var selectedTab = 0
 
     var body: some View {
-        TabView(selection: $selectedTab) {
-            IngredientsView()
-                .tabItem {
-                    Label("Ingredients", systemImage: "refrigerator")
+        ZStack {
+            TabView(selection: $selectedTab) {
+                IngredientsView()
+                    .tabItem {
+                        Label("Ingredients", systemImage: "refrigerator")
+                    }
+                    .tag(INGREDIENTS_TAB_ID)
+                
+                RecipesView(selectedTab: $selectedTab)
+                    .tabItem {
+                        Label("Recipes", systemImage: "note.text")
+                    }
+                    .tag(RECIPES_TAB_ID)
+                
+                SavedRecipesView()
+                    .tabItem {
+                        Label("Saved", systemImage: "heart")
+                    }
+                    .tag(SAVED_RECIPES_TAB_ID)
+                
+                AccountView()
+                    .tabItem {
+                        Label("Account", systemImage: "person.crop.circle")
+                    }
+                    .tag(ACCOUNT_TAB_ID)
+            }.environmentObject(ingredientStore)
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        
+                    }) {
+                        ZStack {
+                            Image(systemName: "microphone.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 30, height: 30)
+                        }
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .padding(30)
+                        .background(
+                            Circle()
+                                .fill(Color.black)
+                        )
+                        .overlay(
+                            Circle()
+                                .stroke(
+                                    AngularGradient(
+                                        colors: [.red, .orange, .yellow, .green, .blue, .purple, .red],
+                                        center: .center
+                                    ),
+                                    lineWidth: 5
+                                )
+                        )
+                        .shadow(radius: 5)
+                    }
                 }
-                .tag(INGREDIENTS_TAB_ID)
-            
-            RecipesView(selectedTab: $selectedTab)
-                .tabItem {
-                    Label("Recipes", systemImage: "note.text")
-                }
-                .tag(RECIPES_TAB_ID)
-            
-            SavedRecipesView()
-                .tabItem {
-                    Label("Saved", systemImage: "heart")
-                }
-                .tag(SAVED_RECIPES_TAB_ID)
-
-            AccountView()
-                .tabItem {
-                    Label("Account", systemImage: "person.crop.circle")
-                }
-                .tag(ACCOUNT_TAB_ID)
-        }.environmentObject(ingredientStore)
+                .padding()
+            }
+            .padding(.vertical, 50)
+        }
     }
 }
 
