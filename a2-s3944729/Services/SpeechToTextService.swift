@@ -42,8 +42,10 @@ class SpeechToTextService: NSObject, ObservableObject {
 
     func startRecording() throws {
         if !requestSpeechPermission() {
+            print("User rejected permission to record.")
             return
         }
+        print("Access granted to start recording.")
         
         // Reset if already running
         stopRecording()
@@ -85,5 +87,7 @@ class SpeechToTextService: NSObject, ObservableObject {
         audioEngine.inputNode.removeTap(onBus: 0)
         request?.endAudio()
         task?.cancel()
+        task = nil
+        request = nil
     }
 }

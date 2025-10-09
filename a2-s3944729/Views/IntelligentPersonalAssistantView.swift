@@ -8,18 +8,43 @@
 import SwiftUI
 
 struct IntelligentPersonalAssistantView: View {
+    @State private var recording = false
+    private let speechToTextService = SpeechToTextService()
+    
+    private func startRecording() {
+        do {
+            try speechToTextService.startRecording()
+        } catch {
+            print("Failed to start recording: \(error)")
+        }
+    }
+    
+    private func stopRecording() {
+        speechToTextService.stopRecording()
+        print("Transcript:")
+        print(speechToTextService.transcript)
+    }
+    
     var body: some View {
         VStack {
             Spacer()
-            HStack {
-                Spacer()
-                AIResponseDialog(text: "How can I help?")
+            if recording {
+                HStack {
+                    Spacer()
+                    AIResponseDialog(text: "How can I help?")
+                }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
             HStack {
                 Spacer()
                 Button(action: {
-                    
+                    if recording {
+                        recording = false
+                        stopRecording()
+                    } else {
+                        recording = true
+                        startRecording()
+                    }
                 }) {
                     ZStack {
                         Image(systemName: "microphone.fill")
