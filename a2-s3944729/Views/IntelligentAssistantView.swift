@@ -6,16 +6,17 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct IntelligentAssistantView: View {
     @Environment(\.modelContext) private var context
-    
+
     var body: some View {
         Text("How can I help you?")
         Button(action: {
-            let intellgent = IntelligentAssistantService(context: context)
+            let intelligentAssistantService = IntelligentAssistantService(context: context)
             Task {
-                let response = await intellgent.performActions(userRequest: "Remove apples")
+                let response = await intelligentAssistantService.performActions(userRequest: "Remove apples")
             }
         }) {
             Text("Test")
