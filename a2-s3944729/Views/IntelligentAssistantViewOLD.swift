@@ -12,7 +12,8 @@ struct IntelligentAssistantView: View {
     @Environment(\.modelContext) private var context
 
     var body: some View {
-        Text("How can I help you?")
+        Text("How can I help?")
+        Text("Ask me anything. For example 'Add 5 apples and 2 bananas'")
         Button(action: {
             let intelligentAssistantService = IntelligentAssistantService(context: context)
             Task {

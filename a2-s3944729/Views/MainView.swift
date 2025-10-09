@@ -51,49 +51,8 @@ struct MainView: View {
                     }
                     .tag(ACCOUNT_TAB_ID)
             }.environmentObject(ingredientStore)
-            VStack {
-                Spacer()
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        showIntelligentAssistant = true
-                    }) {
-                        ZStack {
-                            Image(systemName: "microphone.fill")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 30, height: 30)
-                        }
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                        .padding(30)
-                        .background(
-                            Circle()
-                                .fill(Color.black)
-                        )
-                        .overlay(
-                            Circle()
-                                .stroke(
-                                    AngularGradient(
-                                        colors: [.red, .orange, .yellow, .green, .blue, .purple, .red],
-                                        center: .center
-                                    ),
-                                    lineWidth: 5
-                                )
-                        )
-                        .shadow(radius: 5)
-                    }
-                }
-                .padding()
-            }
-            .padding(.vertical, 50)
+            IntelligentPersonalAssistantView()
         }
-        .sheet(
-            isPresented: $showIntelligentAssistant,
-            content: {
-                IntelligentAssistantView()
-            }
-        )
     }
 }
 
