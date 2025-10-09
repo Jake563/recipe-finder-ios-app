@@ -172,7 +172,7 @@ class AiService {
         return ingredientsString
     }
     
-    private func getAiResponse(prompt: String, responseSchema: [String: Any]) async -> Data? {
+    func getAiResponse(prompt: String, responseSchema: [String: Any]) async -> Data? {
         guard let url = URL(string: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=\(AiService.API_KEY)") else {
             fatalError("Invalid URL")
         }

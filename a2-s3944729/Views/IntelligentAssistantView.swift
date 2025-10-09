@@ -10,7 +10,16 @@ import SwiftUI
 struct IntelligentAssistantView: View {
     var body: some View {
         Text("How can I help you?")
+        Button(action: {
+            let intellgent = IntelligentAssistantService()
+            Task {
+                let response = await intellgent.performActions(userRequest: "Add 2 garlic, 3 apples and 2 bananas")
+            }
+        }) {
+            Text("Test")
+        }
     }
+    
 }
 
 #Preview {
