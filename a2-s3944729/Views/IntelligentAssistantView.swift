@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct IntelligentAssistantView: View {
+    @Environment(\.modelContext) private var context
+    
     var body: some View {
         Text("How can I help you?")
         Button(action: {
-            let intellgent = IntelligentAssistantService()
+            let intellgent = IntelligentAssistantService(context: context)
             Task {
                 let response = await intellgent.performActions(userRequest: "Add 2 garlic, 3 apples and 2 bananas")
             }

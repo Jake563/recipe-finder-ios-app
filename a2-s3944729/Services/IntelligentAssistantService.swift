@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftData
 
 class IntelligentAssistantService {
     private let aiService = AiService(session: URLSession.shared)
@@ -14,6 +15,8 @@ class IntelligentAssistantService {
     
     add_ingredient - Adds an ingredient to the user's ingredients.
     remove_ingredient - Removes an ingredient from the user's ingredients.
+    
+    Make sure Ingredient names are lowercase and singular nouns only (e.g., "Tomatoes" -> "Tomato").
     
     Here is what the user has requested: 
     """
@@ -48,14 +51,50 @@ class IntelligentAssistantService {
     
     private struct ActionData: Decodable {
         let ingredient: String
-        let quantity: Double?
+        let quantity: Int?
         let unit: String?
+    }
+    
+    private let context: ModelContext
+    
+    init(context: ModelContext) {
+        self.context = context
+    }
+    
+    private func addIngredient(ingredientData: ActionData) throws {
+        var foundIngredientType: IngredientType? = nil
+        var index = 0;
+        
+        for ingredientType in AllIngredients.ingredients {
+            if ingredientType.name.lowercased() == ingredientData.ingredient {
+                foundIngredientType = ingredientType
+                break
+            }
+            index = index + 1;
+        }
+        
+        if foundIngredientType == nil {
+            return
+        }
+        
+        let newIngredient = StoredIngredient(
+            quantity: ingredientData.quantity!,
+            quantityMassUnit: ingredientData.unit,
+            ingredientTypeID: index
+        )
+        
+        context.insert(newIngredient)
+        try context.save()
     }
     
     private func performAction(action: Action) {
         if action.action == "add_ingredient" {
             print("Adding ingredient: \(action.data.ingredient)")
-            
+            do {
+                try addIngredient(ingredientData: action.data)
+            } catch {
+                print("Failed to add ingredient: \(error)")
+            }
             return
         }
         if action.action == "remove_ingredient" {
