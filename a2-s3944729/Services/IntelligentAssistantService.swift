@@ -87,6 +87,34 @@ class IntelligentAssistantService {
         try context.save()
     }
     
+    private func removeIngredient(ingredientData: ActionData) throws {
+        let userIngredients = try context.fetch(FetchDescriptor<StoredIngredient>())
+        var index = 0;
+        
+        for ingredientType in AllIngredients.ingredients {
+            if ingredientType.name.lowercased() == ingredientData.ingredient {
+                break
+            }
+            index = index + 1;
+        }
+        
+        var ingredientToRemove: StoredIngredient?
+        
+        for userIngredient in userIngredients {
+            if userIngredient.ingredientTypeID == index {
+                ingredientToRemove = userIngredient
+                break
+            }
+        }
+        
+        if ingredientToRemove == nil {
+            return
+        }
+        
+        context.delete(ingredientToRemove!)
+        try context.save()
+    }
+    
     private func performAction(action: Action) {
         if action.action == "add_ingredient" {
             print("Adding ingredient: \(action.data.ingredient)")
@@ -99,6 +127,11 @@ class IntelligentAssistantService {
         }
         if action.action == "remove_ingredient" {
             print("Removing ingredient: \(action.data.ingredient)")
+            do {
+                try removeIngredient(ingredientData: action.data)
+            } catch {
+                print("Failed to add ingredient: \(error)")
+            }
             return
         }
     }

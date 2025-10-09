@@ -15,7 +15,7 @@ struct IntelligentAssistantView: View {
         Button(action: {
             let intellgent = IntelligentAssistantService(context: context)
             Task {
-                let response = await intellgent.performActions(userRequest: "Add 2 garlic, 3 apples and 2 bananas")
+                let response = await intellgent.performActions(userRequest: "Remove apples")
             }
         }) {
             Text("Test")
