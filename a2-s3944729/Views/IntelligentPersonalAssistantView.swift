@@ -73,7 +73,6 @@ private struct AIResponseDialog: View {
                 )
                 .shadow(radius: 5)
 
-            // Tail pointing to the right
             DialogTail()
                 .fill(Color.black)
                 .frame(width: 20, height: 20)
