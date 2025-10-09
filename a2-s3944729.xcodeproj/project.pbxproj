@@ -65,6 +65,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		F123E2BE2E975E4600F66358 /* Exceptions for "a2-s3944729" folder in "a2-s3944729" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = F10F48FB2E6EB56700ECFA8A /* a2-s3944729 */;
+		};
 		F15834192E8922EB007F3F73 /* Exceptions for "DailyRecipeWidget" folder in "DailyRecipeWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -77,6 +84,9 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F10F48FE2E6EB56700ECFA8A /* a2-s3944729 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				F123E2BE2E975E4600F66358 /* Exceptions for "a2-s3944729" folder in "a2-s3944729" target */,
+			);
 			path = "a2-s3944729";
 			sourceTree = "<group>";
 		};
@@ -529,6 +539,10 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "a2-s3944729/Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Enable Intelligent Personal Assistant";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Enable Intelligent Personal Assistant";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -556,6 +570,10 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "a2-s3944729/Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Enable Intelligent Personal Assistant";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Enable Intelligent Personal Assistant";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
