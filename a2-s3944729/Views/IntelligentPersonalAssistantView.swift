@@ -50,7 +50,7 @@ struct IntelligentPersonalAssistantView: View {
         }
     }
     
-    private func cancelRecording() {
+    private func exitAssistant() {
         speechToTextService.stopRecording()
         recording = false
         showDialog = false
@@ -59,13 +59,13 @@ struct IntelligentPersonalAssistantView: View {
     
     var body: some View {
         ZStack {
-            if recording {
+            if showDialog {
                 ZStack {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .contentShape(Rectangle()) // Makes the entire ZStack tappable
                 .onTapGesture {
-                    cancelRecording()
+                    exitAssistant()
                     print("Recording cancelled")
                 }
             }
