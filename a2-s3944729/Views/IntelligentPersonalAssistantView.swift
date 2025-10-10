@@ -8,10 +8,14 @@
 import SwiftUI
 
 struct IntelligentPersonalAssistantView: View {
+    private static let INITIAL_DIALOG_TEXT = "How can I help?"
+    
+    @Environment(\.modelContext) private var context
     @State private var recording = false
     @State private var loadingAiResponse = false
     @State private var showDialog = false
     @State private var showAlert = false
+    @State private var dialogText = IntelligentPersonalAssistantView.INITIAL_DIALOG_TEXT
     @StateObject private var speechToTextService = SpeechToTextService()
     
     private func startRecording() {
@@ -36,14 +40,21 @@ struct IntelligentPersonalAssistantView: View {
         speechToTextService.stopRecording()
         recording = false
         loadingAiResponse = true
+        let intelligentAssistantService = IntelligentAssistantService(context: context)
         print("Transcript:")
         print(speechToTextService.transcript)
+        
+        Task {
+            dialogText = await intelligentAssistantService.performActions(userRequest: speechToTextService.transcript)
+            loadingAiResponse = false
+        }
     }
     
     private func cancelRecording() {
         speechToTextService.stopRecording()
         recording = false
         showDialog = false
+        dialogText = IntelligentPersonalAssistantView.INITIAL_DIALOG_TEXT
     }
     
     var body: some View {
@@ -63,7 +74,7 @@ struct IntelligentPersonalAssistantView: View {
                 if showDialog {
                     HStack {
                         Spacer()
-                        AIResponseDialog(text: "How can I help?", loading: loadingAiResponse)
+                        AIResponseDialog(text: dialogText, loading: loadingAiResponse)
                     }
                     .padding(.horizontal)
                 }
