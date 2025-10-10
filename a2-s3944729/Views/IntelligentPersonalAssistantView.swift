@@ -10,6 +10,7 @@ import SwiftUI
 struct IntelligentPersonalAssistantView: View {
     @State private var recording = false
     @State private var loadingAiResponse = false
+    @State private var showDialog = false
     @State private var showAlert = false
     @StateObject private var speechToTextService = SpeechToTextService()
     
@@ -18,6 +19,7 @@ struct IntelligentPersonalAssistantView: View {
             do {
                 try await speechToTextService.startRecording()
                 recording = true
+                showDialog = true
             } catch {
                 print("Failed to start recording: \(error)")
                 
@@ -41,6 +43,7 @@ struct IntelligentPersonalAssistantView: View {
     private func cancelRecording() {
         speechToTextService.stopRecording()
         recording = false
+        showDialog = false
     }
     
     var body: some View {
@@ -57,7 +60,7 @@ struct IntelligentPersonalAssistantView: View {
             }
             VStack {
                 Spacer()
-                if recording {
+                if showDialog {
                     HStack {
                         Spacer()
                         AIResponseDialog(text: "How can I help?", loading: loadingAiResponse)
