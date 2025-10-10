@@ -11,26 +11,19 @@ import SwiftData
 /// View that list of all the user's saved ingredients.
 struct IngredientsView: View {
     @State private var searchText: String = ""
-    @State private var filteredIngredients: [Ingredient] = []
     @EnvironmentObject var ingredientStore: IngredientStore
     
     @Query
     private var storedIngredients: [StoredIngredient]
     
-    private func searchIngredients() {
+    private var filteredIngredients: [Ingredient] {
         let ingredients = IngredientService.storedIngredientsToIngredients(storedIngredients: storedIngredients)
-        
-        if searchText.isEmpty {
-            filteredIngredients = ingredients
-            return
+        guard !searchText.isEmpty else {
+            return ingredients
         }
-        var filteredIngredients: [Ingredient] = []
-        for ingredient in ingredients {
-            if ingredient.ingredientType.name.lowercased().contains(searchText.lowercased()) {
-                filteredIngredients.append(ingredient)
-            }
+        return ingredients.filter {
+            $0.ingredientType.name.localizedCaseInsensitiveContains(searchText)
         }
-        self.filteredIngredients = filteredIngredients
     }
     
     var body: some View {
@@ -63,9 +56,6 @@ struct IngredientsView: View {
                         }
                         .listRowSpacing(20)
                         .searchable(text: $searchText, prompt: "Search for an ingredient")
-                        .onChange(of: searchText) {
-                            searchIngredients()
-                        }
                         .scrollContentBackground(.hidden)
                     }
                     if storedIngredients.isEmpty {
@@ -73,9 +63,6 @@ struct IngredientsView: View {
                             .foregroundColor(.secondary)
                     }
                 }
-            }
-            .onAppear() {
-                searchIngredients()
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
