@@ -9,18 +9,29 @@ import SwiftUI
 
 struct IntelligentPersonalAssistantView: View {
     @State private var recording = false
+    @State private var showAlert = false
     private let speechToTextService = SpeechToTextService()
     
     private func startRecording() {
-        do {
-            try speechToTextService.startRecording()
-        } catch {
-            print("Failed to start recording: \(error)")
+        Task {
+            do {
+                try await speechToTextService.startRecording()
+                recording = true
+            } catch {
+                print("Failed to start recording: \(error)")
+                
+                let speechToTextError = error as! SpeechToTextService.SpeechToTextServiceError
+                
+                if speechToTextError == SpeechToTextService.SpeechToTextServiceError.recordPermissionDenied {
+                    showAlert = true
+                }
+            }
         }
     }
     
     private func stopRecording() {
         speechToTextService.stopRecording()
+        recording = false
         print("Transcript:")
         print(speechToTextService.transcript)
     }
@@ -39,10 +50,8 @@ struct IntelligentPersonalAssistantView: View {
                 Spacer()
                 Button(action: {
                     if recording {
-                        recording = false
                         stopRecording()
                     } else {
-                        recording = true
                         startRecording()
                     }
                 }) {
@@ -75,6 +84,13 @@ struct IntelligentPersonalAssistantView: View {
             .padding()
         }
         .padding(.vertical, 50)
+        .alert("Intelligent Assistant Unavailable", isPresented: $showAlert) {
+            Button("OK", role: .cancel) {
+                
+            }
+        } message: {
+            Text("You must grant Microphone and Record permission to use the Personal Intelligent Assistant.")
+        }
     }
 }
 

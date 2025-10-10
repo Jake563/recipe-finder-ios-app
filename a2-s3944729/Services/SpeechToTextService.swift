@@ -17,33 +17,42 @@ class SpeechToTextService: NSObject, ObservableObject {
 
     @Published var transcript = ""
     
+    enum SpeechToTextServiceError: Error {
+        case recordPermissionDenied
+    }
+    
     /// Requests the user permission to record their voice. Returns true if access is granted.
-    func requestSpeechPermission() -> Bool {
-        SFSpeechRecognizer.requestAuthorization { status in
-            switch status {
-            case .authorized:
-                print("Speech recognition authorized")
-            case .denied:
-                print("Speech recognition denied")
-            default:
-                print("Speech recognition unavailable")
+    func requestSpeechPermission() async -> Bool {
+        let speechGranted = await withCheckedContinuation { continuation in
+            SFSpeechRecognizer.requestAuthorization { status in
+                switch status {
+                case .authorized:
+                    print("Speech recognition granted")
+                    continuation.resume(returning: true)
+                case .denied:
+                    print("Speech recognition denied")
+                    continuation.resume(returning: false)
+                default:
+                    print("Speech recognition unavailable")
+                    continuation.resume(returning: false)
+                }
             }
         }
-        
-        var isGranted = false
-        
-        AVAudioApplication.requestRecordPermission { granted in
-            print(granted ? "Mic access granted" : "Mic access denied")
-            isGranted = granted
+
+        let micGranted = await AVAudioApplication.requestRecordPermission()
+        if micGranted {
+            print("Mic access granted")
+        } else {
+            print("Mic access denied")
         }
         
-        return isGranted
+        return micGranted && speechGranted
     }
 
-    func startRecording() throws {
-        if !requestSpeechPermission() {
+    func startRecording() async throws {
+        if !(await requestSpeechPermission()) {
             print("User rejected permission to record.")
-            return
+            throw SpeechToTextServiceError.recordPermissionDenied
         }
         print("Access granted to start recording.")
         
