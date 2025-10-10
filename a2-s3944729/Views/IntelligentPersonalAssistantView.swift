@@ -45,6 +45,16 @@ struct IntelligentPersonalAssistantView: View {
     
     var body: some View {
         ZStack {
+            if recording {
+                ZStack {
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .contentShape(Rectangle()) // Makes the entire ZStack tappable
+                .onTapGesture {
+                    cancelRecording()
+                    print("Recording cancelled")
+                }
+            }
             VStack {
                 Spacer()
                 if recording {
@@ -71,7 +81,7 @@ struct IntelligentPersonalAssistantView: View {
                         }
                         .fontWeight(.bold)
                         .foregroundColor(.white)
-                        .padding(30)
+                        .padding(20)
                         .background(
                             Circle()
                                 .fill(Color.black)
@@ -101,11 +111,6 @@ struct IntelligentPersonalAssistantView: View {
             } message: {
                 Text("You must grant Microphone and Record permission to use the Personal Intelligent Assistant.")
             }
-        }
-        .contentShape(Rectangle()) // Makes the entire ZStack tappable
-        .onTapGesture {
-            cancelRecording()
-            print("Recording cancelled")
         }
     }
 }
