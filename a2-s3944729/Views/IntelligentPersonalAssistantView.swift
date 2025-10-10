@@ -10,7 +10,7 @@ import SwiftUI
 struct IntelligentPersonalAssistantView: View {
     @State private var recording = false
     @State private var showAlert = false
-    private let speechToTextService = SpeechToTextService()
+    @StateObject private var speechToTextService = SpeechToTextService()
     
     private func startRecording() {
         Task {
@@ -79,6 +79,8 @@ struct IntelligentPersonalAssistantView: View {
                             )
                     )
                     .shadow(radius: 5)
+                    .scaleEffect(CGFloat(1 + speechToTextService.audioLevel))
+                    .animation(.easeOut(duration: 0.05), value: speechToTextService.audioLevel)
                 }
             }
             .padding()

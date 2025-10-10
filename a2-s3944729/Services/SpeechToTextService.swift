@@ -16,6 +16,7 @@ class SpeechToTextService: NSObject, ObservableObject {
     private var task: SFSpeechRecognitionTask?
 
     @Published var transcript = ""
+    @Published var audioLevel: Float = 0.0
     
     enum SpeechToTextServiceError: Error {
         case recordPermissionDenied
@@ -73,6 +74,7 @@ class SpeechToTextService: NSObject, ObservableObject {
         let format = inputNode.outputFormat(forBus: 0)
         inputNode.installTap(onBus: 0, bufferSize: 1024, format: format) { buffer, _ in
             request.append(buffer)
+            self.updateAudioLevel(buffer: buffer)
         }
         
         audioEngine.prepare()
@@ -98,5 +100,25 @@ class SpeechToTextService: NSObject, ObservableObject {
         task?.cancel()
         task = nil
         request = nil
+        self.audioLevel = 0.0
+    }
+    
+    private func updateAudioLevel(buffer: AVAudioPCMBuffer) {
+        guard let channelData = buffer.floatChannelData?[0] else {
+            return
+        }
+        let channelDataArray = Array(UnsafeBufferPointer(start: channelData, count: Int(buffer.frameLength)))
+
+        // Compute RMS
+        let rms = sqrt(channelDataArray.map { $0 * $0 }.reduce(0, +) / Float(buffer.frameLength))
+
+        // Convert RMS to decibels
+        let db = 20 * log10(rms)
+        let minDb: Float = -80
+        let level = max(0.0, min(1.0, (db + abs(minDb)) / abs(minDb))) // normalize 0–1
+
+        DispatchQueue.main.async {
+            self.audioLevel = level
+        }
     }
 }
