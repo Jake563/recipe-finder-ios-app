@@ -18,31 +18,45 @@ class IntelligentAssistantService {
     
     Make sure Ingredient names are lowercase and singular nouns only (e.g., "Tomatoes" -> "Tomato").
     
+    Provide a short, user-friendly response in the summary.
+    
     Here is what the user has requested: 
     """
     
     static private let AI_ACTION_SCHEMA: [String: Any] = [
-        "type": "array",
-        "items": [
-            "type": "object",
-            "properties": [
-                "action": [
-                    "type": "string",
-                    "enum": ["add_ingredient", "remove_ingredient"]
-                ],
-                "data": [
+        "type": "object",
+        "properties": [
+            "summary": ["type": "string"],
+            "actions": [
+                "type": "array",
+                "items": [
                     "type": "object",
                     "properties": [
-                        "ingredient": ["type": "string"],
-                        "quantity": ["type": "integer"],
-                        "unit": ["type": "string"]
+                        "action": [
+                            "type": "string",
+                            "enum": ["add_ingredient", "remove_ingredient"]
+                        ],
+                        "data": [
+                            "type": "object",
+                            "properties": [
+                                "ingredient": ["type": "string"],
+                                "quantity": ["type": "integer"],
+                                "unit": ["type": "string"]
+                            ],
+                            "required": ["ingredient"]
+                        ]
                     ],
-                    "required": ["ingredient"]
+                    "required": ["action", "data"]
                 ]
-            ],
-            "required": ["action", "data"]
-        ]
+            ]
+        ],
+        "required": ["summary", "actions"]
     ]
+    
+    private struct IntelligentAssistantResponse: Decodable {
+        let summary: String
+        let actions: [Action]
+    }
     
     private struct Action: Decodable {
         let action: String
@@ -146,21 +160,25 @@ class IntelligentAssistantService {
         
         print(jsonData!)
         
-        var actions: [Action] = []
+        var intelligentAssistantResponse: IntelligentAssistantResponse?
         
         do {
-            actions = try JSONDecoder().decode([Action].self, from: jsonData!)
+            intelligentAssistantResponse = try JSONDecoder().decode(IntelligentAssistantResponse.self, from: jsonData!)
         } catch {
-            print("Error decoding to actions: \(error)")
+            print("Error decoding to intelligent assistant response: \(error)")
             return "An error occured. Please try again later."
         }
         
-        for action in actions {
+        if intelligentAssistantResponse == nil {
+            return "An error occured. Please try again later."
+        }
+        
+        for action in intelligentAssistantResponse!.actions {
             print("Received action: \(action)")
             print("Action: \(action.action)")
             performAction(action: action)
         }
         
-        return ""
+        return intelligentAssistantResponse!.summary
     }
 }
