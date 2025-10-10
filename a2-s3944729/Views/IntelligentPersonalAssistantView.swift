@@ -36,62 +36,74 @@ struct IntelligentPersonalAssistantView: View {
         print(speechToTextService.transcript)
     }
     
+    private func cancelRecording() {
+        speechToTextService.stopRecording()
+        recording = false
+    }
+    
     var body: some View {
-        VStack {
-            Spacer()
-            if recording {
+        ZStack {
+            VStack {
+                Spacer()
+                if recording {
+                    HStack {
+                        Spacer()
+                        AIResponseDialog(text: "How can I help?")
+                    }
+                    .padding(.horizontal)
+                }
                 HStack {
                     Spacer()
-                    AIResponseDialog(text: "How can I help?")
-                }
-                .padding(.horizontal)
-            }
-            HStack {
-                Spacer()
-                Button(action: {
-                    if recording {
-                        stopRecording()
-                    } else {
-                        startRecording()
+                    Button(action: {
+                        if recording {
+                            stopRecording()
+                        } else {
+                            startRecording()
+                        }
+                    }) {
+                        ZStack {
+                            Image(systemName: "microphone.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 30, height: 30)
+                        }
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .padding(30)
+                        .background(
+                            Circle()
+                                .fill(Color.black)
+                        )
+                        .overlay(
+                            Circle()
+                                .stroke(
+                                    AngularGradient(
+                                        colors: [.red, .orange, .yellow, .green, .blue, .purple, .red],
+                                        center: .center
+                                    ),
+                                    lineWidth: 5
+                                )
+                        )
+                        .shadow(radius: 5)
+                        .scaleEffect(CGFloat(1 + speechToTextService.audioLevel))
+                        .animation(.easeOut(duration: 0.05), value: speechToTextService.audioLevel)
                     }
-                }) {
-                    ZStack {
-                        Image(systemName: "microphone.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 30, height: 30)
-                    }
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                    .padding(30)
-                    .background(
-                        Circle()
-                            .fill(Color.black)
-                    )
-                    .overlay(
-                        Circle()
-                            .stroke(
-                                AngularGradient(
-                                    colors: [.red, .orange, .yellow, .green, .blue, .purple, .red],
-                                    center: .center
-                                ),
-                                lineWidth: 5
-                            )
-                    )
-                    .shadow(radius: 5)
-                    .scaleEffect(CGFloat(1 + speechToTextService.audioLevel))
-                    .animation(.easeOut(duration: 0.05), value: speechToTextService.audioLevel)
                 }
+                .padding()
             }
-            .padding()
+            .padding(.vertical, 50)
+            .alert("Intelligent Assistant Unavailable", isPresented: $showAlert) {
+                Button("OK", role: .cancel) {
+                    
+                }
+            } message: {
+                Text("You must grant Microphone and Record permission to use the Personal Intelligent Assistant.")
+            }
         }
-        .padding(.vertical, 50)
-        .alert("Intelligent Assistant Unavailable", isPresented: $showAlert) {
-            Button("OK", role: .cancel) {
-                
-            }
-        } message: {
-            Text("You must grant Microphone and Record permission to use the Personal Intelligent Assistant.")
+        .contentShape(Rectangle()) // Makes the entire ZStack tappable
+        .onTapGesture {
+            cancelRecording()
+            print("Recording cancelled")
         }
     }
 }
