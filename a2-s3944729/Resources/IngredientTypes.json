@@ -13,6 +13,7 @@
   { "name": "Spinach", "icon": "vegetable", "quantityUnit": "weight" },
   { "name": "Bell Pepper", "icon": "vegetable", "quantityUnit": "count" },
   { "name": "Cucumber", "icon": "vegetable", "quantityUnit": "count" },
+  { "name": "Potato", "icon": "vegetable", "quantityUnit": "count" },
 
   { "name": "Egg", "icon": "dairy", "quantityUnit": "count" },
   { "name": "Cheese", "icon": "dairy", "quantityUnit": "weight" },
@@ -40,4 +41,9 @@
   { "name": "Dark Chocolate", "icon": "misc", "quantityUnit": "weight" },
   { "name": "Honey", "icon": "misc", "quantityUnit": "weight" },
   { "name": "Lemon", "icon": "misc", "quantityUnit": "count" }
+  
+  { "name": "Roast", "icon": "misc", "quantityUnit": "count" }
+  { "name": "Chicken Fillet", "icon": "misc", "quantityUnit": "count" }
+  { "name": "Breast Fillet", "icon": "misc", "quantityUnit": "count" }
+  { "name": "Roast Chicken", "icon": "misc", "quantityUnit": "count" }
 ]

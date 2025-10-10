@@ -41,9 +41,12 @@ class IntelligentAssistantService {
                             "properties": [
                                 "ingredient": ["type": "string"],
                                 "quantity": ["type": "integer"],
-                                "unit": ["type": "string"]
+                                "unit": [
+                                    "type": "string",
+                                    "enum": ["mL", "L", "g", "kg"]
+                                ]
                             ],
-                            "required": ["ingredient"]
+                            "required": ["ingredient", "quantity"]
                         ]
                     ],
                     "required": ["action", "data"]
@@ -65,7 +68,7 @@ class IntelligentAssistantService {
     
     private struct ActionData: Decodable {
         let ingredient: String
-        let quantity: Int?
+        let quantity: Int
         let unit: String?
     }
     
@@ -92,7 +95,7 @@ class IntelligentAssistantService {
         }
         
         let newIngredient = StoredIngredient(
-            quantity: ingredientData.quantity!,
+            quantity: ingredientData.quantity,
             quantityMassUnit: ingredientData.unit,
             ingredientTypeID: index
         )
