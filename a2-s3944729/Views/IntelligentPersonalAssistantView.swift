@@ -9,6 +9,7 @@ import SwiftUI
 
 struct IntelligentPersonalAssistantView: View {
     @State private var recording = false
+    @State private var loadingAiResponse = false
     @State private var showAlert = false
     @StateObject private var speechToTextService = SpeechToTextService()
     
@@ -32,6 +33,7 @@ struct IntelligentPersonalAssistantView: View {
     private func stopRecording() {
         speechToTextService.stopRecording()
         recording = false
+        loadingAiResponse = true
         print("Transcript:")
         print(speechToTextService.transcript)
     }
@@ -48,7 +50,7 @@ struct IntelligentPersonalAssistantView: View {
                 if recording {
                     HStack {
                         Spacer()
-                        AIResponseDialog(text: "How can I help?")
+                        AIResponseDialog(text: "How can I help?", loading: loadingAiResponse)
                     }
                     .padding(.horizontal)
                 }
@@ -110,23 +112,31 @@ struct IntelligentPersonalAssistantView: View {
 
 private struct AIResponseDialog: View {
     let text: String
+    let loading: Bool
 
     var body: some View {
         VStack(spacing: 0) {
             // Main bubble
-            Text(text)
-                .font(.body)
-                .foregroundColor(.white)
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.black)
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.white)
-                )
-                .shadow(radius: 5)
+            ZStack {
+                if loading {
+                    ThreeDotsLoadingView()
+                } else {
+                    Text(text)
+                }
+            }
+            .frame(minWidth: 100)
+            .font(.body)
+            .foregroundColor(.white)
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.black)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color.white)
+            )
+            .shadow(radius: 5)
 
             DialogTail()
                 .fill(Color.black)
@@ -148,6 +158,30 @@ private struct DialogTail: Shape {
         path.closeSubpath()
 
         return path
+    }
+}
+
+private struct ThreeDotsLoadingView: View {
+    @State private var animate = false
+
+    var body: some View {
+        HStack(spacing: 8) {
+            ForEach(0..<3) { index in
+                Circle()
+                    .frame(width: 10, height: 10)
+                    .scaleEffect(animate ? 1 : 0.5)
+                    .animation(
+                        Animation
+                            .easeInOut(duration: 0.5)
+                            .repeatForever()
+                            .delay(Double(index) * 0.2),
+                        value: animate
+                    )
+            }
+        }
+        .onAppear {
+            animate = true
+        }
     }
 }
 
