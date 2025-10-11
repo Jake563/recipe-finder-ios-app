@@ -18,6 +18,7 @@ private struct IngredientDTO: Codable {
 struct AllIngredients {
     private static let FILE_NAME = "IngredientTypes"
     static let ingredients = getIngredientsFromFile()
+    private static let indexedIngredients = getIndexedIngredients()
     
     /// Returns a list of ingredient types stored in the Ingredient types JSON file
     static private func getIngredientsFromFile() -> [IngredientType] {
@@ -40,5 +41,16 @@ struct AllIngredients {
             return []
         }
     }
-
+    
+    static private func getIndexedIngredients() -> [String: IngredientType]  {
+        var indexedIngredients: [String: IngredientType] = [:]
+        for ingredient in ingredients {
+            indexedIngredients[ingredient.name.lowercased()] = ingredient
+        }
+        return indexedIngredients
+    }
+    
+    static func getIngredientByName(ingredientName: String) -> IngredientType? {
+        return indexedIngredients[ingredientName]
+    }
 }
