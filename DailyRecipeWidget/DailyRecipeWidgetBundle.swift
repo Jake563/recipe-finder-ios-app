@@ -12,7 +12,5 @@ import SwiftUI
 struct DailyRecipeWidgetBundle: WidgetBundle {
     var body: some Widget {
         DailyRecipeWidget()
-        DailyRecipeWidgetControl()
-        DailyRecipeWidgetLiveActivity()
     }
 }
