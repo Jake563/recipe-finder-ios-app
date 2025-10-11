@@ -21,6 +21,8 @@ struct IngredientDetailsView: View {
     @Environment(\.modelContext) private var context
     @EnvironmentObject private var ingredientStore: IngredientStore
     @EnvironmentObject private var toastNotificationService: ToastNotificationService
+    
+    private let recipeService = RecipeService.getSingleRecipeService()
 
     @Query
     private var storedIngredients: [StoredIngredient]
@@ -73,6 +75,9 @@ struct IngredientDetailsView: View {
                 break
             }
         }
+        
+        self.recipeService.requestRecipeRefresh()
+        
         ingredientStore.hasIngredientChanged = true
         dismiss()
     }
@@ -93,6 +98,8 @@ struct IngredientDetailsView: View {
                 break
             }
         }
+        
+        self.recipeService.requestRecipeRefresh()
 
         ingredientStore.hasIngredientChanged = true
         dismiss()
@@ -116,6 +123,8 @@ struct IngredientDetailsView: View {
         try? context.save()
         ingredientStore.hasIngredientChanged = true
         ingredientStore.newIngredientAdded = true
+        
+        self.recipeService.requestRecipeRefresh()
         
         toastNotificationService.displayNotification(message: "Ingredient Added!")
         dismiss()

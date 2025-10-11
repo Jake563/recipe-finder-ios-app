@@ -15,8 +15,10 @@ struct RecipesView: View {
     @State private var recipes: [Recipe] = []
     @State private var favouritedRecipes = [String: String]()
     @EnvironmentObject private var ingredientStore: IngredientStore
+    
     private let aiService = AiService(session: URLSession.shared)
     private let authService = AuthService.getAuthService()
+    private let recipeService = RecipeService.getSingleRecipeService()
 
     @Binding var selectedTab: Int
     
@@ -28,7 +30,7 @@ struct RecipesView: View {
         if recipesLoading {
             return
         }
-        if !ingredientStore.hasIngredientChanged {
+        if !recipeService.shouldRefreshRecipes() {
             // User has not made any changes to their ingredients since the last time recipes were displayed
             recipesLoading = false
             return

@@ -11,6 +11,8 @@ import SwiftData
 /// Service representing the Intelligent Personal Assistant that can perform various tasks on the app based on a string input.
 class IntelligentAssistantService {
     private let aiService = AiService(session: URLSession.shared)
+    private let recipeService = RecipeService.getSingleRecipeService()
+    
     private let ASSISTANT_CONTEXT_PROMPT = """
     You are an intelligent assistant. You can perform the following actions:
     
@@ -21,6 +23,7 @@ class IntelligentAssistantService {
     Make sure Ingredient names are lowercase and singular nouns only (e.g., "Tomatoes" -> "tomato").
     
     Provide a short, user-friendly response in the summary.
+    If the request is irrelevant, set the summary to "Sorry, I cannot help with that.".
     
     Here is what the user has requested: 
     """
@@ -132,6 +135,8 @@ class IntelligentAssistantService {
             ingredientTypeName: foundIngredientType!.name
         )
         
+        self.recipeService.requestRecipeRefresh()
+        
         context.insert(newIngredient)
         try context.save()
     }
@@ -150,6 +155,8 @@ class IntelligentAssistantService {
         if ingredientToDelete == nil {
             return
         }
+        
+        self.recipeService.requestRecipeRefresh()
         
         context.delete(ingredientToDelete!)
         try context.save()
@@ -172,6 +179,9 @@ class IntelligentAssistantService {
         
         ingredientToUpdate!.quantity += ingredientData.quantityDifference
         ingredientToUpdate!.quantityMassUnit = ingredientData.unit
+        
+        self.recipeService.requestRecipeRefresh()
+        
         try context.save()
     }
     
