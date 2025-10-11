@@ -14,6 +14,7 @@ struct RecipesView: View {
     @State private var recipeLoadingError = false
     @State private var recipes: [Recipe] = []
     @State private var favouritedRecipes = [String: String]()
+    @Environment(\.modelContext) private var context
     
     private let aiService = AiService(session: URLSession.shared)
     private let authService = AuthService.getAuthService()
@@ -41,6 +42,7 @@ struct RecipesView: View {
             let ingredients = IngredientService.storedIngredientsToIngredients(storedIngredients: storedIngredients)
             do {
                 recipes = try await aiService.getRecipes(ingredients: ingredients)
+                recipeService.saveRecentRecipes(recipes: recipes, context: context)
             } catch {
                 recipeLoadingError = true
             }
