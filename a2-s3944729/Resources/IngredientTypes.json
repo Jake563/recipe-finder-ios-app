@@ -40,10 +40,10 @@
   { "name": "Milk Chocolate", "icon": "misc", "quantityUnit": "weight" },
   { "name": "Dark Chocolate", "icon": "misc", "quantityUnit": "weight" },
   { "name": "Honey", "icon": "misc", "quantityUnit": "weight" },
-  { "name": "Lemon", "icon": "misc", "quantityUnit": "count" }
+  { "name": "Lemon", "icon": "misc", "quantityUnit": "count" },
   
-  { "name": "Roast", "icon": "misc", "quantityUnit": "count" }
-  { "name": "Chicken Fillet", "icon": "misc", "quantityUnit": "count" }
-  { "name": "Breast Fillet", "icon": "misc", "quantityUnit": "count" }
-  { "name": "Roast Chicken", "icon": "misc", "quantityUnit": "count" }
+  { "name": "Roast", "icon": "misc", "quantityUnit": "count" },
+  { "name": "Chicken Fillet", "icon": "misc", "quantityUnit": "count" },
+  { "name": "Breast Fillet", "icon": "misc", "quantityUnit": "count" },
+  { "name": "Roast Chicken", "icon": "misc", "quantityUnit": "count" },
 ]
