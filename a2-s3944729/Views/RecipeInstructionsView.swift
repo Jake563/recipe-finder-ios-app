@@ -138,20 +138,39 @@ struct RecipeInstructionsView: View {
                         Button(action: {
                             prevStep()
                         }) {
-                            Text("< Prev")
+                            HStack {
+                                Image(systemName: "arrow.left")
+                                Text("Prev")
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 75)
+                            }
                         }
                         .font(.title)
                         .buttonStyle(PrimaryButtonStyle())
+                    } else {
+                        // Empty space to preserve button layout
+                        VStack {}
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 75)
                     }
-                    Spacer()
+                    Spacer(minLength: 16)
                     if currentInstructionIndex != recipe.instructions.count - 1 {
                         Button(action: {
                             nextStep()
                         }) {
-                            Text("Next >")
+                            HStack {
+                                Text("Next")
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 75)
+                                Image(systemName: "arrow.right")
+                            }
                         }
                         .font(.title)
                         .buttonStyle(PrimaryButtonStyle())
+                    } else {
+                        VStack {}
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 75)
                     }
                 }
             }
@@ -198,7 +217,8 @@ struct RecipeInstructionsView: View {
         ],
         instructions: [
             Instruction(instruction: "Preheat stove top for 10 minutes.", timer: 5),
-            Instruction(instruction: "Crack eggs into pan.", timer: 0)
+            Instruction(instruction: "Crack eggs into pan.", timer: 0),
+            Instruction(instruction: "Enjoy.", timer: 0)
         ]
     ))
 }
