@@ -16,7 +16,6 @@ let ACCOUNT_TAB_ID = 3
 /// View that allows the ingredients, recipes and saved recipes views to be navigated to.
 struct MainView: View {
     @State private var selectedTab = 0
-    @State private var showIntelligentAssistant = false
 
     var body: some View {
         ZStack {
