@@ -165,7 +165,7 @@ struct SavedRecipesView: View {
                                         recipeBeingLongedPressedID = savedRecipe.id
                                     }
                                 let combinedGesture = longPressGesture.sequenced(before: dragGesture)
-
+                                
                                 let recipeIsLongPressed = recipeBeingLongedPressedID == savedRecipe.id
                                 
                                 let isPressedRecipeAbove = isPressedRecipeAboveFunc(recipeIndex: index)
@@ -177,10 +177,11 @@ struct SavedRecipesView: View {
                                     NavigationLink(destination: RecipeInfoView(recipe: savedRecipe.recipe)) {
                                         HStack {
                                             Text(savedRecipe.recipe.name)
+                                                .foregroundStyle(.primary)
                                         }
                                         Spacer()
                                     }
-                                    .accentColor(.primary)
+                                    .buttonStyle(.plain)
                                     Button(action: {
                                         Task {
                                             try? await SavedRecipesService.deleteRecipe(savedRecipeId: savedRecipe.id!)
@@ -194,7 +195,7 @@ struct SavedRecipesView: View {
                                 }
                                 .frame(height: BUTTON_HEIGHT)
                                 .padding(16)
-                                .background(Color(red:0.95, green:0.95, blue:0.95))
+                                .background(Color(uiColor: .secondarySystemBackground))
                                 .cornerRadius(16)
                                 .scaleEffect(recipeIsLongPressed ? 1.1 : 1)
                                 .animation(.spring(), value: recipeBeingLongedPressedID)
