@@ -83,7 +83,7 @@ struct RecipeInfoView: View {
                         dismiss()
                     }) {
                         Image(systemName: "arrow.left")
-                            .foregroundColor(.black)
+                            .foregroundColor(.primary)
                     }
                 }
                 ToolbarItem(placement: .navigationBarLeading) {

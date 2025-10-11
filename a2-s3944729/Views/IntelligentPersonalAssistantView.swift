@@ -13,7 +13,7 @@ struct IntelligentPersonalAssistantView: View {
     @Environment(\.modelContext) private var context
     @State private var recording = false
     @State private var loadingAiResponse = false
-    @State private var showDialog = false
+    @State private var showDialog = true
     @State private var showAlert = false
     @State private var dialogText = IntelligentPersonalAssistantView.INITIAL_DIALOG_TEXT
     @StateObject private var speechToTextService = SpeechToTextService()
@@ -157,8 +157,8 @@ private struct AIResponseDialog: View {
             DialogTail()
                 .fill(Color.black)
                 .frame(width: 20, height: 20)
-                .rotationEffect(.degrees(90)) // rotate so it points right
-                .offset(x: 0, y: -5) // position next to the bubble
+                .rotationEffect(.degrees(90))
+                .offset(x: 0, y: -5)
         }
         .frame(maxWidth: 250, alignment: .trailing)
     }

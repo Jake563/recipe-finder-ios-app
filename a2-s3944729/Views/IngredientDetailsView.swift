@@ -183,7 +183,7 @@ struct IngredientDetailsView: View {
                         dismiss()
                     }) {
                         Image(systemName: "arrow.left")
-                            .foregroundColor(.black)
+                            .foregroundColor(.primary)
                     }
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -194,7 +194,7 @@ struct IngredientDetailsView: View {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: deleteIngredient) {
                             Image(systemName: "trash")
-                                .foregroundColor(.black)
+                                .foregroundColor(.red)
                         }
                     }
                 }

@@ -7,16 +7,15 @@
 
 import SwiftUI
 
-let PRIMARY_BUTTON_COLOUR = Color(red:0.95, green:0.95, blue:0.95)
-
 /// Style that stores the primary button styles.
 struct PrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .padding(16)
-            .background(configuration.isPressed ? Color.white.opacity(0.6) : PRIMARY_BUTTON_COLOUR)
-            .foregroundColor(.black)
+            .background(Color.accentColor)
+            .foregroundColor(.white)
             .cornerRadius(16)
+            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
     }
 }
 
@@ -24,8 +23,9 @@ struct SquareButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .padding(10)
-            .background(configuration.isPressed ? Color.white.opacity(0.6) : PRIMARY_BUTTON_COLOUR)
-            .foregroundColor(.black)
+            .background(Color.accentColor)
+            .foregroundColor(.white)
             .cornerRadius(32)
+            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
     }
 }

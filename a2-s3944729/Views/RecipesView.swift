@@ -108,16 +108,14 @@ struct RecipesView: View {
                                         .foregroundStyle(.pink)
                                 } else {
                                     Image(systemName: "heart")
-                                        .foregroundStyle(.black)
+                                        .foregroundStyle(.primary)
                                 }
                             }
                             .buttonStyle(.plain)
                         }
-                        .listRowBackground(PRIMARY_BUTTON_COLOUR)
                         .frame(height: 50)
                     }
                     .listRowSpacing(20)
-                    .scrollContentBackground(.hidden)
                     getStatusTextView()
                 }
             }

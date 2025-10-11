@@ -185,7 +185,7 @@ struct RecipeInstructionsView: View {
                         dismiss()
                     }) {
                         Image(systemName: "arrow.left")
-                            .foregroundColor(.black)
+                            .foregroundColor(.primary)
                     }
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -197,7 +197,7 @@ struct RecipeInstructionsView: View {
                         instructionHelpShown = true
                     }) {
                         Image(systemName: "questionmark.circle")
-                            .foregroundColor(.black)
+                            .foregroundColor(.primary)
                     }
                 }
             }

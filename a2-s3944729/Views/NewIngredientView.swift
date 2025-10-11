@@ -54,15 +54,12 @@ struct NewIngredientView: View {
                         ),
                         addingIngredient: true)) {
                             Label(ingredient.name.capitalized, systemImage: "plus")
-                            .foregroundStyle(.black)
                     }
-                    .listRowBackground(PRIMARY_BUTTON_COLOUR)
                 }
                 .searchable(text: $searchText, prompt: "Search for an ingredient")
                 .onChange(of: searchText) {
                     searchIngredients()
                 }
-                .scrollContentBackground(.hidden)
                 .listRowSpacing(20)
             }
             .navigationBarBackButtonHidden(true)
@@ -72,7 +69,7 @@ struct NewIngredientView: View {
                         dismiss()
                     }) {
                         Image(systemName: "arrow.left")
-                            .foregroundColor(.black)
+                            .foregroundColor(.primary)
                     }
                 }
                 ToolbarItem(placement: .navigationBarLeading) {

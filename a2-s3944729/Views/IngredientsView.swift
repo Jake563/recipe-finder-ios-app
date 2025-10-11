@@ -42,6 +42,7 @@ struct IngredientsView: View {
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 30, height: 30)
+                                        .foregroundStyle(.primary)
                                     Text(ingredient.ingredientType.name.capitalized)
                                     Spacer()
                                     if let quantityMassUnit = ingredient.quantityMassUnit {
@@ -51,11 +52,9 @@ struct IngredientsView: View {
                                     }
                                 }
                             }
-                            .listRowBackground(PRIMARY_BUTTON_COLOUR)
                         }
                         .listRowSpacing(20)
                         .searchable(text: $searchText, prompt: "Search for an ingredient")
-                        .scrollContentBackground(.hidden)
                     }
                     if storedIngredients.isEmpty {
                         Text("You currently have no ingredients.")
