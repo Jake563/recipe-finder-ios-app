@@ -41,8 +41,7 @@ struct IntelligentPersonalAssistantView: View {
         recording = false
         loadingAiResponse = true
         let intelligentAssistantService = IntelligentAssistantService(context: context)
-        print("Transcript:")
-        print(speechToTextService.transcript)
+        print("Transcript: '\(speechToTextService.transcript)'")
         
         Task {
             dialogText = await intelligentAssistantService.performActions(userRequest: speechToTextService.transcript)
@@ -66,7 +65,6 @@ struct IntelligentPersonalAssistantView: View {
                 .contentShape(Rectangle()) // Makes the entire ZStack tappable
                 .onTapGesture {
                     exitAssistant()
-                    print("Recording cancelled")
                 }
             }
             VStack {
@@ -120,10 +118,9 @@ struct IntelligentPersonalAssistantView: View {
             .padding(.vertical, 50)
             .alert("Intelligent Assistant Unavailable", isPresented: $showAlert) {
                 Button("OK", role: .cancel) {
-                    
                 }
             } message: {
-                Text("You must grant Microphone and Record permission to use the Personal Intelligent Assistant.")
+                Text("You must grant Microphone and Speech Recognition permissions to use the Personal Intelligent Assistant.")
             }
         }
     }
