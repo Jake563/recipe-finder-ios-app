@@ -14,7 +14,7 @@ private struct IngredientDTO: Codable {
     let quantityUnit: QuantityUnit
 }
 
-/// Module that stores a list of ingredients the user can add.
+/// Service responsible for ingredients that a user can add.
 struct AllIngredients {
     private static let FILE_NAME = "IngredientTypes"
     static let ingredients = getIngredientsFromFile()

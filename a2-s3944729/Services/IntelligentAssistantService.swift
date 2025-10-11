@@ -216,7 +216,7 @@ class IntelligentAssistantService {
         }
     }
     
-    /// Asks the intelligent personal assistant to perform the given user request. Returns the Assistant's response.
+    /// Asks the intelligent personal assistant to perform the given user request. Returns a summary of what the assistant performed,
     func performActions(userRequest: String) async -> String {
         let prompt = ASSISTANT_CONTEXT_PROMPT + userRequest
         let jsonData = await aiService.getAiResponse(prompt: prompt, responseSchema: IntelligentAssistantService.AI_ACTION_SCHEMA)
