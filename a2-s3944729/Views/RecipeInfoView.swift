@@ -22,7 +22,7 @@ struct RecipeInfoView: View {
         let ingredients = IngredientService.storedIngredientsToIngredients(storedIngredients: storedIngredients)
         
         for ingredient in ingredients {
-            if ingredient.ingredientType.name == requiredIngredient.name {
+            if ingredient.ingredientType.name == requiredIngredient.name.lowercased() {
                 return ingredient
             }
         }
