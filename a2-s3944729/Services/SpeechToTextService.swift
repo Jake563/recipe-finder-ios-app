@@ -9,6 +9,7 @@ import SwiftUI
 import Speech
 import AVFoundation
 
+/// Service responsible for converting Speech to Text
 class SpeechToTextService: NSObject, ObservableObject {
     private let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-AU"))!
     private let audioEngine = AVAudioEngine()
@@ -22,7 +23,7 @@ class SpeechToTextService: NSObject, ObservableObject {
         case recordPermissionDenied
     }
     
-    /// Requests the user permission to record their voice. Returns true if access is granted.
+    /// Requests the user the needed permissions to allow their speech to be converted to text. Returns true if access is granted.
     func requestSpeechPermission() async -> Bool {
         let speechGranted = await withCheckedContinuation { continuation in
             SFSpeechRecognizer.requestAuthorization { status in
@@ -50,6 +51,7 @@ class SpeechToTextService: NSObject, ObservableObject {
         return micGranted && speechGranted
     }
 
+    /// Starts converting the user's speech to text
     func startRecording() async throws {
         transcript = ""
         if !(await requestSpeechPermission()) {
@@ -94,6 +96,7 @@ class SpeechToTextService: NSObject, ObservableObject {
         }
     }
 
+    /// Stops recording the user's speech to text
     func stopRecording() {
         audioEngine.stop()
         audioEngine.inputNode.removeTap(onBus: 0)
@@ -104,6 +107,7 @@ class SpeechToTextService: NSObject, ObservableObject {
         self.audioLevel = 0.0
     }
     
+    // Calculates how loud the user is speaking on a 0.0 to 1.0 scale.
     private func updateAudioLevel(buffer: AVAudioPCMBuffer) {
         guard let channelData = buffer.floatChannelData?[0] else {
             return
