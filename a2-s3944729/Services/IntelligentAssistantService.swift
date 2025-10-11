@@ -14,7 +14,7 @@ class IntelligentAssistantService {
     You are an intelligent assistant. You can perform the following actions:
     
     add_ingredient - Adds an ingredient to the user's ingredients.
-    remove_ingredient - Removes an ingredient from the user's ingredients.
+    delete_ingredient - Removes an ingredient from the user's ingredients.
     update_ingredient - Updates an ingredient in the user's ingredients.
     
     Make sure Ingredient names are lowercase and singular nouns only (e.g., "Tomatoes" -> "tomato").
@@ -35,7 +35,7 @@ class IntelligentAssistantService {
                     "properties": [
                         "action": [
                             "type": "string",
-                            "enum": ["add_ingredient", "remove_ingredient", "update_ingredient"]
+                            "enum": ["add_ingredient", "delete_ingredient", "update_ingredient"]
                         ],
                         "data": [
                             "type": "object",
@@ -52,7 +52,7 @@ class IntelligentAssistantService {
                                     ],
                                     "required": ["ingredient", "quantity"]
                                 ],
-                                "removeIngredientData": [
+                                "deleteIngredientData": [
                                     "type": "object",
                                     "properties": [
                                         "ingredient": ["type": "string"],
@@ -93,7 +93,7 @@ class IntelligentAssistantService {
     
     private struct ActionData: Decodable {
         let addIngredientData: AddIngredientData?
-        let removeIngredientData: RemoveIngredientData?
+        let deleteIngredientData: DeleteIngredientData?
         let updateIngredientData: UpdateIngredientData?
     }
     
@@ -103,7 +103,7 @@ class IntelligentAssistantService {
         let unit: String?
     }
     
-    private struct RemoveIngredientData: Decodable {
+    private struct DeleteIngredientData: Decodable {
         let ingredient: String
     }
     
@@ -135,22 +135,22 @@ class IntelligentAssistantService {
         try context.save()
     }
     
-    private func removeIngredient(ingredientData: RemoveIngredientData) throws {
+    private func deleteIngredient(ingredientData: DeleteIngredientData) throws {
         let userIngredients = try context.fetch(FetchDescriptor<StoredIngredient>())
-        var ingredientToRemove: StoredIngredient?
+        var ingredientToDelete: StoredIngredient?
         
         for userIngredient in userIngredients {
             if userIngredient.ingredientTypeName == ingredientData.ingredient {
-                ingredientToRemove = userIngredient
+                ingredientToDelete = userIngredient
                 break
             }
         }
         
-        if ingredientToRemove == nil {
+        if ingredientToDelete == nil {
             return
         }
         
-        context.delete(ingredientToRemove!)
+        context.delete(ingredientToDelete!)
         try context.save()
     }
     
@@ -188,13 +188,13 @@ class IntelligentAssistantService {
             return
         }
         
-        if action.action == "remove_ingredient" {
-            if action.data.removeIngredientData == nil {
+        if action.action == "delete_ingredient" {
+            if action.data.deleteIngredientData == nil {
                 return
             }
-            print("Removing ingredient: \(action.data.removeIngredientData!.ingredient)")
+            print("Removing ingredient: \(action.data.deleteIngredientData!.ingredient)")
             do {
-                try removeIngredient(ingredientData: action.data.removeIngredientData!)
+                try deleteIngredient(ingredientData: action.data.deleteIngredientData!)
             } catch {
                 print("Failed to delete ingredient: \(error)")
             }
