@@ -20,7 +20,7 @@ class IntelligentAssistantService {
     delete_ingredient - Removes an ingredient from the user's ingredients.
     update_ingredient - Updates an ingredient in the user's ingredients.
     
-    Make sure Ingredient names are lowercase and singular nouns only (e.g., "Tomatoes" -> "tomato").
+    Make sure Ingredient names are lowercase and singular nouns only (e.g. "Tomatoes" -> "tomato").
     
     Provide a short, user-friendly response in the summary.
     If the request is irrelevant, set the summary to "Sorry, I cannot help with that.".
