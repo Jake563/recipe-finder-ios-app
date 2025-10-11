@@ -57,7 +57,7 @@ struct RecipeInfoView: View {
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 30, height: 30)
                                 }
-                                Text(requiredIngredient.name)
+                                Text(requiredIngredient.name.capitalized)
                             }
                             Spacer()
                             Text("\(String(requiredIngredient.quantity))\(requiredIngredient.quantityMassUnit ?? "")")

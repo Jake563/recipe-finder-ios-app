@@ -43,7 +43,7 @@ struct IngredientsView: View {
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 30, height: 30)
-                                    Text(ingredient.ingredientType.name)
+                                    Text(ingredient.ingredientType.name.capitalized)
                                     Spacer()
                                     if let quantityMassUnit = ingredient.quantityMassUnit {
                                         Text("\(ingredient.quantity)\(quantityMassUnit)")

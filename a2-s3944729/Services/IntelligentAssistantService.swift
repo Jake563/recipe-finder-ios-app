@@ -16,7 +16,7 @@ class IntelligentAssistantService {
     add_ingredient - Adds an ingredient to the user's ingredients.
     remove_ingredient - Removes an ingredient from the user's ingredients.
     
-    Make sure Ingredient names are lowercase and singular nouns only (e.g., "Tomatoes" -> "Tomato").
+    Make sure Ingredient names are lowercase and singular nouns only (e.g., "Tomatoes" -> "tomato").
     
     Provide a short, user-friendly response in the summary.
     
@@ -100,17 +100,7 @@ class IntelligentAssistantService {
     }
     
     private func addIngredient(ingredientData: AddIngredientData) throws {
-        var foundIngredientType: IngredientType? = nil
-        var index = 0;
-        
-        for ingredientType in AllIngredients.ingredients {
-            if ingredientType.name.lowercased() == ingredientData.ingredient {
-                foundIngredientType = ingredientType
-                break
-            }
-            index = index + 1;
-        }
-        
+        let foundIngredientType: IngredientType? = AllIngredients.getIngredientByName(ingredientName: ingredientData.ingredient)
         if foundIngredientType == nil {
             return
         }
@@ -118,7 +108,7 @@ class IntelligentAssistantService {
         let newIngredient = StoredIngredient(
             quantity: ingredientData.quantity,
             quantityMassUnit: ingredientData.unit,
-            ingredientTypeID: index
+            ingredientTypeName: foundIngredientType!.name
         )
         
         context.insert(newIngredient)
@@ -127,19 +117,10 @@ class IntelligentAssistantService {
     
     private func removeIngredient(ingredientData: RemoveIngredientData) throws {
         let userIngredients = try context.fetch(FetchDescriptor<StoredIngredient>())
-        var index = 0;
-        
-        for ingredientType in AllIngredients.ingredients {
-            if ingredientType.name.lowercased() == ingredientData.ingredient {
-                break
-            }
-            index = index + 1;
-        }
-        
         var ingredientToRemove: StoredIngredient?
         
         for userIngredient in userIngredients {
-            if userIngredient.ingredientTypeID == index {
+            if userIngredient.ingredientTypeName == ingredientData.ingredient {
                 ingredientToRemove = userIngredient
                 break
             }

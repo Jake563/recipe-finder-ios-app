@@ -54,7 +54,7 @@ struct NewIngredientView: View {
                             storedIngredientID: nil // Ingredient is not stored yet
                         ),
                         addingIngredient: true)) {
-                        Label(ingredient.name, systemImage: "plus")
+                            Label(ingredient.name.capitalized, systemImage: "plus")
                             .foregroundStyle(.black)
                     }
                     .listRowBackground(PRIMARY_BUTTON_COLOUR)

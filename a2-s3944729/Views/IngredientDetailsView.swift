@@ -67,7 +67,7 @@ struct IngredientDetailsView: View {
     /// Removes the selected ingredient from the user's saved ingredients
     private func deleteIngredient() {
         for storedIngredient in storedIngredients {
-            if storedIngredient.id == ingredient.storedIngredientID {
+            if storedIngredient.ingredientTypeName == ingredient.ingredientType.name {
                 context.delete(storedIngredient)
                 try? context.save()
                 break
@@ -86,7 +86,7 @@ struct IngredientDetailsView: View {
         }
         
         for storedIngredient in storedIngredients {
-            if storedIngredient.id == ingredient.storedIngredientID {
+            if storedIngredient.ingredientTypeName == ingredient.ingredientType.name {
                 storedIngredient.quantity = quantity
                 storedIngredient.quantityMassUnit = selectedMassUnit
                 try? context.save()
@@ -106,22 +106,11 @@ struct IngredientDetailsView: View {
             return
         }
         
-
         let storedIngredient = StoredIngredient(
             quantity: quantity,
             quantityMassUnit: selectedMassUnit,
-            ingredientTypeID: -1
+            ingredientTypeName: ingredient.ingredientType.name
         )
-        
-        // Get ingredient type id
-        var index = 0
-        for ingredient in AllIngredients.ingredients {
-            if ingredient.name == self.ingredient.ingredientType.name {
-                storedIngredient.ingredientTypeID = index
-                break
-            }
-            index = index + 1
-        }
         
         context.insert(storedIngredient)
         try? context.save()
@@ -194,7 +183,7 @@ struct IngredientDetailsView: View {
                     }
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Text(ingredient.ingredientType.name)
+                    Text(ingredient.ingredientType.name.capitalized)
                         .font(.title)
                 }
                 if !addingIngredient {

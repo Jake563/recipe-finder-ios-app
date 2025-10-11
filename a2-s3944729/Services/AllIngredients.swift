@@ -45,7 +45,7 @@ struct AllIngredients {
     static private func getIndexedIngredients() -> [String: IngredientType]  {
         var indexedIngredients: [String: IngredientType] = [:]
         for ingredient in ingredients {
-            indexedIngredients[ingredient.name.lowercased()] = ingredient
+            indexedIngredients[ingredient.name] = ingredient
         }
         return indexedIngredients
     }

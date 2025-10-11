@@ -13,11 +13,11 @@ import SwiftData
     var id = UUID()
     var quantity: Int
     var quantityMassUnit: String?
-    var ingredientTypeID: Int
+    var ingredientTypeName: String
     
-    init(quantity: Int, quantityMassUnit: String? = nil, ingredientTypeID: Int) {
+    init(quantity: Int, quantityMassUnit: String? = nil, ingredientTypeName: String) {
         self.quantity = quantity
         self.quantityMassUnit = quantityMassUnit
-        self.ingredientTypeID = ingredientTypeID
+        self.ingredientTypeName = ingredientTypeName
     }
 }
