@@ -13,7 +13,7 @@ struct IntelligentPersonalAssistantView: View {
     @Environment(\.modelContext) private var context
     @State private var recording = false
     @State private var loadingAiResponse = false
-    @State private var showDialog = true
+    @State private var showDialog = false
     @State private var showAlert = false
     @State private var dialogText = IntelligentPersonalAssistantView.INITIAL_DIALOG_TEXT
     @StateObject private var speechToTextService = SpeechToTextService()
