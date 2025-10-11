@@ -15,6 +15,7 @@ class IntelligentAssistantService {
     
     add_ingredient - Adds an ingredient to the user's ingredients.
     remove_ingredient - Removes an ingredient from the user's ingredients.
+    update_ingredient - Updates an ingredient in the user's ingredients.
     
     Make sure Ingredient names are lowercase and singular nouns only (e.g., "Tomatoes" -> "tomato").
     
@@ -34,7 +35,7 @@ class IntelligentAssistantService {
                     "properties": [
                         "action": [
                             "type": "string",
-                            "enum": ["add_ingredient", "remove_ingredient"]
+                            "enum": ["add_ingredient", "remove_ingredient", "update_ingredient"]
                         ],
                         "data": [
                             "type": "object",
@@ -57,7 +58,19 @@ class IntelligentAssistantService {
                                         "ingredient": ["type": "string"],
                                     ],
                                     "required": ["ingredient"]
-                                ]
+                                ],
+                                "updateIngredientData": [
+                                    "type": "object",
+                                    "properties": [
+                                        "ingredient": ["type": "string"],
+                                        "quantityDifference": ["type": "integer"],
+                                        "unit": [
+                                            "type": "string",
+                                            "enum": ["mL", "L", "g", "kg"]
+                                        ],
+                                    ],
+                                    "required": ["ingredient", "quantityDifference"]
+                                ],
                             ]
                         ]
                     ],
@@ -81,6 +94,7 @@ class IntelligentAssistantService {
     private struct ActionData: Decodable {
         let addIngredientData: AddIngredientData?
         let removeIngredientData: RemoveIngredientData?
+        let updateIngredientData: UpdateIngredientData?
     }
     
     private struct AddIngredientData: Decodable {
@@ -91,6 +105,12 @@ class IntelligentAssistantService {
     
     private struct RemoveIngredientData: Decodable {
         let ingredient: String
+    }
+    
+    private struct UpdateIngredientData: Decodable {
+        let ingredient: String
+        let quantityDifference: Int
+        let unit: String?
     }
     
     private let context: ModelContext
@@ -134,6 +154,26 @@ class IntelligentAssistantService {
         try context.save()
     }
     
+    private func updateIngredient(ingredientData: UpdateIngredientData) throws {
+        let userIngredients = try context.fetch(FetchDescriptor<StoredIngredient>())
+        var ingredientToUpdate: StoredIngredient?
+        
+        for userIngredient in userIngredients {
+            if userIngredient.ingredientTypeName == ingredientData.ingredient {
+                ingredientToUpdate = userIngredient
+                break
+            }
+        }
+        
+        if ingredientToUpdate == nil {
+            return
+        }
+        
+        ingredientToUpdate!.quantity += ingredientData.quantityDifference
+        ingredientToUpdate!.quantityMassUnit = ingredientData.unit
+        try context.save()
+    }
+    
     private func performAction(action: Action) {
         if action.action == "add_ingredient" {
             if action.data.addIngredientData == nil {
@@ -156,7 +196,20 @@ class IntelligentAssistantService {
             do {
                 try removeIngredient(ingredientData: action.data.removeIngredientData!)
             } catch {
-                print("Failed to add ingredient: \(error)")
+                print("Failed to delete ingredient: \(error)")
+            }
+            return
+        }
+        
+        if action.action == "update_ingredient" {
+            if action.data.updateIngredientData == nil {
+                return
+            }
+            print("Updating ingredient: \(action.data.updateIngredientData!.ingredient)")
+            do {
+                try updateIngredient(ingredientData: action.data.updateIngredientData!)
+            } catch {
+                print("Failed to update ingredient: \(error)")
             }
             return
         }
