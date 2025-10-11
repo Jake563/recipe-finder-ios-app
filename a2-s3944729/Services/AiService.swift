@@ -224,9 +224,9 @@ class AiService {
 
         let ingredientsString = ingredientListToString(ingredients: ingredients)
         let prompt = """
-        Generate a maximum of \(AiService.MAX_RECIPES) recipes that contain a subset of these ingredients: [\(ingredientsString)].
+        Generate a maximum of \(AiService.MAX_RECIPES) recipes that only contain a subset of these ingredients: [\(ingredientsString)].
         
-        Timer is in seconds.
+        instruction timer is in seconds.
         Set timer to 0 if there is no timer.
         If no sensible recipes can be made with the above ingredients, return an empty array of recipes.
         """
