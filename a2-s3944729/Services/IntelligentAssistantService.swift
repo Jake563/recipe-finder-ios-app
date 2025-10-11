@@ -39,14 +39,26 @@ class IntelligentAssistantService {
                         "data": [
                             "type": "object",
                             "properties": [
-                                "ingredient": ["type": "string"],
-                                "quantity": ["type": "integer"],
-                                "unit": [
-                                    "type": "string",
-                                    "enum": ["mL", "L", "g", "kg"]
+                                "addIngredientData": [
+                                    "type": "object",
+                                    "properties": [
+                                        "ingredient": ["type": "string"],
+                                        "quantity": ["type": "integer"],
+                                        "unit": [
+                                            "type": "string",
+                                            "enum": ["mL", "L", "g", "kg"]
+                                        ],
+                                    ],
+                                    "required": ["ingredient", "quantity"]
+                                ],
+                                "removeIngredientData": [
+                                    "type": "object",
+                                    "properties": [
+                                        "ingredient": ["type": "string"],
+                                    ],
+                                    "required": ["ingredient"]
                                 ]
-                            ],
-                            "required": ["ingredient", "quantity"]
+                            ]
                         ]
                     ],
                     "required": ["action", "data"]
@@ -67,9 +79,18 @@ class IntelligentAssistantService {
     }
     
     private struct ActionData: Decodable {
+        let addIngredientData: AddIngredientData?
+        let removeIngredientData: RemoveIngredientData?
+    }
+    
+    private struct AddIngredientData: Decodable {
         let ingredient: String
         let quantity: Int
         let unit: String?
+    }
+    
+    private struct RemoveIngredientData: Decodable {
+        let ingredient: String
     }
     
     private let context: ModelContext
@@ -78,7 +99,7 @@ class IntelligentAssistantService {
         self.context = context
     }
     
-    private func addIngredient(ingredientData: ActionData) throws {
+    private func addIngredient(ingredientData: AddIngredientData) throws {
         var foundIngredientType: IngredientType? = nil
         var index = 0;
         
@@ -104,7 +125,7 @@ class IntelligentAssistantService {
         try context.save()
     }
     
-    private func removeIngredient(ingredientData: ActionData) throws {
+    private func removeIngredient(ingredientData: RemoveIngredientData) throws {
         let userIngredients = try context.fetch(FetchDescriptor<StoredIngredient>())
         var index = 0;
         
@@ -134,18 +155,25 @@ class IntelligentAssistantService {
     
     private func performAction(action: Action) {
         if action.action == "add_ingredient" {
-            print("Adding ingredient: \(action.data.ingredient)")
+            if action.data.addIngredientData == nil {
+                return
+            }
+            print("Adding ingredient: \(action.data.addIngredientData!.ingredient)")
             do {
-                try addIngredient(ingredientData: action.data)
+                try addIngredient(ingredientData: action.data.addIngredientData!)
             } catch {
                 print("Failed to add ingredient: \(error)")
             }
             return
         }
+        
         if action.action == "remove_ingredient" {
-            print("Removing ingredient: \(action.data.ingredient)")
+            if action.data.removeIngredientData == nil {
+                return
+            }
+            print("Removing ingredient: \(action.data.removeIngredientData!.ingredient)")
             do {
-                try removeIngredient(ingredientData: action.data)
+                try removeIngredient(ingredientData: action.data.removeIngredientData!)
             } catch {
                 print("Failed to add ingredient: \(error)")
             }
