@@ -63,6 +63,7 @@ struct RecipeInfoView: View {
                         }
                         Divider()
                     }
+                    .listRowBackground(Color.clear)
                 }
                 .listRowSpacing(5)
                 .scrollContentBackground(.hidden)
