@@ -19,7 +19,6 @@ struct IngredientDetailsView: View {
     @State private var massUnitOptions: [String]
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
-    @EnvironmentObject private var ingredientStore: IngredientStore
     @EnvironmentObject private var toastNotificationService: ToastNotificationService
     
     private let recipeService = RecipeService.getSingleRecipeService()
@@ -78,7 +77,6 @@ struct IngredientDetailsView: View {
         
         self.recipeService.requestRecipeRefresh()
         
-        ingredientStore.hasIngredientChanged = true
         dismiss()
     }
     
@@ -101,7 +99,6 @@ struct IngredientDetailsView: View {
         
         self.recipeService.requestRecipeRefresh()
 
-        ingredientStore.hasIngredientChanged = true
         dismiss()
     }
     
@@ -121,8 +118,6 @@ struct IngredientDetailsView: View {
         
         context.insert(storedIngredient)
         try? context.save()
-        ingredientStore.hasIngredientChanged = true
-        ingredientStore.newIngredientAdded = true
         
         self.recipeService.requestRecipeRefresh()
         

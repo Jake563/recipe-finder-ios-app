@@ -11,7 +11,6 @@ import SwiftData
 /// View that list of all the user's saved ingredients.
 struct IngredientsView: View {
     @State private var searchText: String = ""
-    @EnvironmentObject var ingredientStore: IngredientStore
     
     @Query
     private var storedIngredients: [StoredIngredient]
@@ -82,5 +81,4 @@ struct IngredientsView: View {
 
 #Preview {
     IngredientsView()
-        .environmentObject(IngredientStore())
 }

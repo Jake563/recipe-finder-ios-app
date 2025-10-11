@@ -11,7 +11,6 @@ import SwiftData
 /// View that displays the basic information of a recipe, including the estimated time and required ingredients.
 struct RecipeInfoView: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject var ingredientStore: IngredientStore
     
     @Query
     private var storedIngredients: [StoredIngredient]
@@ -108,5 +107,5 @@ struct RecipeInfoView: View {
             Instruction(instruction: "Preheat stove top for 10 minutes.", timer: 5),
             Instruction(instruction: "Crack eggs into pan.", timer: 0)
         ]
-    )).environmentObject(IngredientStore())
+    ))
 }

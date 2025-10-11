@@ -8,11 +8,6 @@
 import SwiftUI
 import SwiftData
 
-class IngredientStore: ObservableObject {
-    @Published var hasIngredientChanged: Bool = true
-    @Published var newIngredientAdded: Bool = false
-}
-
 let INGREDIENTS_TAB_ID = 0
 let RECIPES_TAB_ID = 1
 let SAVED_RECIPES_TAB_ID = 2
@@ -20,7 +15,6 @@ let ACCOUNT_TAB_ID = 3
 
 /// View that allows the ingredients, recipes and saved recipes views to be navigated to.
 struct MainView: View {
-    @StateObject private var ingredientStore = IngredientStore()
     @State private var selectedTab = 0
     @State private var showIntelligentAssistant = false
 
@@ -50,7 +44,7 @@ struct MainView: View {
                         Label("Account", systemImage: "person.crop.circle")
                     }
                     .tag(ACCOUNT_TAB_ID)
-            }.environmentObject(ingredientStore)
+            }
             IntelligentPersonalAssistantView()
         }
     }

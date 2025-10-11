@@ -10,7 +10,6 @@ import SwiftUI
 /// View that allows a new ingredient to be added to a user's saved ingredients.
 struct NewIngredientView: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject var ingredientStore: IngredientStore
     @State private var searchText: String = ""
     @State private var filteredIngredients: [IngredientType] = []
     private let MAX_SEARCH_RESULTS: Int = 10
@@ -83,16 +82,11 @@ struct NewIngredientView: View {
             }
         }
         .onAppear() {
-            if !ingredientStore.newIngredientAdded {
-                return
-            }
             clearSearchText()
-            ingredientStore.newIngredientAdded = false
         }
     }
 }
 
 #Preview {
     NewIngredientView()
-        .environmentObject(IngredientStore())
 }

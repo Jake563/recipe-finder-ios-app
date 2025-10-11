@@ -14,7 +14,6 @@ struct RecipesView: View {
     @State private var recipeLoadingError = false
     @State private var recipes: [Recipe] = []
     @State private var favouritedRecipes = [String: String]()
-    @EnvironmentObject private var ingredientStore: IngredientStore
     
     private let aiService = AiService(session: URLSession.shared)
     private let authService = AuthService.getAuthService()
@@ -37,7 +36,6 @@ struct RecipesView: View {
         }
         recipesLoading = true
         recipeLoadingError = false
-        ingredientStore.hasIngredientChanged = false
         recipes.removeAll()
         Task {
             let ingredients = IngredientService.storedIngredientsToIngredients(storedIngredients: storedIngredients)
@@ -138,5 +136,4 @@ struct RecipesView: View {
 
 #Preview {
     RecipesView(selectedTab: .constant(0))
-        .environmentObject(IngredientStore())
 }
