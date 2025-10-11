@@ -51,6 +51,7 @@ class SpeechToTextService: NSObject, ObservableObject {
     }
 
     func startRecording() async throws {
+        transcript = ""
         if !(await requestSpeechPermission()) {
             print("User rejected permission to record.")
             throw SpeechToTextServiceError.recordPermissionDenied
