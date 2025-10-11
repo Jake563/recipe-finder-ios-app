@@ -25,7 +25,10 @@ class AiService {
                         "properties": [
                             "name": ["type": "string"],
                             "quantity": ["type": "integer"],
-                            "quantityMassUnit": ["type": "string"]
+                            "quantityMassUnit": [
+                                "type": "string",
+                                "enum": ["mL", "L", "g", "kg"]
+                            ]
                         ],
                         "required": ["name", "quantity"]
                     ]
@@ -221,9 +224,13 @@ class AiService {
 
         let ingredientsString = ingredientListToString(ingredients: ingredients)
         let prompt = """
-    Generate a maximum of \(AiService.MAX_RECIPES) recipes that contain these ingredients: \(ingredientsString). Do not include recipes that have other ingredients. Note that quantityMassUnit can be "mL", "L", "g", "kg", or nil. Set timer to 0 if there is no timer. Timer should be in seconds.
-    """
-    
+        Generate a maximum of \(AiService.MAX_RECIPES) recipes that contain a subset of these ingredients: [\(ingredientsString)].
+        
+        Timer is in seconds.
+        Set timer to 0 if there is no timer.
+        If no sensible recipes can be made with the above ingredients, return an empty array of recipes.
+        """
+        
         let responseData = await getAiResponse(prompt: prompt, responseSchema: AiService.AI_RECIPE_SCHEMA)
         
         if responseData == nil {
