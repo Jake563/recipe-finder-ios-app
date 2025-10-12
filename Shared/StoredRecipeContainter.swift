@@ -8,6 +8,7 @@
 import SwiftData
 import Foundation
 
+/// Returns a model container that allows data to be shared between app and widgets.
 func makeSharedContainer() throws -> ModelContainer {
     let groupURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.leftovers")!
     let storeURL = groupURL.appendingPathComponent("Recipes.swiftdata")
