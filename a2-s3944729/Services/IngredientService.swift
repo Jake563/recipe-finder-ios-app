@@ -39,7 +39,7 @@ class IngredientService {
         return nil
     }
     
-    func updateIngredientQuantity(ingredient: StoredIngredient, quantity: Int, unit: String?) {
+    private func updateIngredientQuantity(ingredient: StoredIngredient, quantity: Int, unit: String?) {
         if ingredient.quantityMassUnit == unit {
             ingredient.quantity += quantity
             return
@@ -104,15 +104,7 @@ class IngredientService {
     }
     
     func deleteIngredient(name: String) throws {
-        let userIngredients = try context.fetch(FetchDescriptor<StoredIngredient>())
-        var ingredientToDelete: StoredIngredient?
-        
-        for userIngredient in userIngredients {
-            if userIngredient.ingredientTypeName == name {
-                ingredientToDelete = userIngredient
-                break
-            }
-        }
+        let ingredientToDelete = try getIngredient(name: name)
         
         if ingredientToDelete == nil {
             return
@@ -123,16 +115,8 @@ class IngredientService {
     }
     
     func updateIngredient(name: String, quantityDiff: Int, unit: String?) throws {
-        let userIngredients = try context.fetch(FetchDescriptor<StoredIngredient>())
-        var ingredientToUpdate: StoredIngredient?
-        
-        for userIngredient in userIngredients {
-            if userIngredient.ingredientTypeName == name {
-                ingredientToUpdate = userIngredient
-                break
-            }
-        }
-        
+        let ingredientToUpdate = try getIngredient(name: name)
+
         if ingredientToUpdate == nil {
             return
         }
@@ -141,7 +125,6 @@ class IngredientService {
         if ingredientToUpdate!.quantity <= 0 {
             context.delete(ingredientToUpdate!)
         }
-        
         try context.save()
     }
 }
