@@ -24,7 +24,7 @@ struct NewIngredientView: View {
         }
         
         var ingredients: Array<IngredientType> = []
-        for ingredient in AllIngredients.ingredients {
+        for ingredient in IngredientTypeService.ingredients {
             if ingredient.name.lowercased().contains(searchText.lowercased()) {
                 ingredients.append(ingredient)
                 searchResultCount += 1

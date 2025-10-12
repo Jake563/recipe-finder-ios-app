@@ -124,7 +124,7 @@ class IntelligentAssistantService {
     }
     
     private func addIngredient(ingredientData: AddIngredientData) throws {
-        let foundIngredientType: IngredientType? = AllIngredients.getIngredientByName(ingredientName: ingredientData.ingredient)
+        let foundIngredientType: IngredientType? = IngredientTypeService.getIngredientByName(ingredientName: ingredientData.ingredient)
         if foundIngredientType == nil {
             return
         }

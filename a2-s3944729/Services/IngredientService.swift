@@ -13,7 +13,7 @@ class IngredientService {
             ingredients.append(Ingredient(
                 quantity: storedIngredient.quantity,
                 quantityMassUnit: storedIngredient.quantityMassUnit,
-                ingredientType: AllIngredients.getIngredientByName(ingredientName: storedIngredient.ingredientTypeName)!,
+                ingredientType: IngredientTypeService.getIngredientByName(ingredientName: storedIngredient.ingredientTypeName)!,
                 storedIngredientID: storedIngredient.id
             ))
         }

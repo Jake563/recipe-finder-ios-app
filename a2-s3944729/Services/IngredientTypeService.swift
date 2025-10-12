@@ -1,5 +1,5 @@
 //
-//  AllIngredients.swift
+//  IngredientTypeService.swift
 //  a2-s3944729
 //
 //  Created by Jake Parkinson on 23/8/2025.
@@ -15,7 +15,7 @@ private struct IngredientDTO: Codable {
 }
 
 /// Service responsible for ingredients that a user can add.
-struct AllIngredients {
+struct IngredientTypeService {
     private static let FILE_NAME = "IngredientTypes"
     static let ingredients = getIngredientsFromFile()
     private static let indexedIngredients = getIndexedIngredients()

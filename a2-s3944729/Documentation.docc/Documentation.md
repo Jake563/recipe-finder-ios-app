@@ -17,7 +17,6 @@ This app features:
 
 ### Models
 
-- ``AllIngredients``
 - ``Ingredient``
 - ``IngredientType``
 - ``Instruction``
@@ -38,6 +37,7 @@ This app features:
 - ``AuthService``
 - ``IngredientService``
 - ``SavedRecipesService``
+- ``IngredientTypeService``
 
 ### Views
 
