@@ -9,19 +9,19 @@ import WidgetKit
 import SwiftUI
 import SwiftData
 
-@MainActor
-func getRecipes() -> [RecipeOfTheDay] {
-    do {
-        let container = try makeSharedContainer()
-        let recipes = try container.mainContext.fetch(FetchDescriptor<RecipeOfTheDay>().self)
-        return recipes
-    } catch {
-        print("Failed to load recipes in widget: \(error)")
-        return []
+struct Provider: TimelineProvider {
+    @MainActor
+    private func getRecipes() async -> [RecipeOfTheDay] {
+        do {
+            let container = try makeSharedContainer()
+            let recipes = try container.mainContext.fetch(FetchDescriptor<RecipeOfTheDay>().self)
+            return recipes
+        } catch {
+            print("Failed to load recipes in widget: \(error)")
+            return []
+        }
     }
-}
-
-struct Provider: @preconcurrency TimelineProvider {
+    
     func placeholder(in context: Context) -> SimpleEntry {
         SimpleEntry(date: Date(), recipe: nil)
     }
@@ -31,21 +31,23 @@ struct Provider: @preconcurrency TimelineProvider {
         completion(entry)
     }
 
-    @MainActor func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        var entries: [SimpleEntry] = []
-        let recipes = getRecipes()
-
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
-        let currentDate = Date()
-        for recipeIndex in 0..<recipes.count {
-            let hourOffset = recipeIndex
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, recipe: recipes[recipeIndex])
-            entries.append(entry)
+    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+        Task { @MainActor in
+            var entries: [SimpleEntry] = []
+            let recipes = await getRecipes()
+            
+            // Generate a timeline consisting of five entries an hour apart, starting from the current date.
+            let currentDate = Date()
+            for recipeIndex in 0..<recipes.count {
+                let hourOffset = recipeIndex
+                let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
+                let entry = SimpleEntry(date: entryDate, recipe: recipes[recipeIndex])
+                entries.append(entry)
+            }
+            
+            let timeline = Timeline(entries: entries, policy: .atEnd)
+            completion(timeline)
         }
-
-        let timeline = Timeline(entries: entries, policy: .atEnd)
-        completion(timeline)
     }
 }
 
