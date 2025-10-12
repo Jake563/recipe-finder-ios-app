@@ -10,6 +10,7 @@ import SwiftData
 class RecipeService {
     private var refreshRecipes = true
     private static let singleRecipeService = RecipeService()
+    private let sharedContainer = try! makeSharedContainer()
     
     /// Returns a Singleton instance of Recipe Service
     static func getSingleRecipeService() -> RecipeService {
@@ -28,25 +29,29 @@ class RecipeService {
         refreshRecipes = true
     }
     
+    
+    @MainActor
     private func clearOldRecentRecipes(context: ModelContext) throws {
-        let recipes = try context.fetch(FetchDescriptor<StoredRecipe>().self)
+        let recipes = try sharedContainer.mainContext.fetch(FetchDescriptor<StoredRecipe>().self)
 
         print("Going through recipes")
         for recipe in recipes {
             print(recipe.recipe.name)
-            context.delete(recipe)
+            sharedContainer.mainContext.delete(recipe)
+            //context.delete(recipe)
         }
     }
     
+    @MainActor
     func saveRecentRecipes(recipes: [Recipe], context: ModelContext) {
         do {
             try clearOldRecentRecipes(context: context)
             
             for recipe in recipes {
-                context.insert(StoredRecipe(recipe: recipe))
+                sharedContainer.mainContext.insert(StoredRecipe(recipe: recipe))
             }
             
-            try context.save()
+            try sharedContainer.mainContext.save()
         } catch {
             print("Failed to save recipes: \(error)")
         }

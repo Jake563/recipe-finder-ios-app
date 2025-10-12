@@ -12,7 +12,7 @@ struct ContentView: View {
     @State private var showMainView = false
     @StateObject private var toastNotificationService = ToastNotificationService()
     
-    var body: some View {
+    var body: some View {   
         ZStack(alignment: .top) {
             if showMainView {
                 MainView()

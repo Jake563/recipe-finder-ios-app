@@ -62,6 +62,7 @@
 		F15834022E8922E9007F3F73 /* DailyRecipeWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DailyRecipeWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		F15834042E8922E9007F3F73 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		F15834062E8922EA007F3F73 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		F18E41832E9A8B5B005FF459 /* DailyRecipeWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DailyRecipeWidgetExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -108,6 +109,11 @@
 			path = DailyRecipeWidget;
 			sourceTree = "<group>";
 		};
+		F18E41852E9A8C52005FF459 /* Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Shared;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +156,8 @@
 		F10F48F32E6EB56700ECFA8A = {
 			isa = PBXGroup;
 			children = (
+				F18E41852E9A8C52005FF459 /* Shared */,
+				F18E41832E9A8B5B005FF459 /* DailyRecipeWidgetExtension.entitlements */,
 				F10F48FE2E6EB56700ECFA8A /* a2-s3944729 */,
 				F10F490C2E6EB56700ECFA8A /* a2-s3944729Tests */,
 				F10F49162E6EB56700ECFA8A /* a2-s3944729UITests */,
@@ -199,6 +207,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				F10F48FE2E6EB56700ECFA8A /* a2-s3944729 */,
+				F18E41852E9A8C52005FF459 /* Shared */,
 			);
 			name = "a2-s3944729";
 			packageProductDependencies = (
@@ -270,6 +279,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				F15834082E8922EA007F3F73 /* DailyRecipeWidget */,
+				F18E41852E9A8C52005FF459 /* Shared */,
 			);
 			name = DailyRecipeWidgetExtension;
 			packageProductDependencies = (
@@ -535,6 +545,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "a2-s3944729/a2-s3944729.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3B59JB9P48;
@@ -567,6 +578,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "a2-s3944729/a2-s3944729.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3B59JB9P48;
@@ -667,6 +679,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = DailyRecipeWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3B59JB9P48;
@@ -694,6 +707,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = DailyRecipeWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3B59JB9P48;
