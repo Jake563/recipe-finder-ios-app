@@ -10,6 +10,7 @@ import Speech
 import AVFoundation
 
 /// Service responsible for converting Speech to Text
+@MainActor
 class SpeechToTextService: NSObject, ObservableObject {
     private let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-AU"))!
     private let audioEngine = AVAudioEngine()
@@ -53,7 +54,7 @@ class SpeechToTextService: NSObject, ObservableObject {
 
     /// Starts converting the user's speech to text
     func startRecording() async throws {
-        transcript = ""
+        self.transcript = ""
         if !(await requestSpeechPermission()) {
             print("User rejected permission to record.")
             throw SpeechToTextServiceError.recordPermissionDenied
