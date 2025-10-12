@@ -124,7 +124,6 @@ struct DailyRecipeWidget: Widget {
                     .background()
             }
         }
-        .supportedFamilies([.systemSmall])
         .configurationDisplayName("Recipe Suggestions")
         .description("These are recipes you can make with your ingredients.")
     }
