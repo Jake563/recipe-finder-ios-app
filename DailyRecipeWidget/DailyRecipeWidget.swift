@@ -80,21 +80,29 @@ struct RecipeReference {
     let estimatedTime: String
 }
 
-struct DailyRecipeWidgetEntryView : View {
-    var entry: Provider.Entry
-
+struct DailyRecipeWidgetEntryView: View {
+    var entry: RecipeEntry
+    
     var body: some View {
-        VStack {
-            if entry.recipe != nil {
-                Text("You can make")
-                Text(entry.recipe!.name)
-                Text(entry.recipe!.estimatedTime)
-            } else {
-                Text("No daily recipe available.")
+        VStack(alignment: .leading, spacing: 8) {
+            Text("You can make")
+                .foregroundColor(.white)
+            
+            Text(entry.recipe!.name)
+                .font(.title2)
+                .bold()
+                .foregroundColor(.white)
+            
+            HStack {
+                Image(systemName: "clock")
+                    .foregroundStyle(.white)
+                Text("\(entry.recipe!.estimatedTime)")
+                    .foregroundColor(.white)
             }
         }
     }
 }
+
 
 struct DailyRecipeWidget: Widget {
     let kind: String = "DailyRecipeWidget"
@@ -103,13 +111,20 @@ struct DailyRecipeWidget: Widget {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             if #available(iOS 17.0, *) {
                 DailyRecipeWidgetEntryView(entry: entry)
-                    .containerBackground(.fill.tertiary, for: .widget)
+                    .containerBackground(for: .widget) {
+                        LinearGradient(
+                            colors: [.pink, .purple],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    }
             } else {
                 DailyRecipeWidgetEntryView(entry: entry)
                     .padding()
                     .background()
             }
         }
+        .supportedFamilies([.systemSmall])
         .configurationDisplayName("Recipe Suggestions")
         .description("These are recipes you can make with your ingredients.")
     }
@@ -119,7 +134,7 @@ struct DailyRecipeWidget: Widget {
     DailyRecipeWidget()
 } timeline: {
     RecipeEntry(date: .now, recipe: RecipeReference(
-        name: "Test Recipe",
+        name: "Choc-chip Cookies",
         estimatedTime: "40 minutes"
     ))
     RecipeEntry(date: .now, recipe: RecipeReference(
