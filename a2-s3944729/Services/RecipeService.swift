@@ -6,6 +6,7 @@
 //
 
 import SwiftData
+import WidgetKit
 
 class RecipeService {
     private var refreshRecipes = true
@@ -38,7 +39,6 @@ class RecipeService {
         for recipe in recipes {
             print(recipe.name)
             sharedContainer.mainContext.delete(recipe)
-            //context.delete(recipe)
         }
     }
     
@@ -58,6 +58,7 @@ class RecipeService {
             }
             
             try sharedContainer.mainContext.save()
+            WidgetCenter.shared.reloadAllTimelines()
         } catch {
             print("Failed to save recipes: \(error)")
         }
