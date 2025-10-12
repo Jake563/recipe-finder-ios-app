@@ -11,11 +11,17 @@ import SwiftData
 
 struct Provider: TimelineProvider {
     @MainActor
-    private func getRecipes() async -> [RecentRecipe] {
+    private func getRecipes() async -> [RecipeReference] {
         do {
             let container = try makeSharedContainer()
             let recipes = try container.mainContext.fetch(FetchDescriptor<RecentRecipe>().self)
-            return recipes
+            
+            return recipes.map { recipe in
+               RecipeReference(
+                   name: recipe.name,
+                   estimatedTime: recipe.estimatedTime
+               )
+            }
         } catch {
             print("Failed to load recipes in widget: \(error)")
             return []
@@ -32,9 +38,11 @@ struct Provider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+        print("Get Timeline invoked")
         Task { @MainActor in
             var entries: [RecipeEntry] = []
             let recipes = await getRecipes()
+            print("No. recipes: \(recipes.count)")
             
             // Generate a timeline consisting of five entries an hour apart, starting from the current date.
             let currentDate = Date()
@@ -44,7 +52,6 @@ struct Provider: TimelineProvider {
                 let entry = RecipeEntry(date: entryDate, recipe: recipes[recipeIndex])
                 entries.append(entry)
             }
-            
             let timeline = Timeline(entries: entries, policy: .atEnd)
             completion(timeline)
         }
@@ -53,7 +60,12 @@ struct Provider: TimelineProvider {
 
 struct RecipeEntry: TimelineEntry {
     let date: Date
-    let recipe: RecentRecipe?
+    let recipe: RecipeReference?
+}
+
+struct RecipeReference {
+    let name: String
+    let estimatedTime: String
 }
 
 struct DailyRecipeWidgetEntryView : View {
@@ -94,16 +106,12 @@ struct DailyRecipeWidget: Widget {
 #Preview(as: .systemSmall) {
     DailyRecipeWidget()
 } timeline: {
-    RecipeEntry(date: .now, recipe: RecentRecipe(
+    RecipeEntry(date: .now, recipe: RecipeReference(
         name: "Test Recipe",
-        estimatedTime: "40 minutes",
-        ingredients: [],
-        instructions: []
+        estimatedTime: "40 minutes"
     ))
-    RecipeEntry(date: .now, recipe: RecentRecipe(
+    RecipeEntry(date: .now, recipe: RecipeReference(
         name: "Test Recipe 2",
-        estimatedTime: "20 minutes",
-        ingredients: [],
-        instructions: []
+        estimatedTime: "20 minutes"
     ))
 }
