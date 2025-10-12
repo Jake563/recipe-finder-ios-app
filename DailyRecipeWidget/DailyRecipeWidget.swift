@@ -10,50 +10,47 @@ import SwiftUI
 import SwiftData
 
 @MainActor
-func loadRecipe() -> RecipeOfTheDay? {
+func getRecipes() -> [RecipeOfTheDay] {
     do {
         let container = try makeSharedContainer()
         let recipes = try container.mainContext.fetch(FetchDescriptor<RecipeOfTheDay>().self)
-        return recipes.randomElement()
+        return recipes
     } catch {
         print("Failed to load recipes in widget: \(error)")
-        return nil
+        return []
     }
 }
 
-struct Provider: TimelineProvider {
+struct Provider: @preconcurrency TimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), emoji: "😀", recipe: nil)
+        SimpleEntry(date: Date(), recipe: nil)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), emoji: "😀", recipe: nil)
+        let entry = SimpleEntry(date: Date(), recipe: nil)
         completion(entry)
     }
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+    @MainActor func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
         var entries: [SimpleEntry] = []
+        let recipes = getRecipes()
 
         // Generate a timeline consisting of five entries an hour apart, starting from the current date.
         let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
+        for recipeIndex in 0..<recipes.count {
+            let hourOffset = recipeIndex
             let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, emoji: "😀", recipe: nil)
+            let entry = SimpleEntry(date: entryDate, recipe: recipes[recipeIndex])
             entries.append(entry)
         }
 
         let timeline = Timeline(entries: entries, policy: .atEnd)
         completion(timeline)
     }
-
-//    func relevances() async -> WidgetRelevances<Void> {
-//        // Generate a list containing the contexts this widget is relevant in.
-//    }
 }
 
 struct SimpleEntry: TimelineEntry {
     let date: Date
-    let emoji: String
     let recipe: RecipeOfTheDay?
 }
 
@@ -87,14 +84,24 @@ struct DailyRecipeWidget: Widget {
                     .background()
             }
         }
-        .configurationDisplayName("My Widget")
-        .description("This is an example widget.")
+        .configurationDisplayName("Recipe Suggestions")
+        .description("These are recipes you can make with your ingredients.")
     }
 }
 
 #Preview(as: .systemSmall) {
     DailyRecipeWidget()
 } timeline: {
-    SimpleEntry(date: .now, emoji: "😀", recipe: nil)
-    SimpleEntry(date: .now, emoji: "🤩", recipe: nil)
+    SimpleEntry(date: .now, recipe: RecipeOfTheDay(
+        name: "Test Recipe",
+        estimatedTime: "40 minutes",
+        ingredients: [],
+        instructions: []
+    ))
+    SimpleEntry(date: .now, recipe: RecipeOfTheDay(
+        name: "Test Recipe 2",
+        estimatedTime: "20 minutes",
+        ingredients: [],
+        instructions: []
+    ))
 }
