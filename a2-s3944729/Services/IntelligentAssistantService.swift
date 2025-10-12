@@ -13,7 +13,7 @@ class IntelligentAssistantService {
     private let aiService = AiService(session: URLSession.shared)
     private let recipeService = RecipeService.getSingleRecipeService()
     
-    private let ASSISTANT_CONTEXT_PROMPT = """
+    static private let ASSISTANT_CONTEXT_PROMPT = """
     You are an intelligent assistant. You can perform the following actions:
     
     add_ingredient - Adds an ingredient to the user's ingredients.
@@ -84,6 +84,8 @@ class IntelligentAssistantService {
         ],
         "required": ["summary", "actions"]
     ]
+    
+    static private let ASSISTANT_ERROR_RESPONSE = "An error occured. Please try again later."
     
     private struct IntelligentAssistantResponse: Decodable {
         let summary: String
@@ -228,11 +230,12 @@ class IntelligentAssistantService {
     
     /// Asks the intelligent personal assistant to perform the given user request. Returns a summary of what the assistant performed,
     func performActions(userRequest: String) async -> String {
-        let prompt = ASSISTANT_CONTEXT_PROMPT + userRequest
+        let prompt = IntelligentAssistantService.ASSISTANT_CONTEXT_PROMPT + userRequest
         let jsonData = await aiService.getAiResponse(prompt: prompt, responseSchema: IntelligentAssistantService.AI_ACTION_SCHEMA)
         
         if jsonData == nil {
-            return "An error occured. Please try again later."
+            print("Error: Ai response JSON is nil.")
+            return IntelligentAssistantService.ASSISTANT_ERROR_RESPONSE
         }
         
         print(jsonData!)
@@ -243,11 +246,12 @@ class IntelligentAssistantService {
             intelligentAssistantResponse = try JSONDecoder().decode(IntelligentAssistantResponse.self, from: jsonData!)
         } catch {
             print("Error decoding to intelligent assistant response: \(error)")
-            return "An error occured. Please try again later."
+            return IntelligentAssistantService.ASSISTANT_ERROR_RESPONSE
         }
         
         if intelligentAssistantResponse == nil {
-            return "An error occured. Please try again later."
+            print("Error: Intelligent assistant response is nil.")
+            return IntelligentAssistantService.ASSISTANT_ERROR_RESPONSE
         }
         
         for action in intelligentAssistantResponse!.actions {

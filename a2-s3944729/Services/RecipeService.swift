@@ -8,6 +8,7 @@
 import SwiftData
 import WidgetKit
 
+/// Service responsible for managing recipes.
 class RecipeService {
     private var refreshRecipes = false
     private static let singleRecipeService = RecipeService()

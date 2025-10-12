@@ -12,6 +12,8 @@ This app features:
 - AI-generated instruction clarification in case the user gets confused on an instruction step.
 - Saving recipes to favourites.
 - Account sign-up, sign-in and sign-out.
+- An Intelligent Personal Assistant that can perform operations like adding and editing ingredients.
+- Widget that suggests recipes a user can make.
 
 ## Topics
 
@@ -19,9 +21,7 @@ This app features:
 
 - ``Ingredient``
 - ``IngredientType``
-- ``Instruction``
 - ``Recipe``
-- ``RequiredIngredient``
 - ``SavedRecipe``
 - ``StepClarification``
 - ``StoredIngredient``
@@ -36,8 +36,11 @@ This app features:
 - ``AiService``
 - ``AuthService``
 - ``IngredientService``
-- ``SavedRecipesService``
 - ``IngredientTypeService``
+- ``IntelligentAssistantService``
+- ``RecipeService``
+- ``SavedRecipesService``
+- ``SpeechToTextService``
 
 ### Views
 
@@ -55,3 +58,11 @@ This app features:
 - ``RecipesView``
 - ``SavedRecipesView``
 - ``StepClarificationView``
+- ``ToastNotificationService``
+
+### Shared
+Common things that both the app and widgets need.
+
+- ``Instruction``
+- ``RecentRecipe``
+- ``RequiredIngredient``
