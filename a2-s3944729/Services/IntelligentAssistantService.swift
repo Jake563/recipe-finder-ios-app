@@ -12,6 +12,7 @@ import SwiftData
 class IntelligentAssistantService {
     private let aiService = AiService(session: URLSession.shared)
     private let recipeService = RecipeService.getSingleRecipeService()
+    private let ingredientService: IngredientService
     
     static private let ASSISTANT_CONTEXT_PROMPT = """
     You are an intelligent assistant. You can perform the following actions:
@@ -123,68 +124,33 @@ class IntelligentAssistantService {
     
     init(context: ModelContext) {
         self.context = context
+        self.ingredientService = IngredientService(context: context)
     }
     
     private func addIngredient(ingredientData: AddIngredientData) throws {
-        let foundIngredientType: IngredientType? = IngredientTypeService.getIngredientByName(ingredientName: ingredientData.ingredient)
-        if foundIngredientType == nil {
-            return
-        }
-        
-        let newIngredient = StoredIngredient(
+        try self.ingredientService.addIngredient(
+            name: ingredientData.ingredient,
             quantity: ingredientData.quantity,
-            quantityMassUnit: ingredientData.unit,
-            ingredientTypeName: foundIngredientType!.name
+            unit: ingredientData.unit
         )
         
         self.recipeService.requestRecipeRefresh()
-        
-        context.insert(newIngredient)
-        try context.save()
     }
     
     private func deleteIngredient(ingredientData: DeleteIngredientData) throws {
-        let userIngredients = try context.fetch(FetchDescriptor<StoredIngredient>())
-        var ingredientToDelete: StoredIngredient?
-        
-        for userIngredient in userIngredients {
-            if userIngredient.ingredientTypeName == ingredientData.ingredient {
-                ingredientToDelete = userIngredient
-                break
-            }
-        }
-        
-        if ingredientToDelete == nil {
-            return
-        }
+        try self.ingredientService.deleteIngredient(name: ingredientData.ingredient)
         
         self.recipeService.requestRecipeRefresh()
-        
-        context.delete(ingredientToDelete!)
-        try context.save()
     }
     
     private func updateIngredient(ingredientData: UpdateIngredientData) throws {
-        let userIngredients = try context.fetch(FetchDescriptor<StoredIngredient>())
-        var ingredientToUpdate: StoredIngredient?
-        
-        for userIngredient in userIngredients {
-            if userIngredient.ingredientTypeName == ingredientData.ingredient {
-                ingredientToUpdate = userIngredient
-                break
-            }
-        }
-        
-        if ingredientToUpdate == nil {
-            return
-        }
-        
-        ingredientToUpdate!.quantity += ingredientData.quantityDifference
-        ingredientToUpdate!.quantityMassUnit = ingredientData.unit
+        try self.ingredientService.updateIngredient(
+            name: ingredientData.ingredient,
+            quantityDiff: ingredientData.quantityDifference,
+            unit: ingredientData.unit
+        )
         
         self.recipeService.requestRecipeRefresh()
-        
-        try context.save()
     }
     
     private func performAction(action: Action) {

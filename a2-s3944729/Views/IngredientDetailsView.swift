@@ -33,7 +33,7 @@ struct IngredientDetailsView: View {
         self.ingredient = ingredient
         self.addingIngredient = addingIngredient
         self.enteredQuantity = String(ingredient.quantity)
-        
+
         if ingredient.ingredientType.quantityUnit == QuantityUnit.litres {
             massUnitOptions = LITRE_MASS_UNITS
             selectedMassUnit = LITRE_MASS_UNITS[0]
@@ -67,13 +67,9 @@ struct IngredientDetailsView: View {
     
     /// Removes the selected ingredient from the user's saved ingredients
     private func deleteIngredient() {
-        for storedIngredient in storedIngredients {
-            if storedIngredient.ingredientTypeName == ingredient.ingredientType.name {
-                context.delete(storedIngredient)
-                try? context.save()
-                break
-            }
-        }
+        let ingredientService = IngredientService(context: context)
+        
+        try? ingredientService.deleteIngredient(name: ingredient.ingredientType.name)
         
         self.recipeService.requestRecipeRefresh()
         
@@ -110,14 +106,8 @@ struct IngredientDetailsView: View {
             return
         }
         
-        let storedIngredient = StoredIngredient(
-            quantity: quantity,
-            quantityMassUnit: selectedMassUnit,
-            ingredientTypeName: ingredient.ingredientType.name
-        )
-        
-        context.insert(storedIngredient)
-        try? context.save()
+        let ingredientService = IngredientService(context: context)
+        try? ingredientService.addIngredient(name: ingredient.ingredientType.name, quantity: quantity, unit: selectedMassUnit)
         
         self.recipeService.requestRecipeRefresh()
         
