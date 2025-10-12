@@ -29,11 +29,23 @@ struct Provider: TimelineProvider {
     }
     
     func placeholder(in context: Context) -> RecipeEntry {
-        RecipeEntry(date: Date(), recipe: nil)
+        RecipeEntry(
+            date: Date(),
+            recipe: RecipeReference(
+                name: "Loading...",
+                estimatedTime: ""
+            )
+        )
     }
 
     func getSnapshot(in context: Context, completion: @escaping (RecipeEntry) -> ()) {
-        let entry = RecipeEntry(date: Date(), recipe: nil)
+        let entry = RecipeEntry(
+            date: Date(),
+            recipe: RecipeReference(
+                name: "Example Recipe",
+                estimatedTime: "20 minutes"
+            )
+        )
         completion(entry)
     }
 
