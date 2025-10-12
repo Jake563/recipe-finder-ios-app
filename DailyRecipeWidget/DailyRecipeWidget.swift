@@ -66,7 +66,6 @@ struct DailyRecipeWidgetEntryView : View {
                 Text("You can make")
                 Text(entry.recipe!.name)
                 Text(entry.recipe!.estimatedTime)
-                Text("\(entry.recipe!.numberOfIngredients) ingredients")
             } else {
                 Text("No daily recipe available.")
             }

@@ -51,7 +51,8 @@ class RecipeService {
                 let recipeOfTheDay = RecipeOfTheDay(
                     name: recipe.name,
                     estimatedTime: recipe.estimatedTime,
-                    numberOfIngredients: recipe.ingredients.count
+                    ingredients: recipe.ingredients,
+                    instructions: recipe.instructions
                 )
                 sharedContainer.mainContext.insert(recipeOfTheDay)
             }

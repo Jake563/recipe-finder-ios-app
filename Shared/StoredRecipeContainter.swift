@@ -10,7 +10,7 @@ import Foundation
 
 func makeSharedContainer() throws -> ModelContainer {
     let groupURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.leftovers")!
-    let storeURL = groupURL.appendingPathComponent("Recipes.swiftdata")
+    let storeURL = groupURL.appendingPathComponent("Recipes.swiftdata2")
     let config = ModelConfiguration(url: storeURL)
     let container = try ModelContainer(for: RecipeOfTheDay.self, configurations: config)
     return container

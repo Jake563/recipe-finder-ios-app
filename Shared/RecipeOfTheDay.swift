@@ -13,12 +13,14 @@ import SwiftData
     var id = UUID()
     var name: String
     var estimatedTime: String
-    var numberOfIngredients: Int
+    var ingredients: [RequiredIngredient]
+    var instructions: [Instruction]
     
-    init(id: UUID = UUID(), name: String, estimatedTime: String, numberOfIngredients: Int) {
+    init(id: UUID = UUID(), name: String, estimatedTime: String, ingredients: [RequiredIngredient], instructions: [Instruction]) {
         self.id = id
         self.name = name
         self.estimatedTime = estimatedTime
-        self.numberOfIngredients = numberOfIngredients
+        self.ingredients = ingredients
+        self.instructions = instructions
     }
 }
