@@ -44,7 +44,7 @@ struct MainView: View {
                     }
                     .tag(ACCOUNT_TAB_ID)
             }
-            IntelligentPersonalAssistantView()
+            IntelligentAssistantView()
         }
     }
 }

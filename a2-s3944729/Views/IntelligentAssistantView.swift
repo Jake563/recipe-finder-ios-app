@@ -1,5 +1,5 @@
 //
-//  IntelligentPersonalAssistantView.swift
+//  IntelligentAssistantView.swift
 //  a2-s3944729
 //
 //  Created by Jake Parkinson on 9/10/2025.
@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-struct IntelligentPersonalAssistantView: View {
+/// View that has all the Intelligent Assistant components,
+struct IntelligentAssistantView: View {
     private static let INITIAL_DIALOG_TEXT = "How can I help?"
     
     @Environment(\.modelContext) private var context
@@ -15,7 +16,7 @@ struct IntelligentPersonalAssistantView: View {
     @State private var loadingAiResponse = false
     @State private var showDialog = false
     @State private var showAlert = false
-    @State private var dialogText = IntelligentPersonalAssistantView.INITIAL_DIALOG_TEXT
+    @State private var dialogText = IntelligentAssistantView.INITIAL_DIALOG_TEXT
     @StateObject private var speechToTextService = SpeechToTextService()
     
     private func startRecording() {
@@ -53,7 +54,7 @@ struct IntelligentPersonalAssistantView: View {
         speechToTextService.stopRecording()
         recording = false
         showDialog = false
-        dialogText = IntelligentPersonalAssistantView.INITIAL_DIALOG_TEXT
+        dialogText = IntelligentAssistantView.INITIAL_DIALOG_TEXT
     }
     
     var body: some View {
@@ -132,7 +133,6 @@ private struct AIResponseDialog: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Main bubble
             ZStack {
                 if loading {
                     ThreeDotsLoadingView()
@@ -202,5 +202,5 @@ private struct ThreeDotsLoadingView: View {
 }
 
 #Preview {
-    IntelligentPersonalAssistantView()
+    IntelligentAssistantView()
 }

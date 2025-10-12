@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-/// Service representing the Intelligent Personal Assistant that can perform various tasks on the app based on a string input.
+/// Service representing the Intelligent Personal Assistant that can perform various tasks on the app based on user input.
 class IntelligentAssistantService {
     private let aiService = AiService(session: URLSession.shared)
     private let recipeService = RecipeService.getSingleRecipeService()
@@ -228,7 +228,7 @@ class IntelligentAssistantService {
         }
     }
     
-    /// Asks the intelligent personal assistant to perform the given user request. Returns a summary of what the assistant performed,
+    /// Asks the intelligent personal assistant to perform the given user request. Returns a summary of what the assistant performed.
     func performActions(userRequest: String) async -> String {
         let prompt = IntelligentAssistantService.ASSISTANT_CONTEXT_PROMPT + userRequest
         let jsonData = await aiService.getAiResponse(prompt: prompt, responseSchema: IntelligentAssistantService.AI_ACTION_SCHEMA)
