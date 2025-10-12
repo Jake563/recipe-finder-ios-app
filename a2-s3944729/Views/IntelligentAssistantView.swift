@@ -156,9 +156,9 @@ private struct AIResponseDialog: View {
 
             DialogTail()
                 .fill(Color.black)
+                .stroke(Color.white)
                 .frame(width: 20, height: 20)
                 .rotationEffect(.degrees(90))
-                .offset(x: 0, y: -5)
         }
         .frame(maxWidth: 250, alignment: .trailing)
     }

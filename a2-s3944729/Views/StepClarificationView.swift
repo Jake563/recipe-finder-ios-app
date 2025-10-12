@@ -24,12 +24,6 @@ struct StepClarificationView: View {
     var body: some View {
         VStack {
             HStack {
-                Button(action: {
-                    dismiss()
-                }) {
-                    Image(systemName: "xmark")
-                        .foregroundStyle(.black)
-                }
                 Text("Step clarification")
                     .bold()
                 Spacer()
