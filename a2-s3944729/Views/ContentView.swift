@@ -29,5 +29,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: [StoredIngredient.self, StoredRecipe.self], inMemory: true)
+        .modelContainer(for: [StoredIngredient.self], inMemory: true)
 }

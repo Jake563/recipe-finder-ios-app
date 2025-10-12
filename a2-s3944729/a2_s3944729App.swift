@@ -28,6 +28,6 @@ struct a2_s3944729App: App {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(for: [StoredIngredient.self, StoredRecipe.self]) // uses default on-disk store
+        .modelContainer(for: [StoredIngredient.self]) // uses default on-disk store
     }
 }
