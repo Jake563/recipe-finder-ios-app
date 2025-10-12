@@ -138,6 +138,10 @@ class IngredientService {
         }
         
         updateIngredientQuantity(ingredient: ingredientToUpdate!, quantity: quantityDiff, unit: unit)
+        if ingredientToUpdate!.quantity <= 0 {
+            context.delete(ingredientToUpdate!)
+        }
+        
         try context.save()
     }
 }
