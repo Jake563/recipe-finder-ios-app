@@ -7,14 +7,27 @@
 
 import WidgetKit
 import SwiftUI
+import SwiftData
+
+@MainActor
+func loadRecipe() -> RecipeOfTheDay? {
+    do {
+        let container = try makeSharedContainer()
+        let recipes = try container.mainContext.fetch(FetchDescriptor<RecipeOfTheDay>().self)
+        return recipes.randomElement()
+    } catch {
+        print("Failed to load recipes in widget: \(error)")
+        return nil
+    }
+}
 
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), emoji: "😀")
+        SimpleEntry(date: Date(), emoji: "😀", recipe: nil)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), emoji: "😀")
+        let entry = SimpleEntry(date: Date(), emoji: "😀", recipe: nil)
         completion(entry)
     }
 
@@ -25,7 +38,7 @@ struct Provider: TimelineProvider {
         let currentDate = Date()
         for hourOffset in 0 ..< 5 {
             let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, emoji: "😀")
+            let entry = SimpleEntry(date: entryDate, emoji: "😀", recipe: nil)
             entries.append(entry)
         }
 
@@ -41,6 +54,7 @@ struct Provider: TimelineProvider {
 struct SimpleEntry: TimelineEntry {
     let date: Date
     let emoji: String
+    let recipe: RecipeOfTheDay?
 }
 
 struct DailyRecipeWidgetEntryView : View {
@@ -48,11 +62,14 @@ struct DailyRecipeWidgetEntryView : View {
 
     var body: some View {
         VStack {
-            Text("Time:")
-            Text(entry.date, style: .time)
-
-            Text("Emoji:")
-            Text(entry.emoji)
+            if entry.recipe != nil {
+                Text("You can make")
+                Text(entry.recipe!.name)
+                Text(entry.recipe!.estimatedTime)
+                Text("\(entry.recipe!.numberOfIngredients) ingredients")
+            } else {
+                Text("No daily recipe available.")
+            }
         }
     }
 }
@@ -79,6 +96,6 @@ struct DailyRecipeWidget: Widget {
 #Preview(as: .systemSmall) {
     DailyRecipeWidget()
 } timeline: {
-    SimpleEntry(date: .now, emoji: "😀")
-    SimpleEntry(date: .now, emoji: "🤩")
+    SimpleEntry(date: .now, emoji: "😀", recipe: nil)
+    SimpleEntry(date: .now, emoji: "🤩", recipe: nil)
 }
