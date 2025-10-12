@@ -16,6 +16,7 @@ class IngredientService {
         self.context = context
     }
     
+    /// Converts a list of stored ingredients to a list of ingredients
     static func storedIngredientsToIngredients(storedIngredients: [StoredIngredient]) -> [Ingredient] {
         var ingredients: [Ingredient] = []
         for storedIngredient in storedIngredients {
@@ -29,6 +30,7 @@ class IngredientService {
         return ingredients
     }
     
+    /// Retrieves the ingredient with the given name from SwiftData
     func getIngredient(name: String) throws -> StoredIngredient? {
         let ingredients = try context.fetch(FetchDescriptor<StoredIngredient>())
         for ingredient in ingredients {
@@ -39,6 +41,7 @@ class IngredientService {
         return nil
     }
     
+    /// Updates an ingredient's quantity, respecting units. For example: 1L + 500mL, new quantity = 1500mL
     private func updateIngredientQuantity(ingredient: StoredIngredient, quantity: Int, unit: String?) {
         if ingredient.quantityMassUnit == unit {
             ingredient.quantity += quantity
@@ -81,6 +84,7 @@ class IngredientService {
         ingredient.quantityMassUnit = finalUnit
     }
     
+    /// Adds a new ingredient to SwiftData
     func addIngredient(name: String, quantity: Int, unit: String?) throws {
         let existingIngredient = try getIngredient(name: name)
         if existingIngredient != nil {
@@ -103,6 +107,7 @@ class IngredientService {
         try context.save()
     }
     
+    /// Deletes the ingredient with the given name from SwiftData
     func deleteIngredient(name: String) throws {
         let ingredientToDelete = try getIngredient(name: name)
         
@@ -114,6 +119,7 @@ class IngredientService {
         try context.save()
     }
     
+    /// Updates the details of the ingredient with the given name in SwiftData
     func updateIngredient(name: String, quantityDiff: Int, unit: String?) throws {
         let ingredientToUpdate = try getIngredient(name: name)
 

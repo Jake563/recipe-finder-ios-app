@@ -108,7 +108,7 @@ class SpeechToTextService: NSObject, ObservableObject {
         self.audioLevel = 0.0
     }
     
-    // Calculates how loud the user is speaking on a 0.0 to 1.0 scale.
+    /// Calculates how loud the user is speaking on a 0.0 to 1.0 scale.
     private func updateAudioLevel(buffer: AVAudioPCMBuffer) {
         guard let channelData = buffer.floatChannelData?[0] else {
             return

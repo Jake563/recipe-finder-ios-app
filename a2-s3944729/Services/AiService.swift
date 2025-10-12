@@ -175,6 +175,7 @@ class AiService {
         return ingredientsString
     }
     
+    /// Asks AI the given prompt. Response is returned in the JSON format that corresponds with the given responseSchema.
     func getAiResponse(prompt: String, responseSchema: [String: Any]) async -> Data? {
         guard let url = URL(string: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=\(AiService.API_KEY)") else {
             fatalError("Invalid URL")
@@ -215,7 +216,7 @@ class AiService {
         return nil
     }
     
-    /// Generates a list of recipes that can be made with the given ingredients
+    /// Finds a list of recipes that can be made with the given ingredients
     func getRecipes(ingredients: [Ingredient]) async throws -> [Recipe] {
         print("Getting recipes...")
         if ingredients.isEmpty {

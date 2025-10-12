@@ -11,7 +11,7 @@ enum QuantityUnit: String, Codable {
     case count, weight, litres
 }
 
-///  Represents an ingredient a user can add.
+/// Represents an ingredient a user can add.
 struct IngredientType: Identifiable {
     let id: UUID = UUID()
     let name: String
