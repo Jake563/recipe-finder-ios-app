@@ -12,9 +12,8 @@ import SwiftData
 struct RecipesView: View {
     @State private var recipesLoading = false
     @State private var recipeLoadingError = false
-    @State private var recipes: [Recipe] = []
+    @State private var recipes: [Recipe]
     @State private var favouritedRecipes = [String: String]()
-    @Environment(\.modelContext) private var context
     
     private let aiService = AiService(session: URLSession.shared)
     private let authService = AuthService.getAuthService()
@@ -24,14 +23,29 @@ struct RecipesView: View {
     
     @Query
     private var storedIngredients: [StoredIngredient]
+ 
+    init(selectedTab: Binding<Int>) {
+        self._selectedTab = selectedTab
+        self.recipes = recipeService.getRecentRecipes()
+    }
+    
+    private func shouldRefreshRecipes() -> Bool {
+        if recipeService.shouldRefreshRecipes() {
+            return true
+        }
+        if recipes.isEmpty {
+            return true
+        }
+        // User has not made any changes to their ingredients since the last time recipes were displayed
+        return false
+    }
     
     /// Displays a list of recipes that can be made with the user's current ingredients
     private func onViewOpened() {
         if recipesLoading {
             return
         }
-        if !recipeService.shouldRefreshRecipes() {
-            // User has not made any changes to their ingredients since the last time recipes were displayed
+        if !shouldRefreshRecipes() {
             recipesLoading = false
             return
         }
@@ -42,7 +56,7 @@ struct RecipesView: View {
             let ingredients = IngredientService.storedIngredientsToIngredients(storedIngredients: storedIngredients)
             do {
                 recipes = try await aiService.getRecipes(ingredients: ingredients)
-                recipeService.saveRecentRecipes(recipes: recipes, context: context)
+                recipeService.saveRecentRecipes(recipes: recipes)
             } catch {
                 recipeLoadingError = true
             }

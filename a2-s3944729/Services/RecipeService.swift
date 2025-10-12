@@ -9,7 +9,7 @@ import SwiftData
 import WidgetKit
 
 class RecipeService {
-    private var refreshRecipes = true
+    private var refreshRecipes = false
     private static let singleRecipeService = RecipeService()
     private let sharedContainer = try! makeSharedContainer()
     
@@ -32,7 +32,7 @@ class RecipeService {
     
     
     @MainActor
-    private func clearOldRecentRecipes(context: ModelContext) throws {
+    private func clearOldRecentRecipes() throws {
         let recipes = try sharedContainer.mainContext.fetch(FetchDescriptor<RecipeOfTheDay>().self)
 
         print("Going through recipes")
@@ -43,9 +43,9 @@ class RecipeService {
     }
     
     @MainActor
-    func saveRecentRecipes(recipes: [Recipe], context: ModelContext) {
+    func saveRecentRecipes(recipes: [Recipe]) {
         do {
-            try clearOldRecentRecipes(context: context)
+            try clearOldRecentRecipes()
             
             for recipe in recipes {
                 let recipeOfTheDay = RecipeOfTheDay(
@@ -62,5 +62,29 @@ class RecipeService {
         } catch {
             print("Failed to save recipes: \(error)")
         }
+    }
+    
+    @MainActor
+    func getRecentRecipes() -> [Recipe] {
+        do {
+            let storedRecipes = try sharedContainer.mainContext.fetch(FetchDescriptor<RecipeOfTheDay>())
+            var recipes: [Recipe] = []
+            
+            for storedRecipe in storedRecipes {
+                let recipe: Recipe = Recipe(
+                    name: storedRecipe.name,
+                    estimatedTime: storedRecipe.estimatedTime,
+                    ingredients: storedRecipe.ingredients,
+                    instructions: storedRecipe.instructions
+                )
+                recipes.append(recipe)
+            }
+            
+            print("Loaded \(recipes.count) recent recipes")
+            return recipes
+        } catch {
+            print("Failed to get recent recipes: \(error)")
+        }
+        return []
     }
 }
