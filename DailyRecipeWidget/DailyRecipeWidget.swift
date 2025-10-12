@@ -11,10 +11,10 @@ import SwiftData
 
 struct Provider: TimelineProvider {
     @MainActor
-    private func getRecipes() async -> [RecipeOfTheDay] {
+    private func getRecipes() async -> [RecentRecipe] {
         do {
             let container = try makeSharedContainer()
-            let recipes = try container.mainContext.fetch(FetchDescriptor<RecipeOfTheDay>().self)
+            let recipes = try container.mainContext.fetch(FetchDescriptor<RecentRecipe>().self)
             return recipes
         } catch {
             print("Failed to load recipes in widget: \(error)")
@@ -22,18 +22,18 @@ struct Provider: TimelineProvider {
         }
     }
     
-    func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), recipe: nil)
+    func placeholder(in context: Context) -> RecipeEntry {
+        RecipeEntry(date: Date(), recipe: nil)
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), recipe: nil)
+    func getSnapshot(in context: Context, completion: @escaping (RecipeEntry) -> ()) {
+        let entry = RecipeEntry(date: Date(), recipe: nil)
         completion(entry)
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
         Task { @MainActor in
-            var entries: [SimpleEntry] = []
+            var entries: [RecipeEntry] = []
             let recipes = await getRecipes()
             
             // Generate a timeline consisting of five entries an hour apart, starting from the current date.
@@ -41,7 +41,7 @@ struct Provider: TimelineProvider {
             for recipeIndex in 0..<recipes.count {
                 let hourOffset = recipeIndex
                 let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-                let entry = SimpleEntry(date: entryDate, recipe: recipes[recipeIndex])
+                let entry = RecipeEntry(date: entryDate, recipe: recipes[recipeIndex])
                 entries.append(entry)
             }
             
@@ -51,9 +51,9 @@ struct Provider: TimelineProvider {
     }
 }
 
-struct SimpleEntry: TimelineEntry {
+struct RecipeEntry: TimelineEntry {
     let date: Date
-    let recipe: RecipeOfTheDay?
+    let recipe: RecentRecipe?
 }
 
 struct DailyRecipeWidgetEntryView : View {
@@ -94,13 +94,13 @@ struct DailyRecipeWidget: Widget {
 #Preview(as: .systemSmall) {
     DailyRecipeWidget()
 } timeline: {
-    SimpleEntry(date: .now, recipe: RecipeOfTheDay(
+    RecipeEntry(date: .now, recipe: RecentRecipe(
         name: "Test Recipe",
         estimatedTime: "40 minutes",
         ingredients: [],
         instructions: []
     ))
-    SimpleEntry(date: .now, recipe: RecipeOfTheDay(
+    RecipeEntry(date: .now, recipe: RecentRecipe(
         name: "Test Recipe 2",
         estimatedTime: "20 minutes",
         ingredients: [],

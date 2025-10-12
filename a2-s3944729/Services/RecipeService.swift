@@ -33,7 +33,7 @@ class RecipeService {
     
     @MainActor
     private func clearOldRecentRecipes() throws {
-        let recipes = try sharedContainer.mainContext.fetch(FetchDescriptor<RecipeOfTheDay>().self)
+        let recipes = try sharedContainer.mainContext.fetch(FetchDescriptor<RecentRecipe>().self)
 
         print("Going through recipes")
         for recipe in recipes {
@@ -48,13 +48,13 @@ class RecipeService {
             try clearOldRecentRecipes()
             
             for recipe in recipes {
-                let recipeOfTheDay = RecipeOfTheDay(
+                let RecentRecipe = RecentRecipe(
                     name: recipe.name,
                     estimatedTime: recipe.estimatedTime,
                     ingredients: recipe.ingredients,
                     instructions: recipe.instructions
                 )
-                sharedContainer.mainContext.insert(recipeOfTheDay)
+                sharedContainer.mainContext.insert(RecentRecipe)
             }
             
             try sharedContainer.mainContext.save()
@@ -67,7 +67,7 @@ class RecipeService {
     @MainActor
     func getRecentRecipes() -> [Recipe] {
         do {
-            let storedRecipes = try sharedContainer.mainContext.fetch(FetchDescriptor<RecipeOfTheDay>())
+            let storedRecipes = try sharedContainer.mainContext.fetch(FetchDescriptor<RecentRecipe>())
             var recipes: [Recipe] = []
             
             for storedRecipe in storedRecipes {

@@ -1,5 +1,5 @@
 //
-//  Recipe.swift
+//  RecentRecipe.swift
 //  a2-s3944729
 //
 //  Created by Jake Parkinson on 8/9/2025.
@@ -8,8 +8,8 @@
 import Foundation
 import SwiftData
 
-/// Represents a dish a user can make.
-@Model final class RecipeOfTheDay {
+/// A recipe that has been recently generated
+@Model final class RecentRecipe {
     var id = UUID()
     var name: String
     var estimatedTime: String
