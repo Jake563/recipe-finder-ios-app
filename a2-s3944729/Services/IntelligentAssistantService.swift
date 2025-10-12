@@ -22,9 +22,9 @@ class IntelligentAssistantService {
     update_ingredient - Updates an ingredient in the user's ingredients.
     
     Make sure Ingredient names are lowercase and singular nouns only (e.g. "Tomatoes" -> "tomato").
-    
     Provide a short, user-friendly response in the summary.
     If the request is irrelevant, set the summary to "Sorry, I cannot help with that.".
+    If the user requests to remove a quantity of an ingredient, perform update_ingredient instead of delete_ingredient.
     
     Here is what the user has requested: 
     """
