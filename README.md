@@ -30,5 +30,5 @@ An IoS app that enables users to discover cooking recipes that can be made with 
 ### Recipe Information Screen
 <img width="200" alt="image" src="https://github.com/user-attachments/assets/17345c6f-c507-417d-abc7-b437bcaa3228" />
 
-### Recipe Step Screen
+### Recipe Instruction Screen
 <img width="200" alt="image" src="https://github.com/user-attachments/assets/0645cf2d-1a2c-4c0e-8509-217b70d6a9d7" />
