@@ -16,10 +16,19 @@ An IoS app that enables users to discover cooking recipes that can be made with 
 ## In-app screenshots
 
 ### Onboarding Screen
-<img width="206" height="2622" alt="image" src="https://github.com/user-attachments/assets/26216c03-07f9-48b8-8608-25f12d1805bd" />
+<img width="200" alt="image" src="https://github.com/user-attachments/assets/26216c03-07f9-48b8-8608-25f12d1805bd" />
 
 ### Ingredients Screen
-<img width="206" height="2622" alt="image" src="https://github.com/user-attachments/assets/ea1bb727-7c4e-4213-88c8-e3b28c9f3cbf" />
+<img width="200" alt="image" src="https://github.com/user-attachments/assets/ea1bb727-7c4e-4213-88c8-e3b28c9f3cbf" />
 
 ### Add/Edit Ingredient Screen
-<img width="206" height="2622" alt="image" src="https://github.com/user-attachments/assets/47fcb4d8-12b4-4a9b-9fe1-4535bfd5f40c" />
+<img width="200" alt="image" src="https://github.com/user-attachments/assets/47fcb4d8-12b4-4a9b-9fe1-4535bfd5f40c" />
+
+### Recipes Screen
+<img width="200" alt="image" src="https://github.com/user-attachments/assets/75bf5dae-4d2d-4ab9-a1cd-f8cfd8742269" />
+
+### Recipe Information Screen
+<img width="200" alt="image" src="https://github.com/user-attachments/assets/17345c6f-c507-417d-abc7-b437bcaa3228" />
+
+### Recipe Step Screen
+<img width="200" alt="image" src="https://github.com/user-attachments/assets/0645cf2d-1a2c-4c0e-8509-217b70d6a9d7" />
